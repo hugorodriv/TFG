@@ -1,7 +1,7 @@
 <script>
     import { signIn, signOut } from "@auth/sveltekit/client";
     import { page } from "$app/stores";
-    console.log($page.data?.session?.user?.image);
+    console.log($page.data?.session);
 </script>
 
 <p class="mt-10 text-center text-4xl">Auth component</p>
