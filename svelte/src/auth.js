@@ -8,7 +8,6 @@ import PostgresAdapter from "@auth/pg-adapter"
 import { pool } from '$lib/db';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-    // strategy: "database",
     adapter: PostgresAdapter(pool),
     providers: [
         Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })
@@ -16,10 +15,32 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     secret: AUTH_SECRET,
     callbacks: {
         async session({ session, user }) {
+            console.log("Session")
             if (user) {
                 session.user.id = user.id;
             }
             return session;
         },
+        async signIn({ user }) {
+            console.log("Login")
+
+            // user.id comes from auth. should be safe (SQL injection and a malicious actor providing a fake user.id)
+            // convert to int just to be super safe
+            if (!user.id) {
+                throw new Error("Invalid user ID");
+            }
+            const userId = parseInt(user.id, 10);
+            if (isNaN(parseInt(user.id, 10))) {
+                throw new Error("Invalid user ID");
+            }
+
+            const res = await pool.query('SELECT * FROM profiles WHERE "userId" = $1', [user.id]);
+            const existingUser = res.rows[0];
+
+            if (!existingUser) {
+                console.log("New account")
+            }
+            return true;
+        }
     },
 });
