@@ -29,7 +29,9 @@ services:
 
 volumes:
   pgdata:
+    driver: local
   pgadmin-data:
+    driver: local
 
 networks:
   postgres_network:
