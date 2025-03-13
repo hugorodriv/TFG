@@ -13,3 +13,8 @@ export const pool = new Pool({
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
 })
+
+export async function createAcc(pool) {
+
+    return true
+}

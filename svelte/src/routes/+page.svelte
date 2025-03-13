@@ -9,7 +9,6 @@
     <!-- <Auth /> -->
 
     {#if !$page.data.session}
-        <h1>Not logged in</h1>
         <Auth />
     {:else}
         <h1>Logged in</h1>
