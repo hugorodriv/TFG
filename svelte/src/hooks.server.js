@@ -1,6 +1,7 @@
 // export { handle } from "./auth"
 //
 
-import { handle } from './auth.js';
+import { handle } from './lib/auth.js';
 
 export { handle };
+

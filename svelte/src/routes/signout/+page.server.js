@@ -1,2 +1,2 @@
-import { signOut } from "../../auth.js"
+import { signOut } from "$lib/auth.js"
 export const actions = { default: signOut }
