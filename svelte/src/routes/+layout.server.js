@@ -16,7 +16,7 @@ export const load = async (event) => {
     }
 
     // user logged in, but is not new acc
-    if (session && !isNewAccount(session.user) && url.pathname === '/signup') {
+    if (session && !await isNewAccount(session.user) && url.pathname === '/signup') {
         throw redirect(303, '/home');
     }
 
