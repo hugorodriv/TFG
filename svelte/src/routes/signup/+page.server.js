@@ -2,6 +2,9 @@ import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
 import { checkAvailableUsername, checkUsernameCorrect, createUser } from "$lib/db.js"
 
+/**
+ * @type {any}
+ */
 let userId;
 export async function load(event) {
     const session = await event.locals.auth();

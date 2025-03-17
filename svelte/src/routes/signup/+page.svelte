@@ -6,6 +6,51 @@
     const session = data.session;
 
     export let form;
+
+    // dynamically check if username is used
+
+    /**
+     * @type {Number}
+     */
+    let delayTimer;
+    let statusMessage = "";
+    let usernameError = false;
+
+    const checkUsername = async (/** @type {String} */ username) => {
+        clearTimeout(delayTimer);
+
+        if (username.length < 2) {
+            statusMessage = "";
+            return;
+        }
+        // Set a new timer
+        delayTimer = setTimeout(async () => {
+            try {
+                const response = await fetch(
+                    `/api/check-username?username=${encodeURIComponent(username)}`,
+                );
+
+                const data = await response.json();
+
+                if (data.status === "available") {
+                    statusMessage = "Username available";
+                    usernameError = false;
+                } else if (data.status === "invalid") {
+                    statusMessage = "Username invalid";
+                    usernameError = true;
+                } else if (data.status === "unavailable") {
+                    statusMessage = "Username already taken";
+                    usernameError = true;
+                } else {
+                    statusMessage = "Server error";
+                    usernameError = true;
+                }
+            } catch (error) {
+                statusMessage = "Server error";
+                usernameError = true;
+            }
+        }, 300); // 300ms delay
+    };
 </script>
 
 <p class="mt-10 text-center text-4xl">Signup</p>
@@ -27,12 +72,17 @@
             <label for="username" class="block mb-1 font-semibold">
                 Username
             </label>
-            <p
-                id="usernameAccpeted"
-                class="ml-3 text-green-800 font-extralight"
-            >
-                Available
-            </p>
+            <div class="ml-3 font-extralight">
+                {#if usernameError}
+                    <p class="text-red-800" id="usernameStatus">
+                        {statusMessage}
+                    </p>
+                {:else}
+                    <p class="text-green-800" id="usernameStatus">
+                        {statusMessage}
+                    </p>
+                {/if}
+            </div>
         </div>
         <div class="relative">
             <input
@@ -42,6 +92,7 @@
                 type="text"
                 class="w-full border p-2 rounded pl-7"
                 placeholder="username"
+                on:keyup={(e) => checkUsername(e.target?.value)}
                 required
             />
             <p

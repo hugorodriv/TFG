@@ -20,28 +20,6 @@ export const pool = new Pool({
 })
 
 
-/**
- * @param {{ id: string; }} user
- */
-async function isNewAccount(user) {
-    // user.id comes from auth. should be safe 
-    // (SQL injection and a malicious actor providing a fake user.id)
-    // convert to int just to be super safe
-    if (!user.id) {
-        throw new Error("Invalid user ID");
-    }
-    if (isNaN(parseInt(user.id, 10))) {
-        throw new Error("Invalid user ID");
-    }
-
-    const res = await pool.query('SELECT * FROM profiles WHERE userId = $1', [user.id]);
-
-    // if no rows matching user id, we establish that user doesnt have an acc
-    const existingUser = res.rows[0];
-
-    return !Boolean(existingUser)
-}
-
 
 /**
  * @param {string} username
@@ -64,7 +42,6 @@ export function checkUsernameCorrect(username) {
  */
 export async function checkAvailableUsername(username) {
 
-    // check again just in case
     if (!checkUsernameCorrect(username)) {
         return false
     }
@@ -81,6 +58,10 @@ export async function checkAvailableUsername(username) {
     }
 }
 
+/**
+ * @param {Number} userId
+ * @param {{ username: String; bio: String; }} accData
+ */
 export async function createUser(userId, accData) {
 
     const username = accData.username
