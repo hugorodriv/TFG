@@ -3,8 +3,11 @@ const { Pool } = pkg
 import { DATABASE_HOST, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD } from "$env/static/private";
 
 
-// check validity of username for creating and modifying 
-export const USERNAME_REGEX = /^[a-zA-Z0-9\-_.]+$/;
+//  (?![-_.])           // Prevents the username from starting with -, _, or .
+//  [a-zA-Z0-9\-_.]+    // Allows alphanumeric characters, -, _, and .
+//  (?<![-_.])          // Prevents the username from ending with -, _, or .
+export const USERNAME_REGEX = /^(?![-_.])([a-zA-Z0-9\-_.]+)(?<![-_.])$/;
+
 export const MIN_USERNAME_LENGTH = 4
 export const MAX_USERNAME_LENGTH = 20
 
