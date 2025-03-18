@@ -63,16 +63,47 @@ export async function checkAvailableUsername(username) {
 
 /**
  * @param {Number} userId
- * @param {{ username: String; bio: String; }} accData
+ * @param {{ username: String; name: String; }} accData
  */
 export async function createUser(userId, accData) {
 
     const username = accData.username
-    const bio = accData.bio || ""
+    const name = accData.name || ""
 
     try {
-        const res = await pool.query('INSERT INTO profiles (userId, username, bio) VALUES ($1, $2, $3)', [userId, username, bio]);
+        await pool.query('INSERT INTO profiles (userId, username, name) VALUES ($1, $2, $3)', [userId, username, name]);
+
+        return true;
     } catch (error) {
         console.log(error)
+        return false;
+    }
+}
+
+
+export async function fetchAccData(userId) {
+
+    try {
+        const res = await pool.query('SELECT * from profiles WHERE userId = $1 LIMIT 1', [userId]);
+        return res.rows[0];
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
+
+export async function updateAccDetails(userId, newData) {
+
+    const bio = newData.bio
+    const name = newData.name || ""
+
+    try {
+        await pool.query('UPDATE profiles SET name = $2, bio = $3 WHERE userId = $1', [userId, name, bio]);
+
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
     }
 }

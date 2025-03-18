@@ -19,7 +19,7 @@
     const checkUsername = async (/** @type {String} */ username) => {
         clearTimeout(delayTimer);
 
-        if (username.length < 2) {
+        if (username.length < 4) {
             statusMessage = "";
             return;
         }
@@ -88,7 +88,6 @@
             <input
                 maxlength="20"
                 name="username"
-                value={form?.username}
                 type="text"
                 class="w-full border p-2 rounded pl-7"
                 placeholder="username"
@@ -104,21 +103,30 @@
     </div>
 
     <div>
-        <label for="bio" class="block mb-1 font-semibold">Bio</label>
-        <textarea
-            name="bio"
-            value={form?.bio}
-            placeholder="500 chars max"
+        <label for="name" class="block mb-1 font-semibold">Name</label>
+        <input
+            name="name"
+            placeholder="Name"
             class="w-full border p-2 rounded"
-            rows="4"
-            maxlength="500"
-        ></textarea>
+            maxlength="50"
+        />
     </div>
 
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
-        Create Account
-    </button>
+    {#if !usernameError}
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+            Create Account
+        </button>
+    {:else}
+        <button
+            type="submit"
+            disabled
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+        >
+            Create Account
+        </button>
+    {/if}
+
     {#if form?.error}
-        <h1>{form.error}</h1>
+        <h1>Error creating account. Try again</h1>
     {/if}
 </form>
