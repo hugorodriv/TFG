@@ -2,6 +2,7 @@
     import { signOut } from "@auth/sveltekit/client";
     import { enhance } from "$app/forms";
     import PictureCrop from "./pictureCrop.svelte";
+    import Navbar from "../Navbar.svelte";
 
     export let data;
     const accData = data.accData;
@@ -10,6 +11,7 @@
     export let form;
 </script>
 
+<Navbar />
 <p class="mt-10 text-center text-4xl">Profile settings</p>
 
 <div class="space-y-4 p-4 max-w-md m-auto">
