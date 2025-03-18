@@ -1,21 +1,15 @@
 <script>
     import { signOut } from "@auth/sveltekit/client";
-
     import { onMount } from "svelte";
 
-    function toggleDropdown() {
-        document?.getElementById("dropdown")?.classList.toggle("hidden");
-    }
-
-    // clicks outisde button close dropdown panel
-    const handleClickOutside = (e) => {
-        if (!dropdownBtn.contains(e.target)) {
-            document.getElementById("dropdown")?.classList.add("hidden");
-        }
-    };
-
+    let name = "test";
     onMount(() => {
         const dropdownBtn = document?.getElementById("dropdownBtn");
+        const handleClickOutside = (/** @type {{ target: Event ; }} */ e) => {
+            if (!dropdownBtn.contains(e.target)) {
+                document.getElementById("dropdown")?.classList.add("hidden");
+            }
+        };
         document.addEventListener("click", handleClickOutside);
         return () => {
             document.removeEventListener("click", handleClickOutside);
@@ -31,17 +25,19 @@
         <button
             id="dropdownBtn"
             on:click={() => {
-                toggleDropdown();
+                document
+                    ?.getElementById("dropdown")
+                    ?.classList.toggle("hidden");
             }}
             class="flex items-center space-x-2 hover:bg-gray-100 rounded-full p-1 transition-colors"
         >
             <div
                 class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white"
             >
-                X
+                {name.slice(0, 1).toUpperCase()}
             </div>
 
-            <span class="text-gray-600 px-1">Name</span>
+            <span class="text-gray-600 px-1">{name}</span>
         </button>
 
         <!-- Dropdown menu -->

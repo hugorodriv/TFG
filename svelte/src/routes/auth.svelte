@@ -1,7 +1,5 @@
 <script>
-    import { SignIn, SignOut } from "@auth/sveltekit/components";
-    import { page } from "$app/stores";
-    console.log($page.data);
+    import { SignIn } from "@auth/sveltekit/components";
 </script>
 
 <p class="mt-10 text-center text-3xl">Log in with google</p>
