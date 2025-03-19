@@ -4,10 +4,6 @@ import { fetchAccData, updateAccDetails } from "$lib/db.js"
 
 
 /**
- * @type {Number}
- */
-let userId;
-/**
  * @param {{ locals: { auth: () => any; }; }} event
  */
 export async function load(event) {
@@ -23,7 +19,6 @@ export async function load(event) {
         throw redirect(303, '/');
     }
 
-    userId = session.user?.id
     const accData = await fetchAccData(session?.user?.id)
     const email = session.user?.email
 
@@ -35,24 +30,30 @@ export async function load(event) {
 
 
 export const actions = {
+
     default: async ({ request, locals }) => {
+        const session = await locals.auth();
+        const userId = session?.user?.id;
+
         const formData = await request.formData();
-        const name = String(formData.get('name') || '').slice(0, 20);
+        const name = String(formData.get('name')).slice(0, 20);
+        const bio = String(formData.get('bio')).slice(0, 500);
         if (name === '') {
             return { error: true }
         }
-        const bio = String(formData.get('bio') || '').slice(0, 500);
 
         const correct = await updateAccDetails(userId, { name: name, bio: bio })
 
         if (correct) {
             return {
                 success: true,
-                data: { name, bio }
+                data: { name: name, bio: bio }
             }
         }
+
         return {
-            error: true
+            error: true,
+            data: { name: name, bio: bio }
         }
     }
 }

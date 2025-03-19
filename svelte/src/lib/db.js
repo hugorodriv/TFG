@@ -98,6 +98,10 @@ export async function updateAccDetails(userId, newData) {
     const bio = newData.bio
     const name = newData.name || ""
 
+    if (!USERNAME_REGEX.test(name)) {
+        return false
+    }
+
     try {
         await pool.query('UPDATE profiles SET name = $2, bio = $3 WHERE userId = $1', [userId, name, bio]);
 

@@ -1,7 +1,6 @@
 <script>
     import { signOut } from "@auth/sveltekit/client";
     import { enhance } from "$app/forms";
-    import { goto } from "$app/navigation";
 
     import PictureCrop from "./pictureCrop.svelte";
     import Navbar from "../Navbar.svelte";
@@ -36,7 +35,7 @@
         >
     </div>
 
-    {#if !form?.success}
+    {#if !form?.success && !form?.error}
         <form method="POST" use:enhance>
             <div>
                 <label for="pfp" class="block mb-1 font-semibold"
@@ -48,7 +47,7 @@
             <div>
                 <label for="name" class="block mb-1 font-semibold">Name</label>
                 <input
-                    value={form?.data?.name || accData.name}
+                    value={accData.name}
                     name="name"
                     class="w-full border p-2 rounded"
                     maxlength="20"
@@ -60,10 +59,7 @@
                 <textarea
                     name="bio"
                     class="w-full border p-2 rounded"
-                    maxlength="500"
-                    >{accData.bio !== undefined
-                        ? (form?.data?.bio ?? accData.bio)
-                        : ""}</textarea
+                    maxlength="500">{form?.data?.bio || accData.bio}</textarea
                 >
             </div>
 
@@ -88,5 +84,13 @@
     {/if}
     {#if form?.error}
         <h1>Error updating details. Try again</h1>
+        <h2>Redirecting . . .</h2>
+
+        <script>
+            setTimeout(() => {
+                // "hard" redirect to make sure accData gets re-populated
+                window.location.href = "/profile";
+            }, 1000);
+        </script>
     {/if}
 </div>
