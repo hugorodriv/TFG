@@ -7,6 +7,7 @@ import { DATABASE_HOST, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD } from "
 //  [a-zA-Z0-9\-_.]+    // Allows alphanumeric characters, -, _, and .
 //  (?<![-_.])          // Prevents the username from ending with -, _, or .
 export const USERNAME_REGEX = /^(?![-_.])([a-zA-Z0-9\-_.]+)(?<![-_.])$/;
+export const NAME_REGEX = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
 
 export const MIN_USERNAME_LENGTH = 4
 export const MAX_USERNAME_LENGTH = 20
@@ -98,7 +99,7 @@ export async function updateAccDetails(userId, newData) {
     const bio = newData.bio
     const name = newData.name || ""
 
-    if (!USERNAME_REGEX.test(name)) {
+    if (!NAME_REGEX.test(name)) {
         return false
     }
 
