@@ -6,7 +6,7 @@
 
     const accountData = $accountStore;
     if (!accountData) {
-        goto("/succesfulLogin");
+        goto("/successfulLogin");
     }
     const name = accountData?.name || "";
 

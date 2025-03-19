@@ -2,7 +2,6 @@
     import { accountStore } from "$lib/stores/accStore.js";
     import { goto } from "$app/navigation";
 
-    // import { get } from "svelte/store";
     import Auth from "./auth.svelte";
     import Navbar from "./Navbar.svelte";
 
@@ -11,7 +10,7 @@
 
     const accountData = $accountStore;
     if (!accountData) {
-        goto("succesfulLogin");
+        goto("successfulLogin");
     }
 </script>
 

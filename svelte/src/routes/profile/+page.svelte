@@ -14,7 +14,7 @@
 
     if (form?.success) {
         setTimeout(() => {
-            goto("/succesfulLogin");
+            goto("/successfulLogin");
         }, 2000);
     }
 </script>
@@ -74,7 +74,7 @@
             Update
         </button>
         {#if form?.success}
-            <h1>Succesfully updated</h1>
+            <h1>Successfully updated</h1>
             <h2>Redirecting</h2>
         {/if}
         {#if form?.error}
