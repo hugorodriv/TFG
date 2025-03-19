@@ -1,5 +1,6 @@
 <script>
     import { accountStore } from "$lib/stores/accStore.js";
+    import { onMount } from "svelte";
     import { goto } from "$app/navigation";
 
     import Auth from "./auth.svelte";
@@ -8,10 +9,12 @@
     export let data;
     const session = data.session;
 
-    const accountData = $accountStore;
-    if (!accountData) {
-        goto("successfulLogin");
-    }
+    onMount(() => {
+        const accountData = $accountStore;
+        if (!accountData) {
+            goto("/successfulLogin");
+        }
+    });
 </script>
 
 <div>

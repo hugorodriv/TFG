@@ -5,9 +5,12 @@
     import { goto } from "$app/navigation";
 
     const accountData = $accountStore;
-    if (!accountData) {
-        goto("/successfulLogin");
-    }
+    onMount(() => {
+        const accountData = $accountStore;
+        if (!accountData) {
+            goto("/successfulLogin");
+        }
+    });
     const name = accountData?.name || "";
 
     onMount(() => {

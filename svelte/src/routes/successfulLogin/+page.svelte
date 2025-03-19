@@ -1,5 +1,6 @@
 <script>
     import { accountStore } from "$lib/stores/accStore.js";
+    import { onMount } from "svelte";
 
     import { goto } from "$app/navigation";
 

@@ -2,10 +2,6 @@ import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
 import { checkAvailableUsername, checkUsernameCorrect, createUser } from "$lib/db.js"
 
-/**
- * @type {any}
- */
-let userId;
 export async function load(event) {
     const session = await event.locals.auth();
 
@@ -20,7 +16,6 @@ export async function load(event) {
     }
 
     // new acc
-    userId = session.user?.id
     return {
         session
     };
@@ -29,6 +24,9 @@ export async function load(event) {
 
 export const actions = {
     default: async ({ request, locals }) => {
+        const session = await locals.auth();
+        const userId = session?.user?.id;
+
         const formData = await request.formData();
         const username = String(formData.get('username') || '');
 
