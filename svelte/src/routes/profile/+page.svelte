@@ -11,12 +11,6 @@
     const email = data.email;
 
     export let form;
-
-    if (form?.success) {
-        setTimeout(() => {
-            goto("/successfulLogin");
-        }, 2000);
-    }
 </script>
 
 <Navbar />
@@ -42,43 +36,57 @@
         >
     </div>
 
-    <form method="POST" use:enhance>
-        <div>
-            <label for="pfp" class="block mb-1 font-semibold"
-                >Profile Picture</label
+    {#if !form?.success}
+        <form method="POST" use:enhance>
+            <div>
+                <label for="pfp" class="block mb-1 font-semibold"
+                    >Profile Picture</label
+                >
+
+                <PictureCrop />
+            </div>
+            <div>
+                <label for="name" class="block mb-1 font-semibold">Name</label>
+                <input
+                    value={form?.data?.name || accData.name}
+                    name="name"
+                    class="w-full border p-2 rounded"
+                    maxlength="20"
+                />
+            </div>
+
+            <div>
+                <label for="bio" class="block mb-1 font-semibold">Bio</label>
+                <textarea
+                    name="bio"
+                    class="w-full border p-2 rounded"
+                    maxlength="500"
+                    >{accData.bio !== undefined
+                        ? (form?.data?.bio ?? accData.bio)
+                        : ""}</textarea
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="bg-blue-500 text-white px-4 py-2 rounded"
             >
+                Update
+            </button>
+        </form>
+    {/if}
+    {#if form?.success}
+        <h1>Successfully updated</h1>
+        <h2>Redirecting . . .</h2>
 
-            <PictureCrop />
-        </div>
-        <div>
-            <label for="name" class="block mb-1 font-semibold">Name</label>
-            <input
-                value={form?.data?.name || accData.name}
-                name="name"
-                class="w-full border p-2 rounded"
-                maxlength="20"
-            />
-        </div>
-
-        <div>
-            <label for="bio" class="block mb-1 font-semibold">Bio</label>
-            <textarea
-                value={form?.data?.bio || accData.bio}
-                name="bio"
-                class="w-full border p-2 rounded"
-                maxlength="500"
-            ></textarea>
-        </div>
-
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-            Update
-        </button>
-        {#if form?.success}
-            <h1>Successfully updated</h1>
-            <h2>Redirecting</h2>
-        {/if}
-        {#if form?.error}
-            <h1>Error updating details. Try again</h1>
-        {/if}
-    </form>
+        <script>
+            setTimeout(() => {
+                // "hard" redirect to make sure accData gets re-populated
+                window.location.href = "/";
+            }, 1000);
+        </script>
+    {/if}
+    {#if form?.error}
+        <h1>Error updating details. Try again</h1>
+    {/if}
 </div>
