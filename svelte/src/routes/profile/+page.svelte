@@ -1,6 +1,8 @@
 <script>
     import { signOut } from "@auth/sveltekit/client";
     import { enhance } from "$app/forms";
+    import { goto } from "$app/navigation";
+
     import PictureCrop from "./pictureCrop.svelte";
     import Navbar from "../Navbar.svelte";
 
@@ -9,6 +11,12 @@
     const email = data.email;
 
     export let form;
+
+    if (form?.success) {
+        setTimeout(() => {
+            goto("/succesfulLogin");
+        }, 2000);
+    }
 </script>
 
 <Navbar />
@@ -67,6 +75,7 @@
         </button>
         {#if form?.success}
             <h1>Succesfully updated</h1>
+            <h2>Redirecting</h2>
         {/if}
         {#if form?.error}
             <h1>Error updating details. Try again</h1>

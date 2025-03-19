@@ -1,8 +1,15 @@
 <script>
     import { signOut } from "@auth/sveltekit/client";
     import { onMount } from "svelte";
+    import { accountStore } from "$lib/stores/accStore.js";
+    import { goto } from "$app/navigation";
 
-    let name = "test";
+    const accountData = $accountStore;
+    if (!accountData) {
+        goto("/succesfulLogin");
+    }
+    const name = accountData?.name || "";
+
     onMount(() => {
         const dropdownBtn = document?.getElementById("dropdownBtn");
         const handleClickOutside = (/** @type {{ target: Event ; }} */ e) => {

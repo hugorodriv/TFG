@@ -43,15 +43,12 @@ export const actions = {
         }
         const bio = String(formData.get('bio') || '').slice(0, 500);
 
-
-
         const correct = await updateAccDetails(userId, { name: name, bio: bio })
 
-        // const correct = true
         if (correct) {
             return {
                 success: true,
-                data: { name, bio } // Include the submitted data in the response
+                data: { name, bio }
             }
         }
         return {
