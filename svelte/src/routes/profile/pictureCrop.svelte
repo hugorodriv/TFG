@@ -1,10 +1,4 @@
 <script>
-    /**
-     * @type {string | ArrayBuffer | null | undefined}
-     */
-    /**
-     * @type {HTMLInputElement | any}
-     */
     let profilePic, fileinput;
     let cropActive = false;
     let cropPos = { x: 0, y: 0 };
@@ -13,14 +7,10 @@
     let dragOffset = { x: 0, y: 0 };
     let cropSize = 0;
 
-    /**
-     * @type {string | null}
-     */
     let croppedImage = null;
-    /**
-     * @type {string | null}
-     */
     let finalImage = null;
+
+    let uploaded = false;
 
     // Handle selection of file
     const onFileSelected = (
@@ -59,9 +49,6 @@
     };
 
     // Start dragging
-    /**
-     * @param {{ currentTarget: { getBoundingClientRect: () => any; }; clientX: number; clientY: number; preventDefault: () => void; }} e
-     */
     function startDrag(e) {
         if (!cropActive) return;
 
@@ -82,9 +69,6 @@
     }
 
     // Handle dragging
-    /**
-     * @param {{ currentTarget: { getBoundingClientRect: () => any; }; clientX: number; clientY: number; }} e
-     */
     function handleDrag(e) {
         if (!dragging) return;
 
@@ -139,7 +123,6 @@
         croppedImage = canvas.toDataURL();
     }
 
-    let uploaded = false;
     function uploadPicture() {
         console.log("Uploading picture");
 
