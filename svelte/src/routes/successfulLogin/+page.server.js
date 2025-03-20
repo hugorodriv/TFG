@@ -21,7 +21,9 @@ export const load = async (event) => {
 
     const accData = await fetchAccData(session?.user?.id)
 
-    accData.image = "placeholderImageData"
+    // TODO: populate from S3
+    // fetch() accData.img_url ...
+    accData.img = "placeholderImageData"
     return {
         accData,
         referer

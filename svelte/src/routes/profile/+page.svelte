@@ -17,7 +17,7 @@
         }
     });
 
-    const currentProfilePicture = accountData?.pfp || "";
+    const currentProfilePicture = accountData?.img || "";
 
     export let data;
     const accData = data.accData;
