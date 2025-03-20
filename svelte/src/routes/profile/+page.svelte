@@ -2,8 +2,22 @@
     import { signOut } from "@auth/sveltekit/client";
     import { enhance } from "$app/forms";
 
+    import { onMount } from "svelte";
+    import { accountStore } from "$lib/stores/accStore.js";
+    import { goto } from "$app/navigation";
+
     import PictureCrop from "./pictureCrop.svelte";
     import Navbar from "../Navbar.svelte";
+
+    const accountData = $accountStore;
+    onMount(() => {
+        const accountData = $accountStore;
+        if (!accountData) {
+            goto("/successfulLogin");
+        }
+    });
+
+    const currentProfilePicture = accountData?.pfp || "";
 
     export let data;
     const accData = data.accData;
@@ -44,7 +58,7 @@
     <label for="pfp" class="block mb-1 font-semibold"> Profile Picture </label>
 
     <!-- Change profile picture -->
-    {#if changingPfp}
+    {#if changingPfp && !form?.success && !form?.error}
         <div>
             {#if finalProfilePicture}
                 <img
@@ -62,7 +76,7 @@
         </div>
     {:else}
         <!-- TODO:  Display profile picture of user if they already have one-->
-        <img alt="current profile" src="" />
+        <img alt="current profile" src={currentProfilePicture} />
         <button
             class="bg-blue-600 text-white px-4 py-2 rounded"
             on:click={() => (changingPfp = true)}
@@ -72,7 +86,7 @@
     {/if}
 
     <!-- Change user details  -->
-    {#if !form?.success && !form?.error}
+    {#if !form?.success && !form?.error && !changingPfp}
         <form class="" method="POST" use:enhance>
             <div>
                 <label for="name" class="block mb-1 font-semibold">Name</label>
