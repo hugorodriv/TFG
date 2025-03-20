@@ -35,15 +35,16 @@
         >
     </div>
 
-    {#if !form?.success && !form?.error}
-        <form method="POST" use:enhance>
-            <div>
-                <label for="pfp" class="block mb-1 font-semibold"
-                    >Profile Picture</label
-                >
+    <div class="bg-red-200 my-2 p-2">
+        <!-- <label for="pfp" class="block mb-1 font-semibold"> -->
+        <!--     Profile Picture -->
+        <!-- </label> -->
 
-                <PictureCrop />
-            </div>
+        <PictureCrop />
+    </div>
+
+    {#if !form?.success && !form?.error}
+        <form class="" method="POST" use:enhance>
             <div>
                 <label for="name" class="block mb-1 font-semibold">Name</label>
                 <input
@@ -59,7 +60,7 @@
                 <textarea
                     name="bio"
                     class="w-full border p-2 rounded"
-                    maxlength="500">{form?.data?.bio || accData.bio}</textarea
+                    maxlength="500">{accData.bio}</textarea
                 >
             </div>
 

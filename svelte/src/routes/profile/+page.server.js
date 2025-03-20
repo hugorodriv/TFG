@@ -38,6 +38,7 @@ export const actions = {
         const formData = await request.formData();
         const name = String(formData.get('name')).slice(0, 20);
         const bio = String(formData.get('bio')).slice(0, 500);
+
         if (name === '') {
             return { error: true }
         }
