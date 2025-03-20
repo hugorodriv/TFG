@@ -20,6 +20,8 @@ export const load = async (event) => {
     }
 
     const accData = await fetchAccData(session?.user?.id)
+
+    accData.image = "placeholderImageData"
     return {
         accData,
         referer
