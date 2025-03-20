@@ -49,11 +49,11 @@
             {#if finalProfilePicture}
                 <img
                     alt="new profile"
-                    class="my-2 border-2 p-2"
+                    class="my-2 border-2"
                     src={finalProfilePicture}
                 />
 
-                <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                <button class="bg-green-700 text-white px-4 py-2 rounded">
                     Upload new profile picture
                 </button>
             {:else}
@@ -62,7 +62,7 @@
         </div>
     {:else}
         <!-- TODO:  Display profile picture of user if they already have one-->
-        <img alt="current profile" src="none" />
+        <img alt="current profile" src="" />
         <button
             class="bg-blue-600 text-white px-4 py-2 rounded"
             on:click={() => (changingPfp = true)}

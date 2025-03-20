@@ -2,15 +2,26 @@
     let profilePic, fileinput;
     let cropActive = false;
     let cropPos = { x: 0, y: 0 };
+    let cropSize = 0;
+
     let imageSize = { width: 0, height: 0 };
+
     let dragging = false;
     let dragOffset = { x: 0, y: 0 };
-    let cropSize = 0;
+
+    let resizing = false;
+    let resizeData = {
+        direction: { right: false, left: false, top: false, bottom: false },
+        startX: 0,
+        startY: 0,
+        startWidth: 0,
+        startHeight: 0,
+        startLeft: 0,
+        startTop: 0,
+    };
 
     let croppedImage = null;
     let finalImage = null;
-
-    let uploaded = false;
 
     export let finalProfilePicture = null;
 
@@ -35,74 +46,189 @@
                         height: img.clientHeight,
                     };
 
-                    // Set initial cropper size to the smaller dimension (square)
                     cropSize = Math.min(imageSize.width, imageSize.height);
 
                     cropPos = { x: 0, y: 0 };
                     cropActive = true;
                 }
 
-                //delay necessary for the DOM to update
+                //delay necessary for the loading of the image
                 cropFunction();
-            }, 100);
+            }, 200);
         };
     };
 
-    // Start dragging
     function startDrag(e) {
         if (!cropActive) return;
 
-        dragging = true;
-        const cropperRect = document
-            .querySelector(".cropper-overlay")
-            .getBoundingClientRect();
+        const cropperElement = document.querySelector(".cropper-overlay");
+        const cropperRect = cropperElement.getBoundingClientRect();
 
-        // Calculate offset within the cropper
-        dragOffset = {
-            x: e.clientX - cropperRect.left,
-            y: e.clientY - cropperRect.top,
+        const borderSensitivity = 10;
+
+        const isOnRightEdge =
+            Math.abs(e.clientX - cropperRect.right) <= borderSensitivity;
+        const isOnLeftEdge =
+            Math.abs(e.clientX - cropperRect.left) <= borderSensitivity;
+        const isOnTopEdge =
+            Math.abs(e.clientY - cropperRect.top) <= borderSensitivity;
+        const isOnBottomEdge =
+            Math.abs(e.clientY - cropperRect.bottom) <= borderSensitivity;
+
+        const resizeDirection = {
+            right: isOnRightEdge,
+            left: isOnLeftEdge,
+            top: isOnTopEdge,
+            bottom: isOnBottomEdge,
         };
 
-        // Prevent default behavior to avoid text selection
+        if (isOnRightEdge || isOnLeftEdge || isOnTopEdge || isOnBottomEdge) {
+            dragging = false;
+            resizing = true;
+            resizeData = {
+                direction: resizeDirection,
+                startX: e.clientX,
+                startY: e.clientY,
+                startWidth: cropSize,
+                startHeight: cropSize,
+                startLeft: cropPos.x,
+                startTop: cropPos.y,
+            };
+        } else {
+            // not on the edge
+            dragging = true;
+            resizing = false;
+            dragOffset = {
+                x: e.clientX - cropperRect.left,
+                y: e.clientY - cropperRect.top,
+            };
+        }
+
         e.preventDefault();
         cropFunction();
     }
 
-    // Handle dragging
     function handleDrag(e) {
-        if (!dragging) return;
+        if (!dragging && !resizing) return;
 
         const rect = e.currentTarget.getBoundingClientRect();
 
-        // Calculate new position based on mouse and offset
-        let newX = e.clientX - rect.left - dragOffset.x;
-        let newY = e.clientY - rect.top - dragOffset.y;
+        if (resizing) {
+            const deltaX = e.clientX - resizeData.startX;
+            const deltaY = e.clientY - resizeData.startY;
 
-        // Constrain to image boundaries
-        newX = Math.max(0, Math.min(newX, imageSize.width - cropSize));
-        newY = Math.max(0, Math.min(newY, imageSize.height - cropSize));
+            let newSize = resizeData.startWidth;
+            let newX = resizeData.startLeft;
+            let newY = resizeData.startTop;
 
-        cropPos = { x: newX, y: newY };
+            if (resizeData.direction.right) {
+                newSize = Math.min(
+                    resizeData.startWidth + deltaX,
+                    imageSize.width - resizeData.startLeft,
+                    imageSize.height - resizeData.startTop,
+                );
+            } else if (resizeData.direction.left) {
+                const possibleSize = resizeData.startWidth - deltaX;
+                if (possibleSize > 128) {
+                    newSize = Math.min(
+                        possibleSize,
+                        resizeData.startLeft + resizeData.startWidth,
+                        imageSize.height - resizeData.startTop,
+                    );
+                    newX =
+                        resizeData.startLeft +
+                        (resizeData.startWidth - newSize);
+                }
+            }
+
+            if (resizeData.direction.bottom) {
+                newSize = Math.min(
+                    newSize,
+                    resizeData.startHeight + deltaY,
+                    imageSize.height - resizeData.startTop,
+                );
+            } else if (resizeData.direction.top) {
+                const possibleSize = resizeData.startHeight - deltaY;
+                if (possibleSize > 128) {
+                    newSize = Math.min(
+                        newSize,
+                        possibleSize,
+                        resizeData.startTop + resizeData.startHeight,
+                    );
+                    newY =
+                        resizeData.startTop +
+                        (resizeData.startHeight - newSize);
+                }
+            }
+
+            const smallestSize = Math.max(128, newSize);
+
+            cropSize = smallestSize;
+            cropPos = { x: newX, y: newY };
+        } else if (dragging) {
+            let newX = e.clientX - rect.left - dragOffset.x;
+            let newY = e.clientY - rect.top - dragOffset.y;
+
+            newX = Math.max(0, Math.min(newX, imageSize.width - cropSize));
+            newY = Math.max(0, Math.min(newY, imageSize.height - cropSize));
+
+            cropPos = { x: newX, y: newY };
+        }
+
         cropFunction();
     }
 
-    // End dragging
     function endDrag() {
         dragging = false;
+        resizing = false;
     }
 
-    // Crop function
+    function updateCropperCursor(e) {
+        if (!cropActive) return;
+
+        const cropperElement = document.querySelector(".cropper-overlay");
+        if (!cropperElement) return;
+
+        const cropperRect = cropperElement.getBoundingClientRect();
+        const borderSensitivity = 10;
+
+        const isOnRightEdge =
+            Math.abs(e.clientX - cropperRect.right) <= borderSensitivity;
+        const isOnLeftEdge =
+            Math.abs(e.clientX - cropperRect.left) <= borderSensitivity;
+        const isOnTopEdge =
+            Math.abs(e.clientY - cropperRect.top) <= borderSensitivity;
+        const isOnBottomEdge =
+            Math.abs(e.clientY - cropperRect.bottom) <= borderSensitivity;
+
+        if (
+            (isOnTopEdge && isOnLeftEdge) ||
+            (isOnBottomEdge && isOnRightEdge)
+        ) {
+            cropperElement.style.cursor = "nwse-resize";
+        } else if (
+            (isOnTopEdge && isOnRightEdge) ||
+            (isOnBottomEdge && isOnLeftEdge)
+        ) {
+            cropperElement.style.cursor = "nesw-resize";
+        } else if (isOnTopEdge || isOnBottomEdge) {
+            cropperElement.style.cursor = "ns-resize";
+        } else if (isOnLeftEdge || isOnRightEdge) {
+            cropperElement.style.cursor = "ew-resize";
+        } else {
+            cropperElement.style.cursor = "move";
+        }
+    }
+
     function cropFunction() {
         if (!profilePic || !cropActive) return;
 
         const canvas = document.createElement("canvas");
         const img = document.getElementById("original-image");
 
-        // Set canvas size to cropper size
         canvas.width = cropSize;
         canvas.height = cropSize;
 
-        // Calculate scale factor between displayed image and actual image
         const scaleX = img.naturalWidth / img.clientWidth;
         const scaleY = img.naturalHeight / img.clientHeight;
 
@@ -124,14 +250,24 @@
     }
 
     function returnPictureToParent() {
-        console.log("Uploading picture");
-        finalProfilePicture = croppedImage;
+        const MAX_SIZE = 128;
+        const canvas = document.createElement("canvas");
+        canvas.width = MAX_SIZE;
+        canvas.height = MAX_SIZE;
+        let ctx = canvas.getContext("2d");
 
-        uploaded = true;
+        var img = new Image();
+        img.src = croppedImage;
+
+        // resize to 128x128
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
+            finalProfilePicture = canvas.toDataURL();
+        };
     }
 </script>
 
-<div class="bg-gray-200 max-w-[80%] m-auto rounded p-5 mt-5 text-center">
+<div class="bg-gray-200 m-auto rounded p-5 mt-5 text-center">
     <button
         class="bg-blue-600 text-white px-4 py-2 rounded"
         on:click={() => {
@@ -181,6 +317,7 @@
                         "
                         class="cropper-overlay absolute border-2 border-white cursor-move"
                         on:mousedown={startDrag}
+                        on:mousemove={updateCropperCursor}
                     >
                         <img
                             src={croppedImage}
