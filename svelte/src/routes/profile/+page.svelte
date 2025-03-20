@@ -10,6 +10,12 @@
     const email = data.email;
 
     export let form;
+
+    let changingPfp = false;
+    /**
+     * @type {null}
+     */
+    let finalProfilePicture = null;
 </script>
 
 <Navbar />
@@ -35,14 +41,37 @@
         >
     </div>
 
-    <div class="bg-red-200 my-2 p-2">
-        <!-- <label for="pfp" class="block mb-1 font-semibold"> -->
-        <!--     Profile Picture -->
-        <!-- </label> -->
+    <label for="pfp" class="block mb-1 font-semibold"> Profile Picture </label>
 
-        <PictureCrop />
-    </div>
+    <!-- Change profile picture -->
+    {#if changingPfp}
+        <div>
+            {#if finalProfilePicture}
+                <img
+                    alt="new profile"
+                    class="my-2 border-2 p-2"
+                    src={finalProfilePicture}
+                />
 
+                <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                    Upload new profile picture
+                </button>
+            {:else}
+                <PictureCrop bind:finalProfilePicture />
+            {/if}
+        </div>
+    {:else}
+        <!-- TODO:  Display profile picture of user if they already have one-->
+        <img alt="current profile" src="none" />
+        <button
+            class="bg-blue-600 text-white px-4 py-2 rounded"
+            on:click={() => (changingPfp = true)}
+        >
+            Change
+        </button>
+    {/if}
+
+    <!-- Change user details  -->
     {#if !form?.success && !form?.error}
         <form class="" method="POST" use:enhance>
             <div>
@@ -66,7 +95,7 @@
 
             <button
                 type="submit"
-                class="bg-blue-500 text-white px-4 py-2 rounded"
+                class="bg-blue-600 text-white px-4 py-2 rounded"
             >
                 Update
             </button>

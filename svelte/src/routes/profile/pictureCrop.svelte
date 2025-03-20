@@ -12,10 +12,10 @@
 
     let uploaded = false;
 
+    export let finalProfilePicture = null;
+
     // Handle selection of file
-    const onFileSelected = (
-        /** @type {Event & { currentTarget: EventTarget & HTMLInputElement; }} */ e,
-    ) => {
+    const onFileSelected = (e) => {
         let image = e.target.files[0];
         let reader = new FileReader();
         reader.readAsDataURL(image);
@@ -123,21 +123,13 @@
         croppedImage = canvas.toDataURL();
     }
 
-    function uploadPicture() {
+    function returnPictureToParent() {
         console.log("Uploading picture");
+        finalProfilePicture = croppedImage;
 
         uploaded = true;
     }
 </script>
-
-<h1 class="text-red-500 font-bold text-center text-2xl">TESTING</h1>
-
-<!-- Test page to build an image selector & cropper (for the PFP) -->
-
-<p class="mt-10 text-center text-4xl">Image Cropping Tool</p>
-<p class="mt-10 text-center text-xl">
-    Upload an image, position the crop square, and click "Crop photo"
-</p>
 
 <div class="bg-gray-200 max-w-[80%] m-auto rounded p-5 mt-5 text-center">
     <button
@@ -164,70 +156,48 @@
     {#if profilePic}
         <!-- svelte-ignore a11y_no_static_element_interactions -->
 
-        {#if !finalImage}
-            <div
-                class="mt-6 mx-auto flex-col justify-center relative"
-                on:mousemove={handleDrag}
-                on:mouseup={endDrag}
-                on:mouseleave={endDrag}
-            >
-                <div class="relative inline-block">
-                    <img
-                        id="original-image"
-                        src={profilePic}
-                        alt="Provided by user"
-                        class="w-full h-auto rounded shadow-md"
-                    />
+        <div
+            class="mt-6 mx-auto flex-col justify-center relative"
+            on:mousemove={handleDrag}
+            on:mouseup={endDrag}
+            on:mouseleave={endDrag}
+        >
+            <div class="relative inline-block">
+                <img
+                    id="original-image"
+                    src={profilePic}
+                    alt="Provided by user"
+                    class="w-full h-auto rounded shadow-md"
+                />
 
-                    {#if cropActive}
-                        <div
-                            class="absolute inset-0 bg-[rgba(0,0,0,0.4)]"
-                        ></div>
-                        <div
-                            style="
+                {#if cropActive}
+                    <div class="absolute inset-0 bg-[rgba(0,0,0,0.4)]"></div>
+                    <div
+                        style="
                             width: {cropSize}px; 
                             height: {cropSize}px; 
                             left: {cropPos.x}px; 
                             top: {cropPos.y}px;
                         "
-                            class="cropper-overlay absolute border-2 border-white cursor-move"
-                            on:mousedown={startDrag}
-                        >
-                            <img
-                                src={croppedImage}
-                                alt="selected region"
-                                class="w-full h-auto rounded shadow-md"
-                            />
-                        </div>
-                    {/if}
-                </div>
+                        class="cropper-overlay absolute border-2 border-white cursor-move"
+                        on:mousedown={startDrag}
+                    >
+                        <img
+                            src={croppedImage}
+                            alt="selected region"
+                            class="w-full h-auto rounded shadow-md"
+                        />
+                    </div>
+                {/if}
             </div>
-        {/if}
+        </div>
 
-        {#if finalImage}
-            <div class="mx-auto max-w-xs">
-                <img
-                    src={finalImage}
-                    alt="cropped"
-                    class="border-2 my-2 w-full rounded shadow-md"
-                />
-            </div>
-
-            <button
-                class="mt-6 bg-green-600 text-white px-4 py-2 rounded"
-                on:click={() => uploadPicture()}
-                disabled={!cropActive}
-            >
-                Upload
-            </button>
-        {:else}
-            <button
-                class="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
-                on:click={() => (finalImage = croppedImage)}
-                disabled={!cropActive}
-            >
-                Crop
-            </button>
-        {/if}
+        <button
+            class="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
+            on:click={() => returnPictureToParent()}
+            disabled={!cropActive}
+        >
+            Crop
+        </button>
     {/if}
 </div>
