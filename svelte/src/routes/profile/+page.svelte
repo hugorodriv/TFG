@@ -26,6 +26,7 @@
     export let form;
 
     let changingPfp = false;
+    let detailsChanged = false;
     /**
      * @type {null}
      */
@@ -50,8 +51,9 @@
         </p>
     </div>
     <div class="my-5 border w-20 flex m-auto">
-        <button class="rounded p-2 m-auto" on:click={() => signOut()}
-            >Log out</button
+        <button
+            class="cursor-pointer rounded p-2 m-auto"
+            on:click={() => signOut()}>Log out</button
         >
     </div>
 
@@ -67,18 +69,13 @@
                     src={finalProfilePicture}
                 />
 
-                <button class="bg-green-700 text-white px-4 py-2 rounded">
-                    Upload new profile picture
-                </button>
-            {:else}
                 <PictureCrop bind:finalProfilePicture />
             {/if}
         </div>
     {:else}
-        <!-- TODO:  Display profile picture of user if they already have one-->
         <img alt="current profile" src={currentProfilePicture} />
         <button
-            class="bg-blue-600 text-white px-4 py-2 rounded"
+            class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
             on:click={() => (changingPfp = true)}
         >
             Change
@@ -86,8 +83,22 @@
     {/if}
 
     <!-- Change user details  -->
-    {#if !form?.success && !form?.error && !changingPfp}
-        <form class="" method="POST" use:enhance>
+    {#if !form?.success && !form?.error}
+        <form
+            class=""
+            method="POST"
+            use:enhance
+            on:input={(e) => {
+                if (
+                    e.target.form.bio.value != accData.bio ||
+                    e.target.form.name.value != accData.name
+                ) {
+                    detailsChanged = true;
+                } else {
+                    detailsChanged = false;
+                }
+            }}
+        >
             <div>
                 <label for="name" class="block mb-1 font-semibold">Name</label>
                 <input
@@ -102,29 +113,27 @@
                 <label for="bio" class="block mb-1 font-semibold">Bio</label>
                 <textarea
                     name="bio"
-                    class="w-full border p-2 rounded"
+                    class="min-h-64 w-full border p-2 rounded"
                     maxlength="500">{accData.bio}</textarea
                 >
             </div>
 
-            <button
-                type="submit"
-                class="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-                Update
-            </button>
+            {#if detailsChanged}
+                <button
+                    type="submit"
+                    class="cursor-pointer bg-green-700 text-white px-4 py-2 rounded"
+                >
+                    Update
+                </button>
+            {:else}
+                <p class="w-fit bg-gray-500 text-white px-4 py-2 rounded">
+                    Update
+                </p>
+            {/if}
         </form>
     {/if}
     {#if form?.success}
         <h1>Successfully updated</h1>
-        <h2>Redirecting . . .</h2>
-
-        <script>
-            setTimeout(() => {
-                // "hard" redirect to make sure accData gets re-populated
-                window.location.href = "/";
-            }, 1000);
-        </script>
     {/if}
     {#if form?.error}
         <h1>Error updating details. Try again</h1>

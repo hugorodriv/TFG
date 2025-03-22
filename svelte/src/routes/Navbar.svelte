@@ -53,17 +53,16 @@
         <!-- Dropdown menu -->
         <div
             id="dropdown"
-            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100 z-50"
+            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100"
         >
             <a href="./profile" class="block px-4 py-2 hover:bg-gray-100">
                 Profile
             </a>
-            <button
-                on:click|preventDefault={() => signOut()}
-                class="w-max block px-4 py-2 hover:bg-gray-100"
-            >
-                Log Out
-            </button>
+            <div class="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <button class="" on:click|preventDefault={() => signOut()}>
+                    Log Out
+                </button>
+            </div>
         </div>
     </div>
 </nav>
