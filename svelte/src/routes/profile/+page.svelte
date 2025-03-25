@@ -69,10 +69,16 @@
                 {#if finalProfilePicture}
                     <img
                         alt="new profile"
-                        class="my-2 border-2"
+                        class="my-2"
                         src={finalProfilePicture}
                     />
-
+                    <button
+                        class="cursor-pointer bg-green-700 text-white px-4 py-2 rounded"
+                        on:click={() => console.log("Updating pfp")}
+                    >
+                        Update
+                    </button>
+                {:else}
                     <PictureCrop bind:finalProfilePicture />
                 {/if}
             </div>

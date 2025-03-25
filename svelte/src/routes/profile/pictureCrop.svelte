@@ -259,9 +259,16 @@
         var img = new Image();
         img.src = croppedImage;
 
-        // resize to 128x128
         img.onload = function () {
+            // Clip to circle
+            ctx.beginPath();
+            ctx.arc(MAX_SIZE / 2, MAX_SIZE / 2, MAX_SIZE / 2, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+
+            // Draw image
             ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
+
             finalProfilePicture = canvas.toDataURL();
         };
     }

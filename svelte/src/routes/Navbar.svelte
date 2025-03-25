@@ -44,7 +44,8 @@
             <div
                 class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white"
             >
-                {name.slice(0, 1).toUpperCase()}
+                <img alt="profile" src={accountData?.img} />
+                <!-- {name.slice(0, 1).toUpperCase()} -->
             </div>
 
             <span class="text-gray-600 px-1">{name}</span>
