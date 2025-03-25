@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
-import { isNewAccount } from "$lib/auth.js";
-import { fetchAccData, updateAccDetails } from "$lib/db.js"
+import { isNewAccount, signOut } from "$lib/auth.js";
+import { deleteAccount, fetchAccData, updateAccDetails } from "$lib/db.js"
 
 
 /**
@@ -30,8 +30,8 @@ export async function load(event) {
 
 
 export const actions = {
-
-    default: async ({ request, locals }) => {
+    // TODO: Re-populate store (for updating Navbar )
+    updateDetails: async ({ request, locals }) => {
         const session = await locals.auth();
         const userId = session?.user?.id;
 
@@ -55,6 +55,20 @@ export const actions = {
         return {
             error: true,
             data: { name: name, bio: bio }
+        }
+    },
+    deleteAccount: async ({ request, locals }) => {
+
+        const session = await locals.auth();
+        const userId = session?.user?.id;
+        console.log("Removing account", userId)
+
+        const correct = await deleteAccount(userId)
+
+        if (correct) {
+            return
+        } else {
+            return { error: true }
         }
     }
 }

@@ -112,3 +112,21 @@ export async function updateAccDetails(userId, newData) {
         return false;
     }
 }
+
+export async function deleteAccount(userId) {
+
+
+    try {
+        // TODO: Delete user posts?
+
+        const resProfiles = await pool.query('DELETE FROM profiles WHERE userId = $1', [userId]);
+        const resSessions = await pool.query('DELETE FROM sessions WHERE "userId" = $1', [userId]);
+        const resAccounts = await pool.query('DELETE FROM accounts WHERE "userId" = $1', [userId]);
+        const resUsers = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+
+        return resProfiles && resSessions && resUsers && resAccounts
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}

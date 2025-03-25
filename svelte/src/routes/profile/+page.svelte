@@ -31,6 +31,8 @@
      * @type {null}
      */
     let finalProfilePicture = null;
+
+    let confirmAccountDeletionButton = false;
 </script>
 
 <Navbar />
@@ -57,37 +59,41 @@
         >
     </div>
 
-    <label for="pfp" class="block mb-1 font-semibold"> Profile Picture </label>
-
     <!-- Change profile picture -->
-    {#if changingPfp && !form?.success && !form?.error}
-        <div>
-            {#if finalProfilePicture}
-                <img
-                    alt="new profile"
-                    class="my-2 border-2"
-                    src={finalProfilePicture}
-                />
+    {#if !confirmAccountDeletionButton}
+        <label for="pfp" class="block mb-1 font-semibold">
+            Profile Picture
+        </label>
+        {#if changingPfp && !form?.success && !form?.error}
+            <div>
+                {#if finalProfilePicture}
+                    <img
+                        alt="new profile"
+                        class="my-2 border-2"
+                        src={finalProfilePicture}
+                    />
 
-                <PictureCrop bind:finalProfilePicture />
-            {/if}
-        </div>
-    {:else}
-        <img alt="current profile" src={currentProfilePicture} />
-        <button
-            class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
-            on:click={() => (changingPfp = true)}
-        >
-            Change
-        </button>
+                    <PictureCrop bind:finalProfilePicture />
+                {/if}
+            </div>
+        {:else}
+            <img alt="current profile" src={currentProfilePicture} />
+            <button
+                class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
+                on:click={() => (changingPfp = true)}
+            >
+                Change
+            </button>
+        {/if}
     {/if}
 
     <!-- Change user details  -->
-    {#if !form?.success && !form?.error}
+    {#if !confirmAccountDeletionButton && !form?.success && !form?.error}
         <form
             class=""
             method="POST"
             use:enhance
+            action="?/updateDetails"
             on:input={(e) => {
                 if (
                     e.target.form.bio.value != accData.bio ||
@@ -110,7 +116,7 @@
             </div>
 
             <div>
-                <label for="bio" class="block mb-1 font-semibold">Bio</label>
+                <label for="bio" class="block my-1 font-semibold">Bio</label>
                 <textarea
                     name="bio"
                     class="min-h-64 w-full border p-2 rounded"
@@ -145,5 +151,29 @@
                 window.location.href = "/profile";
             }, 1000);
         </script>
+    {/if}
+
+    <p class="mt-12 font-bold">Account deletion</p>
+    {#if confirmAccountDeletionButton}
+        <form method="POST" action="?/deleteAccount">
+            <button
+                on:click={() => {
+                    confirmAccountDeletionButton = true;
+                }}
+                type="submit"
+                class="w-full h-12 cursor-pointer bg-red-800 font-bold text-white px-4 py-2 rounded"
+            >
+                Confirm delete account
+            </button>
+        </form>
+    {:else}
+        <button
+            on:click={() => {
+                confirmAccountDeletionButton = true;
+            }}
+            class="cursor-pointer bg-red-700 font-bold text-white px-4 py-2 rounded"
+        >
+            Delete account
+        </button>
     {/if}
 </div>
