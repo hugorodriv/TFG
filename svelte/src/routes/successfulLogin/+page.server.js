@@ -30,17 +30,8 @@ export const load = async (event) => {
     } else {
         // no user image. will create a blue circle with first letter of the name in white
 
-        const letter = accData.name.slice(0, 1).toUpperCase();
-        const svg = `
-        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="25" cy="25" r="25" fill="#007BFF"/>
-            <text x="25" y="25" font-size="25" fill="white" font-family="sans-serif"
-                  text-anchor="middle" dominant-baseline="central">
-                ${letter}
-            </text>
-        </svg>`;
-
-        accData.img = `data:image/svg+xml;base64,${btoa(svg)}`;
+        // will be populated client side
+        accData.img = null
     }
 
     return {

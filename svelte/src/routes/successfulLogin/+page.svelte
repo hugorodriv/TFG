@@ -5,7 +5,23 @@
     import { goto } from "$app/navigation";
 
     export let data;
-    accountStore.set(data.accData);
+    let accDataToStore = data.accData;
+
+    // if no img data, create blue bg and white letter (def pfp)
+    if (!accDataToStore.img) {
+        const letter = accDataToStore.name.slice(0, 1).toUpperCase();
+        const svg = `
+            <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="25" cy="25" r="25" fill="#007BFF"/>
+                <text x="25" y="25" font-size="25" fill="white" font-family="sans-serif"
+                    text-anchor="middle" dominant-baseline="central">
+                    ${letter}
+                </text>
+            </svg>`;
+
+        accDataToStore.img = `data:image/svg+xml;base64,${btoa(svg)}`;
+    }
+    accountStore.set(accDataToStore);
     const redirectLink = data.referer;
 
     // automatic redirect after populating. show link in case redirect doesnt work
