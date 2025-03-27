@@ -2,22 +2,21 @@
     import { signOut } from "@auth/sveltekit/client";
     import { enhance } from "$app/forms";
 
+    import { redirect } from "@sveltejs/kit";
     import { onMount } from "svelte";
-    import { accountStore } from "$lib/stores/accStore.js";
-    import { goto } from "$app/navigation";
 
     import PictureCrop from "./pictureCrop.svelte";
     import Navbar from "../Navbar.svelte";
 
-    const accountData = $accountStore;
+    let accountData;
+    /**
+     * @type {string | null}
+     */
+    let pfp;
     onMount(() => {
-        const accountData = $accountStore;
-        if (!accountData) {
-            goto("/successfulLogin");
-        }
+        accountData = JSON.parse(localStorage.getItem("accData")) || null;
+        pfp = localStorage.getItem("pfp");
     });
-
-    const currentProfilePicture = accountData?.img || "";
 
     export let data;
     const accData = data.accData;
@@ -44,12 +43,34 @@
         }
 
         const myHeaders = new Headers({ "Content-Type": "image/*" });
-        const response = await fetch(data.url, {
-            method: "PUT",
-            headers: myHeaders,
-            body: finalProfilePicture,
-        });
-        const data_upload = await response.text();
+        try {
+            const response_put = await fetch(data.url, {
+                method: "PUT",
+                headers: myHeaders,
+                body: finalProfilePicture,
+            });
+
+            if (!response_put.ok) {
+                alert("Error changing profile picture");
+            }
+
+            // update localStorage for pfp
+            // throw redirect(301, "/successfulLogin");
+
+            const reader = new FileReader();
+            reader.readAsDataURL(finalProfilePicture);
+            reader.onloadend = function () {
+                const base64data = reader.result;
+                console.log(base64data);
+
+                imageStorage = localStorage.setItem("pfp", base64data);
+                pfp = base64data;
+
+                window.dispatchEvent(new Event("pfp-updated"));
+            };
+        } catch (error) {
+            alert("Error changing profile picture");
+        }
     }
 </script>
 
@@ -102,7 +123,7 @@
                 {/if}
             </div>
         {:else}
-            <img alt="current profile" src={currentProfilePicture} />
+            <img alt="current profile" src={pfp} />
             <button
                 class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
                 on:click={() => (changingPfp = true)}

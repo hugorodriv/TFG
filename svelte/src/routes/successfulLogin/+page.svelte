@@ -7,6 +7,7 @@
     export let data;
     onMount(() => {
         let accDataToStore = data.accData;
+        let imageStorage;
 
         // if no img data, create blue bg and white letter (default pfp)
         if (!accDataToStore.img_url) {
@@ -20,7 +21,10 @@
                 </text>
             </svg>`;
 
-            accDataToStore.img = `data:image/svg+xml;base64,${btoa(svg)}`;
+            imageStorage = localStorage.setItem(
+                "pfp",
+                `data:image/svg+xml;base64,${btoa(svg)}` || null,
+            );
         } else {
             (async () => {
                 try {
@@ -28,26 +32,28 @@
                     if (!response.ok) throw new Error("Failed to fetch image");
 
                     const blob = await response.blob();
-                    // accDataToStore.img = URL.createObjectURL(
-                    //     new File([blob], "pfp.jpg", {
-                    //         type: blob.type,
-                    //     }),
-                    // );
-                    //
-                    accDataToStore.img = URL.createObjectURL(blob);
 
-                    // accountStore.set(accDataToStore);
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = function () {
+                        const base64data = reader.result;
+
+                        imageStorage = localStorage.setItem("pfp", base64data);
+                    };
                 } catch (error) {
                     console.error("Error fetching image:", error);
                 }
             })();
         }
-        accountStore.set(accDataToStore);
+        console.log("refreshed cookies");
+        localStorage.setItem("accData", JSON.stringify(accDataToStore));
+
         const redirectLink = data.referer;
 
         // automatic redirect after populating. show link in case redirect doesnt work
         if (typeof window !== "undefined") {
             goto(redirectLink);
+
             let redirected = false;
 
             setTimeout(() => {

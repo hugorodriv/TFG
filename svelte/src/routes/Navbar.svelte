@@ -1,19 +1,15 @@
 <script>
     import { signOut } from "@auth/sveltekit/client";
-    import { onMount } from "svelte";
-    import { accountStore } from "$lib/stores/accStore.js";
-    import { goto } from "$app/navigation";
+    import { onMount, onDestroy } from "svelte";
+    import { browser } from "$app/environment";
 
-    const accountData = $accountStore;
-    onMount(() => {
-        const accountData = $accountStore;
-        if (!accountData) {
-            goto("/successfulLogin");
-        }
-    });
-    const name = accountData?.name || "";
+    let accountData;
+    let pfp;
 
     onMount(() => {
+        accountData = JSON.parse(localStorage.getItem("accData")) || null;
+        pfp = localStorage.getItem("pfp");
+
         const dropdownBtn = document?.getElementById("dropdownBtn");
         const handleClickOutside = (/** @type {{ target: Event ; }} */ e) => {
             if (!dropdownBtn.contains(e.target)) {
@@ -44,10 +40,10 @@
             <div
                 class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white"
             >
-                <img alt="profile" src={accountData?.img} />
+                <img alt="profile" src={pfp} />
             </div>
 
-            <span class="text-gray-600 px-1">{name}</span>
+            <span class="text-gray-600 px-1">{accountData?.name}</span>
         </button>
 
         <!-- Dropdown menu -->
