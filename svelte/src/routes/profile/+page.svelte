@@ -33,6 +33,24 @@
     let finalProfilePicture = null;
 
     let confirmAccountDeletionButton = false;
+
+    async function uploadPfp() {
+        const response_changePfpUrl = await fetch(`/api/changePfp`);
+
+        const data = await response_changePfpUrl.json();
+        // console.log(data);
+        if (!data.success) {
+            // server side error
+        }
+
+        const myHeaders = new Headers({ "Content-Type": "image/*" });
+        const response = await fetch(data.url, {
+            method: "PUT",
+            headers: myHeaders,
+            body: finalProfilePicture,
+        });
+        const data_upload = await response.text();
+    }
 </script>
 
 <Navbar />
@@ -70,11 +88,12 @@
                     <img
                         alt="new profile"
                         class="my-2"
-                        src={finalProfilePicture}
+                        src={URL.createObjectURL(finalProfilePicture)}
                     />
+
                     <button
                         class="cursor-pointer bg-green-700 text-white px-4 py-2 rounded"
-                        on:click={() => console.log("Updating pfp")}
+                        on:click={() => uploadPfp()}
                     >
                         Update
                     </button>

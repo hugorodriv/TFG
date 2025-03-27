@@ -269,7 +269,14 @@
             // Draw image
             ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
 
-            finalProfilePicture = canvas.toDataURL();
+            // Convert to Blob
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    finalProfilePicture = new File([blob], "pfp.jpg", {
+                        type: "image/jpg",
+                    });
+                }
+            }, "image/png");
         };
     }
 </script>

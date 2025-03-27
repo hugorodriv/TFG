@@ -1,6 +1,6 @@
 import { checkAvailableUsername, checkUsernameCorrect, MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "$lib/db.js"
 import { json } from '@sveltejs/kit';
-import { fail, error } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 
 export async function GET({ url, locals }) {
 

@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount, signOut } from "$lib/auth.js";
 import { deleteAccount, fetchAccData, updateAccDetails } from "$lib/db.js"
+import { uploadPresignedPfp } from '$lib/s3.js';
 
 
 /**
@@ -57,6 +58,35 @@ export const actions = {
             data: { name: name, bio: bio }
         }
     },
+    // changePfp: async ({ request, locals }) => {
+    //     const session = await locals.auth();
+    //     const userId = session?.user?.id;
+    //     console.log("User ", userId, " requested a link to change the pfp")
+    //
+    //     // TODO: Fetch and remove previous PFP
+    //
+    //
+    //     try {
+    //         // const contentType = formData.get('contentType')?.toString() || 'image/jpeg';
+    //         const contentType = "image/jpeg"
+    //
+    //         // Generate pre-signed URL
+    //         const { uploadUrl, filename } = await uploadPresignedPfp(
+    //             userId,
+    //             contentType
+    //         );
+    //
+    //         console.log(uploadUrl, filename)
+    //         return {
+    //             successPfp: true,
+    //             uploadUrl,
+    //             filename
+    //         };
+    //     } catch (err) {
+    //         console.error('Profile picture upload error:', err);
+    //         return ({ errorPfp: true });
+    //     }
+    // },
     deleteAccount: async ({ request, locals }) => {
 
         const session = await locals.auth();

@@ -23,17 +23,6 @@ export const load = async (event) => {
 
     const accData = await fetchAccData(session?.user?.id)
 
-    if (accData.img_url) {
-        // TODO: populate from S3
-        // fetch() accData.img_url ...
-        accData.img = "placeholderImageData"
-    } else {
-        // no user image. will create a blue circle with first letter of the name in white
-
-        // will be populated client side
-        accData.img = null
-    }
-
     return {
         accData,
         referer
