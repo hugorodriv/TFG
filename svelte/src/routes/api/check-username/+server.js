@@ -1,7 +1,19 @@
 import { checkAvailableUsername, checkUsernameCorrect, MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "$lib/db.js"
 import { json } from '@sveltejs/kit';
+import { fail, error } from "@sveltejs/kit";
 
-export async function GET({ url }) {
+export async function GET({ url, locals }) {
+
+    // authorize API call
+    if (!locals) {
+        error(401)
+    }
+    const session = await locals.auth();
+
+    if (!session?.user) {
+        error(401)
+    }
+
     const username = url.searchParams.get('username');
     if (!username) {
         return json({ status: "error" })
