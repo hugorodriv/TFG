@@ -16,7 +16,6 @@
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData")) || null;
         pfp = localStorage.getItem("pfp");
-        console.log(accountData);
     });
 
     export let data;

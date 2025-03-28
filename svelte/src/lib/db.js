@@ -82,6 +82,9 @@ export async function createUser(userId, accData) {
 }
 
 
+/**
+ * @param {any} userId
+ */
 export async function fetchAccData(userId) {
 
     try {
@@ -96,6 +99,10 @@ export async function fetchAccData(userId) {
 }
 
 
+/**
+ * @param {any} userId
+ * @param {{ name: any; bio: any; }} newData
+ */
 export async function updateAccDetails(userId, newData) {
 
     const bio = newData.bio
@@ -114,7 +121,26 @@ export async function updateAccDetails(userId, newData) {
         return false;
     }
 }
+/**
+ * @param {Number | String | undefined} userId
+ */
+export async function getUserUUID(userId) {
 
+    try {
+        // get uuid from given userId
+        const res = await pool.query('SELECT id FROM profiles WHERE userId = $1 LIMIT 1', [userId])
+        const uuid = res.rows[0]["id"]
+
+        return uuid
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+/**
+ * @param {any} userId
+ */
 export async function deleteAccount(userId) {
 
 
