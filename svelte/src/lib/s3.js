@@ -13,24 +13,23 @@ const s3Client = new S3Client({
 });
 
 /**
- * @param {string | number} userId
+ * @param {string} uuid
  */
-export function getUserPfpLink(userId) {
-    return `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/pfp/${userId}.jpeg`;
+export function getUserPfpLink(uuid) {
+    return `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/pfp/${uuid}.jpeg`;
 }
 
 /**
- * @param {Number | String} userId
+ * @param {String} uuid
  */
-export async function uploadPresignedPfp(userId, contentType = 'image/jpeg') {
+export async function uploadPresignedPfp(uuid, contentType = 'image/jpeg') {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(contentType)) {
         throw new Error('Invalid file type');
     }
 
     // unique filename
-    // const filename = `pfp/${userId}-${Date.now()}.${contentType.split('/')[1]}`;
-    const filename = `pfp/${userId}.jpeg`;
+    const filename = `pfp/${uuid}.jpeg`;
 
     // Create S3 upload parameters
     const uploadParams = {
@@ -48,7 +47,7 @@ export async function uploadPresignedPfp(userId, contentType = 'image/jpeg') {
         );
 
         // bucket, in this case, is public, as these are for users pfps, which everybody can see
-        const publicUrl = getUserPfpLink(userId)
+        const publicUrl = getUserPfpLink(uuid)
 
         return {
             uploadUrl,

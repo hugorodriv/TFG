@@ -16,6 +16,7 @@
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData")) || null;
         pfp = localStorage.getItem("pfp");
+        console.log(accountData);
     });
 
     export let data;
@@ -65,8 +66,6 @@
 
                 imageStorage = localStorage.setItem("pfp", base64data);
                 pfp = base64data;
-
-                window.dispatchEvent(new Event("pfp-updated"));
             };
         } catch (error) {
             alert("Error changing profile picture");

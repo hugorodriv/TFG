@@ -85,8 +85,10 @@ export async function createUser(userId, accData) {
 export async function fetchAccData(userId) {
 
     try {
-        const res = await pool.query('SELECT * from profiles WHERE userId = $1 LIMIT 1', [userId]);
-        return res.rows[0];
+        const res = await pool.query('SELECT * FROM profiles WHERE userId = $1 LIMIT 1', [userId]);
+        // TODO: Dont include userId (but the uuid instead)
+        const { userId: omittedUserId, ...profile } = res.rows[0];
+        return profile;
     } catch (error) {
         console.log(error)
         return false;
