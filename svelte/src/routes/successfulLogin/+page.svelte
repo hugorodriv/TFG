@@ -1,11 +1,11 @@
 <script>
-    import { accountStore } from "$lib/stores/accStore.js";
     import { onMount } from "svelte";
 
     import { goto } from "$app/navigation";
 
     export let data;
     onMount(() => {
+        localStorage.clear();
         let accDataToStore = data.accData;
         let imageStorage;
 
@@ -48,11 +48,9 @@
         console.log("refreshed cookies");
         localStorage.setItem("accData", JSON.stringify(accDataToStore));
 
-        const redirectLink = data.referer;
-
         // automatic redirect after populating. show link in case redirect doesnt work
         if (typeof window !== "undefined") {
-            goto(redirectLink);
+            goto("/");
 
             let redirected = false;
 
