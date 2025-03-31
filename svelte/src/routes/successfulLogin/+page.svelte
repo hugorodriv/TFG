@@ -28,7 +28,11 @@
         } else {
             (async () => {
                 try {
-                    const response = await fetch(accDataToStore.img_url);
+                    // bit of a hack, yet industry standard. add unnecessary parameters to URL, so that the browser doesnt try
+                    // to cache picture
+                    const response = await fetch(
+                        `${accDataToStore.img_url}?cacheInvalidation=${Date.now()}`,
+                    );
                     if (!response.ok) throw new Error("Failed to fetch image");
 
                     const blob = await response.blob();
