@@ -2,7 +2,6 @@
     import { signOut } from "@auth/sveltekit/client";
     import { enhance } from "$app/forms";
 
-    import { redirect } from "@sveltejs/kit";
     import { onMount } from "svelte";
 
     import PictureCrop from "./pictureCrop.svelte";
@@ -13,6 +12,7 @@
      * @type {string | null}
      */
     let pfp;
+    let nameTooShort = false;
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData")) || null;
         pfp = localStorage.getItem("pfp");
@@ -139,6 +139,12 @@
             use:enhance
             action="?/updateDetails"
             on:input={(e) => {
+                if (e.target.form.name.value.length < 1) {
+                    nameTooShort = true;
+                } else {
+                    nameTooShort = false;
+                }
+
                 if (
                     e.target.form.bio.value != accData.bio ||
                     e.target.form.name.value != accData.name
@@ -168,7 +174,7 @@
                 >
             </div>
 
-            {#if detailsChanged}
+            {#if detailsChanged && !nameTooShort}
                 <button
                     type="submit"
                     class="cursor-pointer bg-green-700 text-white px-4 py-2 rounded"

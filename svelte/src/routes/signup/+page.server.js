@@ -48,8 +48,11 @@ export const actions = {
 
         // Name
         const name = String(formData.get('name') || '').slice(0, 50);
+        if (name.length < 1) {
+            return { error: true }
+        }
 
-        // write to database new acc
+        // write new acc to database
         const correct = await createUser(userId, { username: username, name: name })
         if (correct) {
             throw redirect(303, '/profile/');

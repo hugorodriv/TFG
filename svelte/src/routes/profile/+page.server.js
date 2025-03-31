@@ -39,7 +39,7 @@ export const actions = {
         const name = String(formData.get('name')).slice(0, 20);
         const bio = String(formData.get('bio')).slice(0, 500);
 
-        if (name === '') {
+        if (name.length < 1) {
             return { error: true }
         }
 

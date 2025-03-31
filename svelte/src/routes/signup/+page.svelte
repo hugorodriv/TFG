@@ -16,14 +16,26 @@
     let statusMessage = "";
     let usernameError = false;
 
+    let usernameTooShort = true;
+    let nameTooShort = true;
+
+    function checkName(/** @type {String} */ name) {
+        if (name.length < 1) {
+            nameTooShort = true;
+        } else {
+            nameTooShort = false;
+        }
+    }
     const checkUsername = async (/** @type {String} */ username) => {
         clearTimeout(delayTimer);
 
         if (username.length < 4) {
             statusMessage = "";
+            usernameTooShort = true;
             return;
         }
-        // Set a new timer
+        usernameTooShort = false;
+        // implement delay to not make too many requests
         delayTimer = setTimeout(async () => {
             try {
                 const response = await fetch(
@@ -109,10 +121,11 @@
             placeholder="Name"
             class="w-full border p-2 rounded"
             maxlength="50"
+            on:keyup={(e) => checkName(e.target?.value)}
         />
     </div>
 
-    {#if !usernameError}
+    {#if !usernameError && !usernameTooShort && !nameTooShort}
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
             Create Account
         </button>
