@@ -209,6 +209,7 @@
             <button
                 on:click={() => {
                     confirmAccountDeletionButton = true;
+                    localStorage.clear();
                 }}
                 type="submit"
                 class="w-full h-12 cursor-pointer bg-red-800 font-bold text-white px-4 py-2 rounded"

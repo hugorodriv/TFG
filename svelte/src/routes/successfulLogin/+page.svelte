@@ -23,7 +23,7 @@
 
             imageStorage = localStorage.setItem(
                 "pfp",
-                `data:image/svg+xml;base64,${btoa(svg)}` || null,
+                `data:image/svg+xml;base64,${btoa(svg)}`,
             );
         } else {
             (async () => {
