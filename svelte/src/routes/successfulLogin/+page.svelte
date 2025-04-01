@@ -10,6 +10,7 @@
         let imageStorage;
 
         // if no img data, create blue bg and white letter (default pfp)
+        localStorage.setItem("accData", JSON.stringify(accDataToStore));
         if (!accDataToStore.img_url) {
             const letter = accDataToStore.name.slice(0, 1).toUpperCase();
             const svg = `
@@ -25,6 +26,9 @@
                 "pfp",
                 `data:image/svg+xml;base64,${btoa(svg)}`,
             );
+            if (typeof window !== "undefined") {
+                goto("/");
+            }
         } else {
             (async () => {
                 try {
@@ -48,23 +52,18 @@
                     console.error("Error fetching image:", error);
                 }
             })().then(() => {
-                console.log("refreshed cookies");
-                localStorage.setItem("accData", JSON.stringify(accDataToStore));
-
                 // automatic redirect after populating. show link in case redirect doesnt work
                 if (typeof window !== "undefined") {
                     goto("/");
-
-                    let redirected = false;
-
-                    setTimeout(() => {
-                        if (!redirected) {
-                            const link = document.getElementById("link");
-                            if (link) link.style.display = "block";
-                        }
-                    }, 500);
                 }
             });
+        }
+
+        if (typeof window !== "undefined") {
+            setTimeout(() => {
+                const link = document.getElementById("link");
+                if (link) link.style.display = "block";
+            }, 500);
         }
     });
 </script>
