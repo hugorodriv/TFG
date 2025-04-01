@@ -1,6 +1,7 @@
 import pkg from "pg"
 const { Pool } = pkg
 import { DATABASE_HOST, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD } from "$env/static/private";
+import { removePfpS3 } from "./s3";
 
 
 //  (?![-_.])           // Prevents the username from starting with -, _, or .
@@ -145,12 +146,18 @@ export async function deleteAccount(userId) {
 
 
     try {
-        // TODO: Delete user posts?
+        // pfp S3 removal
+        const uuid = await getUserUUID(userId)
+        removePfpS3(uuid)
 
+        // database cleaning
         const resProfiles = await pool.query('DELETE FROM profiles WHERE userId = $1', [userId]);
         const resSessions = await pool.query('DELETE FROM sessions WHERE "userId" = $1', [userId]);
         const resAccounts = await pool.query('DELETE FROM accounts WHERE "userId" = $1', [userId]);
         const resUsers = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+
+        // TODO: Delete user posts?
+
 
         return resProfiles && resSessions && resUsers && resAccounts
     } catch (error) {
