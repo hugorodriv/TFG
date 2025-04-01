@@ -47,23 +47,24 @@
                 } catch (error) {
                     console.error("Error fetching image:", error);
                 }
-            })();
-        }
-        console.log("refreshed cookies");
-        localStorage.setItem("accData", JSON.stringify(accDataToStore));
+            })().then(() => {
+                console.log("refreshed cookies");
+                localStorage.setItem("accData", JSON.stringify(accDataToStore));
 
-        // automatic redirect after populating. show link in case redirect doesnt work
-        if (typeof window !== "undefined") {
-            goto("/");
+                // automatic redirect after populating. show link in case redirect doesnt work
+                if (typeof window !== "undefined") {
+                    goto("/");
 
-            let redirected = false;
+                    let redirected = false;
 
-            setTimeout(() => {
-                if (!redirected) {
-                    const link = document.getElementById("link");
-                    if (link) link.style.display = "block";
+                    setTimeout(() => {
+                        if (!redirected) {
+                            const link = document.getElementById("link");
+                            if (link) link.style.display = "block";
+                        }
+                    }, 500);
                 }
-            }, 500);
+            });
         }
     });
 </script>
