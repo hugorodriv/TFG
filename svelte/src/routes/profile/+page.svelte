@@ -118,7 +118,7 @@
                 {#if finalProfilePicture}
                     <img
                         alt="new profile"
-                        class="my-2"
+                        class="drop-shadow-lg py-5"
                         src={URL.createObjectURL(finalProfilePicture)}
                     />
 
@@ -133,7 +133,7 @@
                 {/if}
             </div>
         {:else}
-            <img alt="current profile" src={pfp} />
+            <img class="drop-shadow-lg py-5" alt="current profile" src={pfp} />
 
             {#if confirmRemovePfp}
                 <button
@@ -150,7 +150,7 @@
                     Change
                 </button>
                 <button
-                    class="cursor-pointer underline align-bottom font-bold rounded"
+                    class="ml-2 cursor-pointer underline align-bottom font-bold"
                     on:click={() => (confirmRemovePfp = true)}
                 >
                     Remove
