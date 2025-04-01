@@ -32,6 +32,7 @@
     let finalProfilePicture = null;
 
     let confirmAccountDeletionButton = false;
+    let confirmRemovePfp = false;
 
     async function uploadPfp() {
         const response_changePfpUrl = await fetch(`/api/changePfp`);
@@ -63,12 +64,22 @@
                 const base64data = reader.result;
                 console.log(base64data);
 
-                imageStorage = localStorage.setItem("pfp", base64data);
+                localStorage.setItem("pfp", base64data);
                 pfp = base64data;
             };
         } catch (error) {
             alert("Error changing profile picture");
         }
+    }
+
+    async function removePfp() {
+        const response_changePfpUrl = await fetch(`/api/removePfp`);
+
+        const data = await response_changePfpUrl.json();
+        console.log(data);
+        // if (!data.success) {
+        //     // server side error
+        // }
     }
 </script>
 
@@ -122,12 +133,28 @@
             </div>
         {:else}
             <img alt="current profile" src={pfp} />
-            <button
-                class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
-                on:click={() => (changingPfp = true)}
-            >
-                Change
-            </button>
+
+            {#if confirmRemovePfp}
+                <button
+                    class="cursor-pointer bg-red-700 font-bold text-white px-4 py-2 rounded"
+                    on:click={removePfp}
+                >
+                    Confirm removal profile picture
+                </button>
+            {:else}
+                <button
+                    class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
+                    on:click={() => (changingPfp = true)}
+                >
+                    Change
+                </button>
+                <button
+                    class="cursor-pointer underline align-bottom font-bold rounded"
+                    on:click={() => (confirmRemovePfp = true)}
+                >
+                    Remove
+                </button>
+            {/if}
         {/if}
     {/if}
 
@@ -188,6 +215,7 @@
             {/if}
         </form>
     {/if}
+
     {#if form?.success}
         <h1>Successfully updated</h1>
     {/if}

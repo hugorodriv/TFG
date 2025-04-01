@@ -1,7 +1,6 @@
 import pkg from "pg"
 const { Pool } = pkg
 import { DATABASE_HOST, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD } from "$env/static/private";
-import { deletePfp } from "./s3";
 
 
 //  (?![-_.])           // Prevents the username from starting with -, _, or .
@@ -159,3 +158,18 @@ export async function deleteAccount(userId) {
         return false;
     }
 }
+
+/**
+ * @param {string} uuid
+ */
+export async function removePfpDB(uuid) {
+
+    try {
+        await pool.query('UPDATE profiles SET img_url = NULL where id = $1', [uuid]);
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+

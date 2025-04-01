@@ -31,7 +31,7 @@ export async function uploadPresignedPfp(uuid, contentType = 'image/jpeg') {
     // unique filename
     const filename = `pfp/${uuid}.jpeg`;
 
-    // Create S3 upload parameters
+
     const uploadParams = {
         Bucket: S3_BUCKET_NAME,
         Key: filename,
@@ -57,5 +57,26 @@ export async function uploadPresignedPfp(uuid, contentType = 'image/jpeg') {
     } catch (error) {
         console.error('Error generating pre-signed URL:', error);
         throw new Error('Failed to generate upload URL');
+    }
+}
+
+
+/**
+ * @param {string} uuid
+ */
+export async function removePfpS3(uuid) {
+
+    const filename = `pfp/${uuid}.jpeg`
+    const delParams = {
+        Bucket: S3_BUCKET_NAME,
+        Key: filename,
+    };
+
+
+    try {
+        await s3Client.send(new DeleteObjectCommand(delParams));
+        return { success: true }
+    } catch (e) {
+        return { error: e }
     }
 }
