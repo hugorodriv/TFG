@@ -1,6 +1,6 @@
 CREATE TABLE profiles (
   userId SERIAL PRIMARY KEY NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  id UUID DEFAULT gen_random_uuid(),
+  uuid UUID DEFAULT gen_random_uuid(),
   username VARCHAR(20) UNIQUE NOT NULL,
   name VARCHAR(20) NOT NULL,
   bio VARCHAR(500),

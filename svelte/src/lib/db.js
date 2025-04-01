@@ -129,8 +129,8 @@ export async function getUserUUID(userId) {
 
     try {
         // get uuid from given userId
-        const res = await pool.query('SELECT id FROM profiles WHERE userId = $1 LIMIT 1', [userId])
-        const uuid = res.rows[0]["id"]
+        const res = await pool.query('SELECT uuid FROM profiles WHERE userId = $1 LIMIT 1', [userId])
+        const uuid = res.rows[0]["uuid"]
 
         return uuid
     } catch (error) {
@@ -154,7 +154,7 @@ export async function deleteAccount(userId) {
         const resProfiles = await pool.query('DELETE FROM profiles WHERE userId = $1', [userId]);
         const resSessions = await pool.query('DELETE FROM sessions WHERE "userId" = $1', [userId]);
         const resAccounts = await pool.query('DELETE FROM accounts WHERE "userId" = $1', [userId]);
-        const resUsers = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+        const resUsers = await pool.query('DELETE FROM users WHERE uuid = $1', [userId]);
 
         // TODO: Delete user posts?
 
@@ -172,7 +172,7 @@ export async function deleteAccount(userId) {
 export async function removePfpDB(uuid) {
 
     try {
-        await pool.query('UPDATE profiles SET img_url = NULL where id = $1', [uuid]);
+        await pool.query('UPDATE profiles SET img_url = NULL where uuid = $1', [uuid]);
         return true;
     } catch (error) {
         console.log(error)

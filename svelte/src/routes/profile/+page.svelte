@@ -53,6 +53,7 @@
 
             if (!response_put.ok) {
                 alert("Error changing profile picture");
+                console.log(response_put);
             }
 
             // update localStorage for pfp
