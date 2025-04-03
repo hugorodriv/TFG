@@ -69,7 +69,7 @@
         <!-- Dropdown menu -->
         <div
             id="dropdown"
-            class="hidden absolute right-0 bg-white mt-4 w-48 rounded-md shadow-lg py-1 border border-gray-200"
+            class="z-50 hidden absolute right-0 bg-white mt-4 w-48 rounded-md shadow-lg py-1 border border-gray-200"
         >
             <div class="text-center px-4 py-3 border-b-1 border-gray-200">
                 <div>{accountData?.name}</div>
