@@ -1,6 +1,5 @@
 <script>
     import { enhance } from "$app/forms";
-
     import { onMount } from "svelte";
 
     import PictureCrop from "./pictureCrop.svelte";
@@ -33,6 +32,7 @@
 
     let confirmAccountDeletionButton = false;
     let confirmRemovePfp = false;
+    let succesfullPfpChange = false;
 
     async function uploadPfp() {
         const response_changePfpUrl = await fetch(`/api/changePfp`);
@@ -67,6 +67,7 @@
                 localStorage.setItem("pfp", base64data);
                 pfp = base64data;
             };
+            succesfullPfpChange = true;
         } catch (error) {
             alert("Error changing profile picture");
         }
@@ -75,7 +76,28 @@
     async function removePfp() {
         const response_changePfpUrl = await fetch(`/api/removePfp`);
 
-        const data = await response_changePfpUrl.json();
+        try {
+            const data = await response_changePfpUrl.json();
+            succesfullPfpChange = true;
+
+            // create default PFP
+            const letter = accountData.name.slice(0, 1).toUpperCase();
+            const svg = `
+            <svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="64" cy="64" r="64" fill="#007BFF"/>
+                <text x="64" y="64" font-size="64" fill="white" font-family="sans-serif"
+                    text-anchor="middle" dominant-baseline="central">
+                    ${letter}
+                </text>
+            </svg>`;
+
+            localStorage.setItem(
+                "pfp",
+                `data:image/svg+xml;base64,${btoa(svg)}`,
+            );
+        } catch (error) {
+            alert("Error removing pfp");
+        }
         console.log(data);
     }
 </script>
@@ -212,9 +234,6 @@
         </ul>
     </div>
 
-    {#if form?.success}
-        <h1>Successfully updated</h1>
-    {/if}
     {#if form?.error}
         <h1>Error updating details. Try again</h1>
         <h2>Redirecting . . .</h2>
@@ -232,57 +251,85 @@
         <label for="pfp" class="block mb-1 font-semibold">
             Profile Picture
         </label>
-        {#if changingPfp && !form?.success && !form?.error}
+
+        {#if succesfullPfpChange}
+            <h1>Successfully updated</h1>
+            <h2>Refresh page to see changes</h2>
+        {/if}
+        {#if changingPfp && !succesfullPfpChange}
             <!-- New profile picture selected and cropped -->
             <div>
                 {#if finalProfilePicture}
-                    <img
-                        alt="new profile"
-                        class="drop-shadow-lg py-5"
-                        src={URL.createObjectURL(finalProfilePicture)}
-                    />
+                    <div class="text-center m-auto justify-center flex">
+                        <img
+                            class="drop-shadow-lg py-5"
+                            alt="current profile"
+                            src={URL.createObjectURL(finalProfilePicture)}
+                        />
+                    </div>
 
-                    <button
-                        class="cursor-pointer bg-green-700 text-white px-4 py-2 rounded"
-                        on:click={() => uploadPfp()}
+                    <div
+                        class="w-full inline-flex shadow-xs text-center justify-center"
                     >
-                        Update
-                    </button>
+                        <button
+                            type="button"
+                            on:click={() => uploadPfp()}
+                            class="bg-green-50 hover:bg-green-100 hover:text-green-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-lg"
+                        >
+                            Update
+                        </button>
+                    </div>
                 {:else}
                     <PictureCrop bind:finalProfilePicture />
                 {/if}
             </div>
-        {:else}
+        {:else if !succesfullPfpChange}
             <!-- Displaying current pfp and two buttons for either changing or deleting -->
-
-            <img class="drop-shadow-lg py-5" alt="current profile" src={pfp} />
+            <div class="text-center m-auto justify-center flex">
+                <img
+                    class="drop-shadow-lg py-5"
+                    alt="current profile"
+                    src={pfp}
+                />
+            </div>
 
             {#if confirmRemovePfp}
                 <button
-                    class="cursor-pointer bg-red-700 font-bold text-white px-4 py-2 rounded"
+                    type="button"
                     on:click={removePfp}
-                >
-                    Confirm removal profile picture
-                </button>
-            {:else}
-                <button
-                    class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
-                    on:click={() => (changingPfp = true)}
-                >
-                    Change
-                </button>
-                <button
-                    class="ml-2 cursor-pointer underline align-bottom font-bold"
-                    on:click={() => (confirmRemovePfp = true)}
+                    class="w-full inline-flex shadow-xs text-center justify-center hover:bg-red-200 hover:text-red-700 px-4 py-2 font-medium text-gray-900 bg-red-100 border border-red-200 rounded-lg"
                 >
                     Remove
                 </button>
+            {:else}
+                <div
+                    class="w-full inline-flex shadow-xs text-center justify-center"
+                >
+                    <button
+                        type="button"
+                        on:click={() => (changingPfp = true)}
+                        class="hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-l-lg"
+                    >
+                        Change
+                    </button>
+                    <button
+                        type="button"
+                        on:click={() => (confirmRemovePfp = true)}
+                        class="hover:bg-red-100 hover:text-red-700 max-w-24 px-4 py-2 font-medium text-gray-900 bg-red-50 border border-red-200 rounded-r-lg"
+                    >
+                        Remove
+                    </button>
+                </div>
             {/if}
         {/if}
     {/if}
 
     <!-- Change user details  -->
     {#if selection == 2}
+        {#if form?.success}
+            <h1>Successfully updated</h1>
+            <h2>Refresh page to see changes</h2>
+        {/if}
         {#if !confirmAccountDeletionButton && !form?.success && !form?.error}
             <form
                 class=""
@@ -326,7 +373,7 @@
                 <div>
                     <label
                         for="message"
-                        class="block mb-2 font-medium text-gray-900">Bio</label
+                        class="block my-2 font-medium text-gray-900">Bio</label
                     >
                     <textarea
                         name="bio"
@@ -358,22 +405,22 @@
         {#if confirmAccountDeletionButton}
             <form method="POST" action="?/deleteAccount">
                 <button
+                    type="button"
                     on:click={() => {
                         confirmAccountDeletionButton = true;
-                        localStorage.clear();
                     }}
-                    type="submit"
-                    class="w-full h-12 cursor-pointer bg-red-800 font-bold text-white px-4 py-2 rounded"
+                    class="text-white font-bold w-full inline-flex shadow-xs text-center justify-center hover:bg-red-900 px-4 py-2 bg-red-800 border border-red-200 rounded-lg"
                 >
                     Confirm delete account
                 </button>
             </form>
         {:else}
             <button
+                type="button"
                 on:click={() => {
                     confirmAccountDeletionButton = true;
                 }}
-                class="cursor-pointer bg-red-700 font-bold text-white px-4 py-2 rounded"
+                class="w-full inline-flex shadow-xs text-center justify-center hover:bg-red-200 hover:text-red-700 px-4 py-2 font-medium text-gray-900 bg-red-100 border border-red-200 rounded-lg"
             >
                 Delete account
             </button>

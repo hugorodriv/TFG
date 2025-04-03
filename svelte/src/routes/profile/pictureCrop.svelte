@@ -20,6 +20,9 @@
         startTop: 0,
     };
 
+    /**
+     * @type {string | null}
+     */
     let croppedImage = null;
     let finalImage = null;
 
@@ -281,19 +284,28 @@
     }
 </script>
 
-<div class="bg-gray-200 m-auto rounded p-5 mt-5 text-center">
-    <button
-        class="bg-blue-600 text-white px-4 py-2 rounded"
-        on:click={() => {
-            fileinput.click();
-        }}
-    >
+<div class=" m-auto rounded p-5 mt-5 text-center">
+    <div class="w-full inline-flex shadow-xs text-center justify-center">
         {#if !profilePic}
-            Choose Image
+            <button
+                on:click={() => {
+                    fileinput.click();
+                }}
+                class="bg-white hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-lg"
+            >
+                Choose Image
+            </button>
         {:else}
-            Choose different Image
+            <button
+                on:click={() => {
+                    fileinput.click();
+                }}
+                class="bg-red-50 hover:bg-red-100 hover:text-red-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-lg"
+            >
+                Choose different image
+            </button>
         {/if}
-    </button>
+    </div>
 
     <input
         style="display:none"
@@ -321,7 +333,7 @@
                 />
 
                 {#if cropActive}
-                    <div class="absolute inset-0 bg-[rgba(0,0,0,0.4)]"></div>
+                    <div class="absolute inset-0 bg-[rgba(0,0,0,0.6)]"></div>
                     <div
                         style="
                             width: {cropSize}px; 
@@ -329,7 +341,7 @@
                             left: {cropPos.x}px; 
                             top: {cropPos.y}px;
                         "
-                        class="cropper-overlay absolute border-2 border-white cursor-move"
+                        class="cropper-overlay absolute border-2 border-black border-dashed cursor-move"
                         on:mousedown={startDrag}
                         on:mousemove={updateCropperCursor}
                     >
@@ -344,9 +356,9 @@
         </div>
 
         <button
-            class="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
             on:click={() => returnPictureToParent()}
             disabled={!cropActive}
+            class="hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-lg"
         >
             Crop
         </button>
