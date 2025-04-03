@@ -1,21 +1,32 @@
 <script>
     import { signOut } from "@auth/sveltekit/client";
-    import { onMount, onDestroy } from "svelte";
-    import { browser } from "$app/environment";
+    import { onMount } from "svelte";
 
+    /**
+     * @type {{ name: String; }}
+     */
     let accountData;
+    /**
+     * @type {string}
+     */
     let pfp;
 
-    onMount(() => {
-        accountData = JSON.parse(localStorage.getItem("accData")) || null;
-        pfp = localStorage.getItem("pfp");
+    /**
+     * @param {MouseEvent} e
+     */
+    function handleClickOutside(e) {
+        const dropdownBtn = document.getElementById("dropdownBtn");
 
-        const dropdownBtn = document?.getElementById("dropdownBtn");
-        const handleClickOutside = (/** @type {{ target: Event ; }} */ e) => {
-            if (!dropdownBtn.contains(e.target)) {
-                document.getElementById("dropdown")?.classList.add("hidden");
-            }
-        };
+        const target = /** @type {Node | null} */ (e.target);
+        if (!dropdownBtn?.contains(target)) {
+            document.getElementById("dropdown")?.classList.add("hidden");
+        }
+    }
+
+    onMount(() => {
+        accountData = JSON.parse(localStorage.getItem("accData") || "{}");
+        pfp = localStorage.getItem("pfp") || "";
+
         document.addEventListener("click", handleClickOutside);
         return () => {
             document.removeEventListener("click", handleClickOutside);
