@@ -406,10 +406,7 @@
         {#if confirmAccountDeletionButton}
             <form method="POST" action="?/deleteAccount">
                 <button
-                    type="button"
-                    on:click={() => {
-                        confirmAccountDeletionButton = true;
-                    }}
+                    type="submit"
                     class="text-white font-bold w-full inline-flex shadow-xs text-center justify-center hover:bg-red-900 px-4 py-2 bg-red-800 border border-red-200 rounded-lg"
                 >
                     Confirm delete account
