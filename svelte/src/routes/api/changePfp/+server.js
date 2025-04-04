@@ -34,7 +34,7 @@ export async function GET({ locals }) {
     // update DB with new link
     // TODO: probably redundant, as it is the same URL every time (only depends on user)
     try {
-        await pool.query('UPDATE profiles SET img_url = $2 WHERE userId = $1', [userId, publicUrl]);
+        await pool.query('UPDATE profiles SET img_url = $2 WHERE _id = $1', [userId, publicUrl]);
     } catch (e) {
         error(500)
     }

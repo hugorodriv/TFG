@@ -170,14 +170,14 @@
         >
             {#if !usernameError && !usernameTooShort && !nameTooShort}
                 <button
-                    disabled
+                    type="submit"
                     class="bg-green-50 hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-l-lg"
                 >
                     Register
                 </button>
             {:else}
                 <button
-                    type="submit"
+                    disabled
                     class=" hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-l-lg"
                 >
                     Register

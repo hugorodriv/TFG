@@ -4,6 +4,7 @@
 
     import PictureCrop from "./pictureCrop.svelte";
     import Navbar from "../Navbar.svelte";
+    import Bottombar from "../Bottombar.svelte";
 
     let selection = 0; // 1: pfp, 2: bio&name, 3:accDeletion
     let accountData;
@@ -426,4 +427,6 @@
             </button>
         {/if}
     {/if}
+
+    <Bottombar />
 </div>

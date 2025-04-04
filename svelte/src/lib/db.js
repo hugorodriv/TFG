@@ -73,7 +73,7 @@ export async function createUser(userId, accData) {
     const name = accData.name || ""
 
     try {
-        await pool.query('INSERT INTO profiles (userId, username, name) VALUES ($1, $2, $3)', [userId, username, name]);
+        await pool.query('INSERT INTO profiles (_id, username, name) VALUES ($1, $2, $3)', [userId, username, name]);
 
         return true;
     } catch (error) {
@@ -89,9 +89,9 @@ export async function createUser(userId, accData) {
 export async function fetchAccData(userId) {
 
     try {
-        const res = await pool.query('SELECT * FROM profiles WHERE userId = $1 LIMIT 1', [userId]);
+        const res = await pool.query('SELECT * FROM profiles WHERE _id = $1 LIMIT 1', [userId]);
         // TODO: Dont include userId (but the uuid instead)
-        const { userid: omittedUserId, ...profile } = res.rows[0];
+        const { _id: omittedUserId, ...profile } = res.rows[0];
         return profile;
     } catch (error) {
         console.log(error)
@@ -114,7 +114,7 @@ export async function updateAccDetails(userId, newData) {
     }
 
     try {
-        await pool.query('UPDATE profiles SET name = $2, bio = $3 WHERE userId = $1', [userId, name, bio]);
+        await pool.query('UPDATE profiles SET name = $2, bio = $3 WHERE _id = $1', [userId, name, bio]);
 
         return true;
     } catch (error) {
@@ -129,7 +129,7 @@ export async function getUserUUID(userId) {
 
     try {
         // get uuid from given userId
-        const res = await pool.query('SELECT uuid FROM profiles WHERE userId = $1 LIMIT 1', [userId])
+        const res = await pool.query('SELECT uuid FROM profiles WHERE _id = $1 LIMIT 1', [userId])
         const uuid = res.rows[0]["uuid"]
 
         return uuid
@@ -151,7 +151,7 @@ export async function deleteAccount(userId) {
         removePfpS3(uuid)
 
         // database cleaning
-        const resProfiles = await pool.query('DELETE FROM profiles WHERE userId = $1', [userId]);
+        const resProfiles = await pool.query('DELETE FROM profiles WHERE _id = $1', [userId]);
         const resSessions = await pool.query('DELETE FROM sessions WHERE "userId" = $1', [userId]);
         const resAccounts = await pool.query('DELETE FROM accounts WHERE "userId" = $1', [userId]);
         const resUsers = await pool.query('DELETE FROM users WHERE uuid = $1', [userId]);

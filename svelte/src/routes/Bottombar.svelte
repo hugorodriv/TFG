@@ -7,14 +7,16 @@
 
 <!-- svelte-ignore a11y_consider_explicit_label -->
 <div
-    class="fixed z-50 w-full max-w-lg h-16 -translate-x-1/2 bottom-4 left-1/2 bg-white border border-gray-200 rounded-full"
+    class="mt-10 fixed z-50 w-full max-w-lg h-16 -translate-x-1/2 bottom-4 left-1/2 bg-white border border-gray-200 rounded-full"
 >
     <div class="grid grid-cols-5 h-full mx-auto">
         <!-- Home button -->
-        <button class="flex flex-col items-center justify-center px-5 group">
+        <a
+            href="/"
+            class="flex flex-col items-center justify-center px-5 group"
+        >
             <svg
                 class="w-8 h-8 {homeActive ? 'active' : 'inactive'} hovered"
-                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
             >
@@ -26,7 +28,7 @@
                     d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"
                 />
             </svg>
-        </button>
+        </a>
 
         <!-- Search -->
         <button
