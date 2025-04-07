@@ -8,6 +8,9 @@
 
     let searchResults;
 
+    /**
+     * @type {{ username: String; }}
+     */
     let accountData;
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
@@ -35,7 +38,8 @@
 
             // remove current account from list
             const results = body.list.filter(
-                (r) => r.username !== accountData.username,
+                (/** @type {{ username: any; }} */ r) =>
+                    r.username !== accountData.username,
             );
             if (results.length >= 1) {
                 searchResults = results;
@@ -83,7 +87,7 @@
         <div>
             {#if searchResults}
                 <div
-                    class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+                    class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8"
                 >
                     <div class="flex items-center justify-between mb-4">
                         <h5
@@ -93,10 +97,7 @@
                         </h5>
                     </div>
                     <div class="flow-root">
-                        <ul
-                            role="list"
-                            class="divide-y divide-gray-200 dark:divide-gray-700"
-                        >
+                        <ul role="list" class="divide-y divide-gray-200">
                             {#each searchResults as user}
                                 <!-- <div>{user.username}</div> -->
                                 <!-- <div>{user.img_url}</div> -->

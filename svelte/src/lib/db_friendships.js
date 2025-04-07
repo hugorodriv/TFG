@@ -55,7 +55,7 @@ export async function getSentPendingFriendships(userId) {
  * @param {String} username
  */
 export async function searchUsername(username) {
-    const LIMIT = 10
+    const LIMIT = 5
 
     try {
         const query = `
