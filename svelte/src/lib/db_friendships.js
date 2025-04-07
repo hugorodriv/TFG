@@ -80,3 +80,39 @@ export async function searchUsername(username) {
         return { success: false };
     }
 }
+
+/**
+ * @param {String} sender_uuid
+ * @param {String} receiver_uuid
+ */
+export async function sendFriendRequest(sender_uuid, receiver_uuid) {
+    const status = 'PENDING'
+    try {
+        await pool.query('INSERT INTO friendships (sender_uuid, receiver_uuid, status) VALUES ($1, $2, $3)', [sender_uuid, receiver_uuid, status]);
+
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
+/**
+ * @param {String} user_uuid
+ * @param {String} other_profile_uuid
+ */
+export async function getFriendshipStatus(user_uuid, other_profile_uuid) {
+    try {
+        // get uuid from given userId
+        const res = await pool.query('SELECT status, created_at FROM friendships WHERE sender_uuid = $1 AND receiver_uuid = $2', [user_uuid, other_profile_uuid])
+        if (res.rows.length < 1) {
+            return null
+        }
+        const status = res.rows[0]["status"]
+
+        return status
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}

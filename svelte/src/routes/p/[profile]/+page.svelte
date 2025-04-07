@@ -9,14 +9,36 @@
     let userNotFound = true;
     let isOwnProfile = false;
     const profile = data.userdata;
+    const friendshipStatus = data.friendshipStatus;
+    /**
+     * @type {string}
+     */
     let image_data;
+    let requestSent = false;
+
+    /**
+     * @param {String} uuid
+     */
+    async function sendFriendRequest(uuid) {
+        const response = await fetch("../api/send-friend-request", {
+            method: "POST",
+            body: JSON.stringify({ uuid }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const body = await response.json();
+        if (body.success) {
+            requestSent = true;
+        }
+    }
 
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
 
         if (data.success && profile) {
             userNotFound = false;
-            console.log(profile);
 
             if (profile.username == accountData?.username) {
                 isOwnProfile = true;
@@ -68,10 +90,8 @@
             </svg>`;
 
             image_data = `data:image/svg+xml;base64,${btoa(svg)}`;
-            console.log("User not found");
         }
     });
-    // console.log(userdata);
 </script>
 
 <Navbar />
@@ -108,34 +128,51 @@
                 </p>
 
                 {#if !isOwnProfile}
-                    <button
-                        type="button"
-                        class="mt-4 text-white bg-blue-600 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
-                        on:click={() => {
-                            sendFriendRequest(profile.uuid);
-                        }}
-                    >
-                        <svg
-                            class="w-6 h-6 text-white"
-                            width="24"
-                            height="24"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
+                    <!-- If friendship status null  -->
+                    {#if !friendshipStatus}
+                        {#if !requestSent}
+                            <button
+                                type="button"
+                                class="mt-4 text-white bg-blue-600 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
+                                on:click={async () => {
+                                    await sendFriendRequest(profile.uuid);
+                                }}
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    width="24"
+                                    height="24"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                Add friend
+                            </button>
+                        {:else}
+                            <p
+                                class="text-gray-800 text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
+                            >
+                                Request sent
+                            </p>
+                        {/if}
+                    {:else if friendshipStatus === "PENDING"}
+                        <p
+                            class="text-gray-800 text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
                         >
-                            <path
-                                fill-rule="evenodd"
-                                d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                        Add friend
-                    </button>
-
-                    <!-- <p -->
-                    <!--     class="text-gray-800 text-sm px-5 py-2.5 text-center inline-flex items-center me-2" -->
-                    <!-- > -->
-                    <!--     Request sent -->
-                    <!-- </p> -->
+                            Friend request pending
+                        </p>
+                    {:else if friendshipStatus === "ACCEPTED"}
+                        <p
+                            class="text-gray-800 text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
+                        >
+                            Already friends :)
+                        </p>
+                    {/if}
                 {:else}
                     <div class="flex mt-4 md:mt-6">
                         <a

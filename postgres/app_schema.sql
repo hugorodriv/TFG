@@ -12,14 +12,15 @@ CREATE TABLE profiles (
 
 
 CREATE TYPE friendship_status AS ENUM ('PENDING', 'ACCEPTED', 'DECLINED');
+
 CREATE TABLE friendships (
-    sender_id INTEGER NOT NULL,
-    receiver_id INTEGER NOT NULL,
+    sender_uuid UUID NOT NULL,
+    receiver_uuid UUID NOT NULL,
     status friendship_status NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    PRIMARY KEY (sender_id, receiver_id),
-    FOREIGN KEY (sender_id) REFERENCES profiles(_id) ON DELETE CASCADE,
-    FOREIGN KEY (receiver_id) REFERENCES profiles(_id) ON DELETE CASCADE
+    PRIMARY KEY (sender_uuid, receiver_uuid),
+    FOREIGN KEY (sender_uuid) REFERENCES profiles(uuid) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_uuid) REFERENCES profiles(uuid) ON DELETE CASCADE
 );
 
 CREATE INDEX ON friendships (receiver_id, status);

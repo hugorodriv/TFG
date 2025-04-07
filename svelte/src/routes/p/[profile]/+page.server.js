@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
-import { fetchAccDataFromUsername, USERNAME_REGEX } from '$lib/db.js';
+import { fetchAccDataFromUsername, getUserUUID, USERNAME_REGEX } from '$lib/db.js';
+import { getFriendshipStatus } from '$lib/db_friendships.js';
 
 
 export const load = async (event) => {
@@ -16,6 +17,7 @@ export const load = async (event) => {
         throw redirect(303, '/');
     }
 
+    const userId = session.user?.id
 
     const pathname = event.url.pathname
     //event.url.pathname is /p/**username***
@@ -32,7 +34,11 @@ export const load = async (event) => {
         if (userdata.length < 1) {
             return { success: true, userdata: null }
         }
-        return { success: true, userdata: userdata }
+
+        const userUuid = await getUserUUID(userId)
+        const friendshipStatus = await getFriendshipStatus(userUuid, userdata.uuid)
+        console.log(friendshipStatus)
+        return { success: true, userdata: userdata, friendshipStatus: friendshipStatus }
     } catch (error) {
         return { success: false }
     }

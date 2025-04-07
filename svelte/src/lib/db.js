@@ -105,6 +105,9 @@ export async function fetchAccData(userId) {
 export async function fetchAccDataFromUsername(username) {
     try {
         const res = await pool.query('SELECT * FROM profiles WHERE username = $1 LIMIT 1', [username]);
+        if (res.rows.length < 1) {
+            return null
+        }
         // TODO: Dont include userId (but the uuid instead)
         const { _id: omittedUserId, ...profile } = res.rows[0];
         return profile;
