@@ -158,8 +158,6 @@ export async function getUserUUID(userId) {
  * @param {any} userId
  */
 export async function deleteAccount(userId) {
-
-
     try {
         // pfp S3 removal
         const uuid = await getUserUUID(userId)
@@ -169,7 +167,7 @@ export async function deleteAccount(userId) {
         const resProfiles = await pool.query('DELETE FROM profiles WHERE _id = $1', [userId]);
         const resSessions = await pool.query('DELETE FROM sessions WHERE "userId" = $1', [userId]);
         const resAccounts = await pool.query('DELETE FROM accounts WHERE "userId" = $1', [userId]);
-        const resUsers = await pool.query('DELETE FROM users WHERE uuid = $1', [userId]);
+        const resUsers = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 
         // TODO: Delete user posts?
 
