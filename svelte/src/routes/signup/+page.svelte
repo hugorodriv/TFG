@@ -28,6 +28,7 @@
     const checkUsername = async (/** @type {String} */ username) => {
         clearTimeout(delayTimer);
 
+        username = username.toLowerCase();
         if (username.length < 4) {
             statusMessage = "";
             usernameTooShort = true;

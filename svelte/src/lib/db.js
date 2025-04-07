@@ -54,7 +54,7 @@ export async function checkAvailableUsername(username) {
     try {
         const { rows } = await pool.query(
             'SELECT username FROM profiles WHERE username = $1 LIMIT 1',
-            [username]
+            [username.toLowerCase()]
         );
         return rows?.length === 0;
     } catch (error) {
@@ -69,7 +69,7 @@ export async function checkAvailableUsername(username) {
  */
 export async function createUser(userId, accData) {
 
-    const username = accData.username
+    const username = accData.username.toLowerCase()
     const name = accData.name || ""
 
     try {
