@@ -2,8 +2,6 @@ import { fetchAccData } from "$lib/db.js";
 import { isNewAccount } from '$lib/auth.js';
 import { redirect } from '@sveltejs/kit';
 
-// import { createCanvas } from 'canvas';
-
 export const load = async (event) => {
     const session = await event.locals.auth();
 

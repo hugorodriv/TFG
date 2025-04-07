@@ -31,7 +31,8 @@
         </a>
 
         <!-- Search -->
-        <button
+        <a
+            href="/search"
             class="flex translate-y-0.5 flex-col items-center justify-center px-5 group"
         >
             <svg
@@ -45,7 +46,7 @@
                     d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
                 />
             </svg>
-        </button>
+        </a>
 
         <!-- Upload post -->
         <button

@@ -45,16 +45,10 @@
             })().then(() => {});
         }
     });
-
-    function sendFriendRequest(uuid) {
-        requestSent = true;
-    }
-
-    console.log("test");
 </script>
 
 <li class="py-3 sm:py-4">
-    <div class="flex items-center">
+    <a href="/p/{username}" class="flex items-center">
         <div class="shrink-0">
             <img
                 class="w-8 h-8 rounded-full"
@@ -70,36 +64,5 @@
                 {name}
             </p>
         </div>
-
-        {#if requestSent}
-            <p
-                class="text-gray-800 text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
-            >
-                Request sent
-            </p>
-        {:else}
-            <button
-                type="button"
-                class="text-white bg-gray-600 hover:bg-gray-800 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
-                on:click={() => {
-                    sendFriendRequest(uuid);
-                }}
-            >
-                <svg
-                    class="w-6 h-6 text-white"
-                    width="24"
-                    height="24"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z"
-                        clip-rule="evenodd"
-                    />
-                </svg>
-                Add friend
-            </button>
-        {/if}
-    </div>
+    </a>
 </li>

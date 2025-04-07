@@ -51,7 +51,11 @@
             <div
                 class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white"
             >
-                <img alt="profile" src={pfp} />
+                <img
+                    class="drop-shadow-lg py-5"
+                    alt="current profile"
+                    src={pfp}
+                />
             </div>
 
             <span class="text-gray-600 px-1">{accountData?.name}</span>

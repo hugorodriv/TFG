@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { isNewAccount, signOut } from "$lib/auth.js";
+import { isNewAccount } from "$lib/auth.js";
 import { deleteAccount, fetchAccData, updateAccDetails } from "$lib/db.js"
 
 

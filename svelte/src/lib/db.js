@@ -7,7 +7,7 @@ import { removePfpS3 } from "./s3";
 //  (?![-_.])           // Prevents the username from starting with -, _, or .
 //  [a-zA-Z0-9\-_.]+    // Allows alphanumeric characters, -, _, and .
 //  (?<![-_.])          // Prevents the username from ending with -, _, or .
-export const USERNAME_REGEX = /^(?![-_.])([a-zA-Z0-9\-_.]+)(?<![-_.])$/;
+export const USERNAME_REGEX = /^(?![-_.])([a-z0-9\-_.]+)(?<![-_.])$/;
 export const NAME_REGEX = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
 
 export const MIN_USERNAME_LENGTH = 4
@@ -99,6 +99,21 @@ export async function fetchAccData(userId) {
     }
 }
 
+/**
+ * @param {String} username
+ */
+export async function fetchAccDataFromUsername(username) {
+    try {
+        const res = await pool.query('SELECT * FROM profiles WHERE username = $1 LIMIT 1', [username]);
+        // TODO: Dont include userId (but the uuid instead)
+        const { _id: omittedUserId, ...profile } = res.rows[0];
+        return profile;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 
 /**
  * @param {any} userId
@@ -179,4 +194,3 @@ export async function removePfpDB(uuid) {
         return false;
     }
 }
-

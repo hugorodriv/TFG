@@ -63,8 +63,6 @@
             reader.readAsDataURL(finalProfilePicture);
             reader.onloadend = function () {
                 const base64data = reader.result;
-                console.log(base64data);
-
                 localStorage.setItem("pfp", base64data);
                 pfp = base64data;
             };
@@ -99,7 +97,6 @@
         } catch (error) {
             alert("Error removing pfp");
         }
-        console.log(data);
     }
 </script>
 
