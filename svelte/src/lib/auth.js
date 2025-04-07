@@ -25,14 +25,14 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     },
 });
 
+/**
+ * @param {{ id: Number; }} user
+ */
 export async function isNewAccount(user) {
     // user.id comes from auth. should be safe 
     // (SQL injection and a malicious actor providing a fake user.id)
     // convert to int just to be super safe
     if (!user.id) {
-        throw new Error("Invalid user ID");
-    }
-    if (isNaN(parseInt(user.id, 10))) {
         throw new Error("Invalid user ID");
     }
 

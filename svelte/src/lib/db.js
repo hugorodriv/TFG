@@ -84,7 +84,7 @@ export async function createUser(userId, accData) {
 
 
 /**
- * @param {any} userId
+ * @param {Number} userId
  */
 export async function fetchAccData(userId) {
 
