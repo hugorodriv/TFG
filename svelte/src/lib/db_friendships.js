@@ -109,6 +109,49 @@ export async function getFriendshipStatus(user_uuid, other_profile_uuid) {
 }
 
 /**
+ * @param {String} uuid
+ */
+export async function getFriendList(uuid) {
+
+    try {
+        const status = 'ACCEPTED'
+
+        // kinda complicated query:
+        // The problem is a given user can either be the sender or the reciever of the friendship
+        // depending if they were the ones that sent it, or not
+        // This is why a simple JOIN wouldnt work
+        const res = await pool.query(
+            `SELECT 
+            p.uuid as friend_uuid,
+            p.name as friend_name,
+            p.img_url as friend_img_url,
+            p.username as friend_username
+        FROM friendships f
+        JOIN profiles p ON f.receiver_uuid = p.uuid
+        WHERE f.sender_uuid = $1 AND f.status = $2
+
+        UNION
+
+        SELECT 
+            p.uuid as friend_uuid,
+            p.name as friend_name,
+            p.img_url as friend_img_url,
+            p.username as friend_username
+        FROM friendships f
+        JOIN profiles p ON f.sender_uuid = p.uuid
+        WHERE f.receiver_uuid = $1 AND f.status = $2`,
+            [uuid, status]
+        );
+
+        const friendships = res.rows
+        return { friendList: friendships }
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}
+
+/**
  * @param {String} sender_uuid
  * @param {String} receiver_uuid
  */

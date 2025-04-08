@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
-import { getPendingFriendships, getSentPendingFriendships } from '$lib/db_friendships';
+import { getPendingFriendships, getSentPendingFriendships, getFriendList } from '$lib/db_friendships';
 import { getUserUUID } from '$lib/db';
 
 
@@ -36,8 +36,9 @@ export async function load(event) {
     try {
         const p_friendships = await getPendingFriendships(uuid)
         const sent_p_frienships = await getSentPendingFriendships(uuid)
+        const friendList = await getFriendList(uuid)
 
-        return { pending: p_friendships.pending, sentPending: sent_p_frienships.pending }
+        return { pending: p_friendships.pending, sentPending: sent_p_frienships.pending, friendList: friendList?.friendList }
 
     } catch (error) {
         console.log("Error: ", error)

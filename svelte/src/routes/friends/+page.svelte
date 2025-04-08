@@ -6,6 +6,9 @@
 
     export let data;
 
+    /**
+     * @type {{ uuid: String; }}
+     */
     let accountData;
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
@@ -15,7 +18,9 @@
 <Navbar />
 
 <div class="space-y-4 p-4 max-w-md m-auto">
-    <p class="mt-10 text-center text-xl">New friend requests</p>
+    {#if data.pending.length > 0}
+        <p class="mt-10 text-center text-xl">New friend requests</p>
+    {/if}
 
     <div class="flow-root">
         <ul role="list" class="">
@@ -31,7 +36,10 @@
             {/each}
         </ul>
     </div>
-    <p class="mt-10 text-center text-xl">Sent</p>
+
+    {#if data.sentPending.length > 0}
+        <p class="mt-10 text-center text-xl">Sent</p>
+    {/if}
 
     <div class="flow-root">
         <ul role="list" class="">
@@ -46,6 +54,23 @@
             {/each}
         </ul>
     </div>
+    {#if data.friendList}
+        <p class="mt-10 text-center text-xl">Friend list</p>
+        <div class="flow-root">
+            <ul role="list" class="">
+                {#each data.friendList as p}
+                    <ProfileCard
+                        name={p.friend_name}
+                        username={p.friend_username}
+                        img_url={p.friend_img_url}
+                        sender_uuid={null}
+                        receiver_uuid={p.friend_uuid}
+                        isFriend={true}
+                    />
+                {/each}
+            </ul>
+        </div>
+    {/if}
 </div>
 
 <Bottombar />

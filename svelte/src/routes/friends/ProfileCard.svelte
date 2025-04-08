@@ -8,6 +8,10 @@
     export let sender_uuid;
     export let receiver_uuid;
 
+    // if user is friend already the button text changes and the fetch changes slightly too,
+    export let isFriend = false;
+    console.log(sender_uuid, receiver_uuid);
+
     /**
      * @type {string}
      */
@@ -101,6 +105,7 @@
             </div>
         </a>
         {#if acceptButton}
+            <!-- Accept friendship button -->
             <button
                 type="button"
                 class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
@@ -151,7 +156,11 @@
                             d="M6 18L18 6M6 6l12 12"
                         />
                     </svg>
-                    Cancel
+                    {#if isFriend}
+                        Remove
+                    {:else}
+                        Cancel
+                    {/if}
                 </span>
             </button>
         {/if}
