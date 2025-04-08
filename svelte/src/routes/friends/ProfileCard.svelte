@@ -10,12 +10,13 @@
 
     // if user is friend already the button text changes and the fetch changes slightly too,
     export let isFriend = false;
-    console.log(sender_uuid, receiver_uuid);
 
     /**
      * @type {string}
      */
     let image_data;
+
+    let confirmFriensdhipDeletion = false;
 
     onMount(() => {
         // if no img data, create blue bg and white letter (default pfp)
@@ -133,36 +134,66 @@
             </button>
         {:else}
             <!-- Cancel friendship button -->
-            <button
-                on:click={async (e) => {
-                    const success = await cancelFriendship(receiver_uuid);
-                    if (success) {
-                        e.target.innerText = "REMOVED";
-                    }
-                }}
-                class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
-            >
-                <span class="flex items-center gap-2">
-                    <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                    {#if isFriend}
-                        Remove
-                    {:else}
-                        Cancel
-                    {/if}
-                </span>
-            </button>
+            {#if confirmFriensdhipDeletion}
+                <button
+                    on:click={async (e) => {
+                        const success = await cancelFriendship(receiver_uuid);
+                        if (success) {
+                            e.target.innerText = "REMOVED";
+                        }
+                    }}
+                    class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                >
+                    <span class="flex items-center gap-2">
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                        {#if isFriend}
+                            Confirm remove
+                        {:else}
+                            Confirm cancel
+                        {/if}
+                    </span>
+                </button>
+            {:else}
+                <button
+                    on:click={async (e) => {
+                        confirmFriensdhipDeletion = true;
+                    }}
+                    class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                >
+                    <span class="flex items-center gap-2">
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                        {#if isFriend}
+                            Remove
+                        {:else}
+                            Cancel
+                        {/if}
+                    </span>
+                </button>
+            {/if}
         {/if}
     </span>
 </li>
