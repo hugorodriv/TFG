@@ -23,5 +23,5 @@ CREATE TABLE friendships (
     FOREIGN KEY (receiver_uuid) REFERENCES profiles(uuid) ON DELETE CASCADE
 );
 
-CREATE INDEX ON friendships (receiver_id, status);
-CREATE INDEX ON friendships (sender_id, status);
+CREATE INDEX ON friendships (receiver_uuid, status);
+CREATE INDEX ON friendships (sender_uuid, status);

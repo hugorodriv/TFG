@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
 import { getPendingFriendships, getSentPendingFriendships } from '$lib/db_friendships';
+import { getUserUUID } from '$lib/db';
 
 
 /**
@@ -25,14 +26,22 @@ export async function load(event) {
         throw redirect(303, "/")
     }
 
+    const uuid = await getUserUUID(userId)
+
+    if (!uuid) {
+        throw redirect(303, "/")
+    }
+
     // TODO: Load friend requests that are pending for the current user
     try {
-        const p_friendships = await getPendingFriendships(userId)
-        const sent_p_frienships = await getSentPendingFriendships(userId)
+        const p_friendships = await getPendingFriendships(uuid)
+        const sent_p_frienships = await getSentPendingFriendships(uuid)
 
         // return { pending: p_friendships, sentPending: sent_p_frienships }
         //
-        return { pending: p_friendships, sentPending: sent_p_frienships }
+        console.log("PENDING: ", p_friendships.pending)
+        console.log("SENT:", sent_p_frienships.pending)
+        return { pending: p_friendships.pending, sentPending: sent_p_frienships.pending }
 
     } catch (error) {
         console.log("Error: ", error)

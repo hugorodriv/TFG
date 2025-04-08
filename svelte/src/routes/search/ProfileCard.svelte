@@ -3,13 +3,11 @@
     export let username;
     export let name;
     export let img_url;
-    export let uuid;
 
     /**
      * @type {string}
      */
     let image_data;
-    let requestSent = false;
 
     onMount(() => {
         // if no img data, create blue bg and white letter (default pfp)

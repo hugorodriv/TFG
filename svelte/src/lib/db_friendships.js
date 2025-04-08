@@ -1,24 +1,20 @@
 import { pool } from "./db";
 
 /**
- * @param {Number} userId
+ * @param {String} uuid
  */
-export async function getPendingFriendships(userId) {
+export async function getPendingFriendships(uuid) {
 
     const status = 'PENDING'
     try {
         // Get pending friend requests sent by the user with receiver username
         const { rows } = await pool.query(
-            'SELECT f.*, p.username as sender_username FROM friendships f ' +
-            'JOIN profiles p ON f.sender_id = p._id ' +
-            'WHERE f.receiver_id = $1 AND f.status = $2',
-            [userId, status]
+            'SELECT f.*, p.img_url as receiver_img_url, p.username as sender_username FROM friendships f ' +
+            'JOIN profiles p ON f.sender_uuid = p.uuid ' +
+            'WHERE f.receiver_uuid = $1 AND f.status = $2',
+            [uuid, status]
         );
 
-        // const { rows } = await pool.query(
-        //     'SELECT * FROM friendships WHERE receiver_id = $1 AND status = $2',
-        //     [userId, status]
-        // );
         return { success: true, pending: rows }
     } catch (error) {
         console.log(error)
@@ -26,24 +22,20 @@ export async function getPendingFriendships(userId) {
     }
 }
 /**
- * @param {Number} userId
+ * @param {String} uuid
  */
-export async function getSentPendingFriendships(userId) {
+export async function getSentPendingFriendships(uuid) {
 
     const status = 'PENDING'
     try {
 
         // Get sent and pending friend requests
         const { rows } = await pool.query(
-            'SELECT f.*, p.username as receiver_username FROM friendships f ' +
-            'JOIN profiles p ON f.receiver_id = p._id ' +
-            'WHERE f.sender_id = $1 AND f.status = $2',
-            [userId, status]
+            'SELECT f.*, p.img_url as receiver_img_url, p.username as receiver_username FROM friendships f ' +
+            'JOIN profiles p ON f.receiver_uuid = p.uuid ' +
+            'WHERE f.sender_uuid = $1 AND f.status = $2',
+            [uuid, status]
         );
-        // const { rows } = await pool.query(
-        //     'SELECT * FROM friendships WHERE sender_id = $1 AND status = $2',
-        //     [userId, status]
-        // );
         return { success: true, pending: rows }
     } catch (error) {
         console.log(error)
