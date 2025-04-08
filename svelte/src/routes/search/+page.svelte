@@ -29,8 +29,9 @@
     ) => {
         clearTimeout(delayTimer);
 
-        const username = e.target.value;
-        if (!username) {
+        // either username or name
+        const searchQuery = e.target.value;
+        if (!searchQuery) {
             searchResults = null;
             return;
         }
@@ -39,7 +40,7 @@
         delayTimer = setTimeout(async () => {
             const response = await fetch("./api/search-username", {
                 method: "POST",
-                body: JSON.stringify({ username }),
+                body: JSON.stringify({ searchQuery }),
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -89,7 +90,7 @@
                 type="search"
                 id="search"
                 class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
-                placeholder="username"
+                placeholder="Name or username"
                 on:keyup={updateSearchResults}
             />
         </div>

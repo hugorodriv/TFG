@@ -44,22 +44,21 @@ export async function getSentPendingFriendships(uuid) {
 }
 
 /**
- * @param {String} username
+ * @param {String} searchQuery
  */
-export async function searchUsername(username) {
+export async function searchUser(searchQuery) {
     const LIMIT = 5
 
     try {
         const query = `
             SELECT name, username, img_url, uuid 
             FROM profiles 
-            WHERE username ILIKE $1 
+            WHERE username LIKE $1 OR name ILIKE $1
             ORDER BY username 
             LIMIT $2
         `;
 
-        // Add % wildcards to search for the pattern anywhere in the username
-        const searchPattern = `%${username}%`;
+        const searchPattern = `%${searchQuery}%`;
 
         const { rows } = await pool.query(query, [searchPattern, LIMIT]);
 
