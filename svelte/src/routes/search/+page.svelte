@@ -106,7 +106,6 @@
                                     name={user.name}
                                     username={user.username}
                                     img_url={user.img_url}
-                                    uuid={user.uuid}
                                 />
                             {:else}
                                 <!-- spinner -->

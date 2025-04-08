@@ -45,7 +45,7 @@
     });
 </script>
 
-<li class="py-3 sm:py-4">
+<li class="py-3">
     <a href="/p/{username}" class="flex items-center">
         <div class="shrink-0">
             <img

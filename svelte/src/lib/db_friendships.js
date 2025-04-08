@@ -9,7 +9,7 @@ export async function getPendingFriendships(uuid) {
     try {
         // Get pending friend requests sent by the user with receiver username
         const { rows } = await pool.query(
-            'SELECT f.*, p.img_url as receiver_img_url, p.username as sender_username FROM friendships f ' +
+            'SELECT f.*, p.name as sender_name, p.img_url as sender_img_url, p.username as sender_username FROM friendships f ' +
             'JOIN profiles p ON f.sender_uuid = p.uuid ' +
             'WHERE f.receiver_uuid = $1 AND f.status = $2',
             [uuid, status]
@@ -31,7 +31,7 @@ export async function getSentPendingFriendships(uuid) {
 
         // Get sent and pending friend requests
         const { rows } = await pool.query(
-            'SELECT f.*, p.img_url as receiver_img_url, p.username as receiver_username FROM friendships f ' +
+            'SELECT f.*, p.name as receiver_name, p.img_url as receiver_img_url, p.username as receiver_username FROM friendships f ' +
             'JOIN profiles p ON f.receiver_uuid = p.uuid ' +
             'WHERE f.sender_uuid = $1 AND f.status = $2',
             [uuid, status]
@@ -105,5 +105,43 @@ export async function getFriendshipStatus(user_uuid, other_profile_uuid) {
     } catch (error) {
         console.log(error)
         return false
+    }
+}
+
+/**
+ * @param {String} sender_uuid
+ * @param {String} receiver_uuid
+ */
+export async function acceptFriendship(sender_uuid, receiver_uuid) {
+    try {
+        const status = 'ACCEPTED'
+
+        const res = await pool.query('UPDATE friendships SET status = $3 WHERE sender_uuid = $1 AND receiver_uuid = $2', [sender_uuid, receiver_uuid, status])
+
+        if (res?.rowCount && res.rowCount > 0) {
+            return { success: true }
+        }
+        return { success: false }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
+    }
+}
+
+/**
+ * @param {String} sender_uuid
+ * @param {String} receiver_uuid
+ */
+export async function deleteFriendship(sender_uuid, receiver_uuid) {
+    try {
+        const res = await pool.query('DELETE FROM friendships WHERE (sender_uuid = $1 AND receiver_uuid = $2) OR (sender_uuid = $2 AND receiver_uuid = $1)', [sender_uuid, receiver_uuid])
+
+        if (res?.rowCount && res.rowCount > 0) {
+            return { success: true }
+        }
+        return { success: false }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
     }
 }

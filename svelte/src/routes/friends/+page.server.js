@@ -37,10 +37,6 @@ export async function load(event) {
         const p_friendships = await getPendingFriendships(uuid)
         const sent_p_frienships = await getSentPendingFriendships(uuid)
 
-        // return { pending: p_friendships, sentPending: sent_p_frienships }
-        //
-        console.log("PENDING: ", p_friendships.pending)
-        console.log("SENT:", sent_p_frienships.pending)
         return { pending: p_friendships.pending, sentPending: sent_p_frienships.pending }
 
     } catch (error) {
