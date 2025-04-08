@@ -16,7 +16,7 @@
             class="flex flex-col items-center justify-center px-5 group"
         >
             <svg
-                class="w-8 h-8 {homeActive ? 'active' : 'inactive'} hovered"
+                class="w-7 h-7 {homeActive ? 'active' : 'inactive'} hovered"
                 fill="none"
                 viewBox="0 0 24 24"
             >
@@ -33,16 +33,17 @@
         <!-- Search -->
         <a
             href="/search"
-            class="flex translate-y-0.5 flex-col items-center justify-center px-5 group"
+            class="flex flex-col items-center justify-center px-5 group"
         >
             <svg
                 class="w-7 h-7 {searchActive ? 'active' : 'inactive'} hovered"
                 fill="none"
+                viewBox="0 0 24 24"
             >
                 <path
                     stroke="currentColor"
                     stroke-linecap="round"
-                    stroke-width="3"
+                    stroke-width="2"
                     d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
                 />
             </svg>

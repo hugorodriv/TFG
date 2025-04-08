@@ -37,7 +37,6 @@ export const load = async (event) => {
 
         const userUuid = await getUserUUID(userId)
         const friendshipStatus = await getFriendshipStatus(userUuid, userdata.uuid)
-        console.log(friendshipStatus)
         return { success: true, userdata: userdata, friendshipStatus: friendshipStatus }
     } catch (error) {
         return { success: false }
