@@ -36,10 +36,10 @@ export async function isNewAccount(user) {
         throw new Error("Invalid user ID");
     }
 
-    const res = await pool.query('SELECT * FROM profiles WHERE _id = $1', [user.id]);
+    const { rowCount } = await pool.query(
+        'SELECT 1 FROM profiles WHERE _id = $1',
+        [user.id]
+    );
 
-    // if no rows matching user id, we establish that user doesnt have an acc
-    const existingUser = res.rows[0];
-
-    return !Boolean(existingUser)
+    return rowCount === 0;
 }
