@@ -20,7 +20,7 @@
 
     let loading = true;
 
-    const LOC_REFRESH_MINUTES = 30;
+    const LOC_REFRESH_MINUTES = 10;
     onMount(() => {
         if (!session) {
             localStorage.clear();
