@@ -7,19 +7,9 @@ export const load = async (event) => {
     const session = await event.locals.auth();
     const url = event.url;
 
-    // user not logged in and trying to access /signup
-    if (!session && url.pathname === '/signup' || url.pathname === "/signin") {
-        throw redirect(303, '/');
-    }
-
     // user logged in and is new account
     if (session && await isNewAccount(session.user) && url.pathname !== '/signup') {
         throw redirect(303, '/signup');
-    }
-
-    // user logged in, but is not new acc, and is trying to signup
-    if (session && !await isNewAccount(session.user) && url.pathname === '/signup') {
-        throw redirect(303, '/');
     }
 
     return {

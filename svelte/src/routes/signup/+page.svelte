@@ -109,7 +109,7 @@
             >
 
             <!-- Username status (available, error, invalid ...) -->
-            <div class="ml-5 font-extralight">
+            <div class="ml-5">
                 <p
                     id="usernameStatus"
                     class="{usernameError ? 'text-red-800' : 'text-green-800'} "
