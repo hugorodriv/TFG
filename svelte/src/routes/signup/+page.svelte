@@ -25,10 +25,14 @@
             nameTooShort = false;
         }
     }
-    const checkUsername = async (/** @type {String} */ username) => {
+    const checkUsername = async (e) => {
+        const username = e.target?.value.toLowerCase();
+
+        //enforce lowercase client side
+        e.target.value = username;
+
         clearTimeout(delayTimer);
 
-        username = username.toLowerCase();
         if (username.length < 4) {
             statusMessage = "";
             usernameTooShort = true;
@@ -124,7 +128,7 @@
                 maxlength="20"
                 name="username"
                 type="text"
-                on:keyup={(e) => checkUsername(e.target?.value)}
+                on:keyup={(e) => checkUsername(e)}
                 required
                 class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 w-full p-2.5"
                 placeholder="username"

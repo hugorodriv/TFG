@@ -55,7 +55,7 @@ export const actions = {
         // write new acc to database
         const correct = await createUser(userId, { username: username, name: name })
         if (correct) {
-            throw redirect(303, '/profile/');
+            throw redirect(303, 'successfulLogin/');
         }
         return {
             error: true
