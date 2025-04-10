@@ -79,20 +79,14 @@
                 <div>{accountData?.name}</div>
                 <div class="font-medium truncate">@{accountData?.username}</div>
             </div>
-            <div
-                class="border-b-1 border-gray-200 py-2 text-sm text-gray-700 dark:text-gray-200"
-            >
+            <div class="border-b-1 border-gray-200 py-2 text-sm text-gray-700">
                 <div>
-                    <a
-                        href="/friends"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    <a href="/friends" class="block px-4 py-2 hover:bg-gray-100"
                         >Friends</a
                     >
                 </div>
                 <div>
-                    <a
-                        href="/profile"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    <a href="/profile" class="block px-4 py-2 hover:bg-gray-100"
                         >Profile Settings</a
                     >
                 </div>
@@ -101,7 +95,7 @@
                 <a
                     href="./signout/"
                     on:click|preventDefault={() => signOut()}
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >Sign out</a
                 >
             </div>

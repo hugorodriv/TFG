@@ -159,9 +159,9 @@
                             />
                         </svg>
                         {#if isFriend}
-                            Confirm remove
+                            Confirm
                         {:else}
-                            Confirm cancel
+                            Confirm
                         {/if}
                     </span>
                 </button>
