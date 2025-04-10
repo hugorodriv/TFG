@@ -8,7 +8,7 @@
 <!-- svelte-ignore a11y_consider_explicit_label -->
 <div class="pb-24">
     <div
-        class="mt-10 fixed z-50 w-full max-w-lg h-16 -translate-x-1/2 bottom-4 left-1/2 bg-white border border-gray-200 rounded-full"
+        class="mt-10 fixed z-50 w-11/12 max-w-lg h-16 -translate-x-1/2 bottom-4 left-1/2 bg-white border border-gray-300 rounded-full"
     >
         <div class="grid grid-cols-5 h-full mx-auto">
             <!-- Home button -->
