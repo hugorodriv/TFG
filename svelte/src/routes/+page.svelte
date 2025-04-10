@@ -20,8 +20,6 @@
 
     let loading = true;
 
-    let requestedLocRefresh = false;
-
     const LOC_REFRESH_MINUTES = 30;
     onMount(() => {
         if (!session) {
@@ -67,7 +65,7 @@
         {:else}
             <Navbar />
             <div class="space-y-4 p-4 max-w-md m-auto">
-                {#if !location || requestedLocRefresh}
+                {#if !location}
                     <LocationPrompt bind:location />
                 {:else}
                     <LocationShowcase {location} />

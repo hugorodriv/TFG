@@ -17,22 +17,54 @@
         }
     }
 
-    function success(loc) {
+    async function resolveCoordinates(lat, lon) {
+        // Return a promise for the fetch operation
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+            {
+                headers: {
+                    "User-Agent": "TFG_HRR",
+                },
+            },
+        );
+        const res = await response.json();
+
+        return `${res.address.village || res.address.town || res.address.hamlet || res.address.suburb || res.address.city_district || res.address.neighbourhood || "Unknown"}, ${res.address.province || res.address.city || res.address.county || res.address.state || "Unknown"}`;
+    }
+
+    async function success(loc) {
+        // Store basic location data first
         location = {
             lon: loc.coords.longitude,
             lat: loc.coords.latitude,
             timestamp: loc.timestamp,
+            resolved: null, // Will be populated once resolved
         };
-        if (location?.lon) {
+
+        try {
+            // Wait for the coordinates to resolve
+            const resolvedLocation = await resolveCoordinates(
+                loc.coords.latitude,
+                loc.coords.longitude,
+            );
+
+            // Update the location object with the resolved value
+            location.resolved = resolvedLocation;
+
+            // Now save to localStorage with the resolved value
+            localStorage.setItem("location", JSON.stringify(location));
+        } catch (error) {
+            console.error("Failed to resolve coordinates:", error);
+            // Still save the basic location data even if resolution fails
             localStorage.setItem("location", JSON.stringify(location));
         }
     }
+
     function error(e) {
         console.error(e);
         locationError = true;
     }
     onMount(async () => {
-        console.log("Refreshing loc");
         const permission = await navigator.permissions.query({
             name: "geolocation",
         });

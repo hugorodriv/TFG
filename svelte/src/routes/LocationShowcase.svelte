@@ -1,29 +1,6 @@
 <script>
-    import { onMount } from "svelte";
-    /**
-     * @type {{ lon: any; lat: any; timestamp: any; } }
-     */
     export let location;
 
-    /**
-     * @type {string}
-     */
-    let resolvedLocation;
-    async function resolveCoordinates(loc) {
-        // https://nominatim.openstreetmap.org/ API
-        fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${loc.lat}&lon=${loc.lon}&format=json`,
-            {
-                headers: {
-                    "User-Agent": "TFG_HRR",
-                },
-            },
-        )
-            .then((res) => res.json())
-            .then((res) => {
-                resolvedLocation = `${res.address.village || res.address.town || res.address.hamlet || res.address.suburb || res.address.city_district || res.address.neighbourhood || "Unknown"}, ${res.address.province || res.address.city || res.address.county || res.address.state || "Unknown"}`;
-            });
-    }
     /**
      * @param {Number} timestamp
      */
@@ -46,11 +23,10 @@
             return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
         }
     }
-    resolveCoordinates(location);
 </script>
 
 <div class="text-center space-y-1 p-4 max-w-md m-auto">
-    {#if !resolvedLocation}
+    {#if !location.resolved}
         <!-- spinner -->
         <div class="text-center">
             <svg
@@ -69,7 +45,7 @@
             </svg>
         </div>
     {:else}
-        <p>{resolvedLocation}</p>
+        <p>{location.resolved}</p>
     {/if}
     <p>{getTimeAgo(location.timestamp)}</p>
 </div>
