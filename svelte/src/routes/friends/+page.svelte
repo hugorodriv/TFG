@@ -19,7 +19,7 @@
 
 <div class="space-y-4 p-4 max-w-md m-auto">
     {#if data.pending.length > 0}
-        <p class="mt-10 text-center text-xl">New friend requests</p>
+        <p class="text-center text-xl">New friend requests</p>
     {/if}
 
     <div class="flow-root">
@@ -38,11 +38,11 @@
     </div>
 
     {#if data.sentPending.length > 0}
-        <p class="mt-10 text-center text-xl">Sent</p>
+        <p class="text-center text-xl">Sent</p>
     {/if}
 
     <div class="flow-root">
-        <ul role="list" class="">
+        <ul role="list">
             {#each data.sentPending as p}
                 <ProfileCard
                     name={p.receiver_name}
@@ -54,8 +54,29 @@
             {/each}
         </ul>
     </div>
+
+    <p class="text-center text-xl">Friend list</p>
+
+    <a aria-label="searchbar" href="../search/" class="relative">
+        <div
+            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+        >
+            <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 20 20">
+                <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+            </svg>
+        </div>
+        <input
+            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
+            placeholder="Name or username"
+        />
+    </a>
     {#if data.friendList.length > 0}
-        <p class="mt-10 text-center text-xl">Friend list</p>
         <div class="flow-root">
             <ul role="list" class="">
                 {#each data.friendList as p}
@@ -71,34 +92,9 @@
             </ul>
         </div>
     {:else}
-        <p class="my-10 text-center text-xl">
+        <p class="my-5 text-center text">
             No friends found! Try looking somebody up :)
         </p>
-        <!-- <a href="../search/">Search</a> -->
-        <!-- svelte-ignore a11y_consider_explicit_label -->
-        <a href="../search/" class="relative">
-            <div
-                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-            >
-                <svg
-                    class="w-4 h-4 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                >
-                    <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                </svg>
-            </div>
-            <input
-                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
-                placeholder="Name or username"
-            />
-        </a>
     {/if}
 </div>
 

@@ -28,6 +28,14 @@
 
     export let finalProfilePicture = null;
 
+    function getClientPos(e) {
+        if (e.touches && e.touches.length > 0) {
+            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        } else {
+            return { x: e.clientX, y: e.clientY };
+        }
+    }
+
     // Handle selection of file
     const onFileSelected = (e) => {
         let image = e.target.files[0];
@@ -64,19 +72,20 @@
     function startDrag(e) {
         if (!cropActive) return;
 
+        const { x, y } = getClientPos(e);
+
         const cropperElement = document.querySelector(".cropper-overlay");
         const cropperRect = cropperElement.getBoundingClientRect();
 
         const borderSensitivity = 10;
 
         const isOnRightEdge =
-            Math.abs(e.clientX - cropperRect.right) <= borderSensitivity;
+            Math.abs(x - cropperRect.right) <= borderSensitivity;
         const isOnLeftEdge =
-            Math.abs(e.clientX - cropperRect.left) <= borderSensitivity;
-        const isOnTopEdge =
-            Math.abs(e.clientY - cropperRect.top) <= borderSensitivity;
+            Math.abs(x - cropperRect.left) <= borderSensitivity;
+        const isOnTopEdge = Math.abs(y - cropperRect.top) <= borderSensitivity;
         const isOnBottomEdge =
-            Math.abs(e.clientY - cropperRect.bottom) <= borderSensitivity;
+            Math.abs(y - cropperRect.bottom) <= borderSensitivity;
 
         const resizeDirection = {
             right: isOnRightEdge,
@@ -90,8 +99,8 @@
             resizing = true;
             resizeData = {
                 direction: resizeDirection,
-                startX: e.clientX,
-                startY: e.clientY,
+                startX: x,
+                startY: y,
                 startWidth: cropSize,
                 startHeight: cropSize,
                 startLeft: cropPos.x,
@@ -102,8 +111,8 @@
             dragging = true;
             resizing = false;
             dragOffset = {
-                x: e.clientX - cropperRect.left,
-                y: e.clientY - cropperRect.top,
+                x: x - cropperRect.left,
+                y: y - cropperRect.top,
             };
         }
 
@@ -114,11 +123,13 @@
     function handleDrag(e) {
         if (!dragging && !resizing) return;
 
+        const { x, y } = getClientPos(e);
+
         const rect = e.currentTarget.getBoundingClientRect();
 
         if (resizing) {
-            const deltaX = e.clientX - resizeData.startX;
-            const deltaY = e.clientY - resizeData.startY;
+            const deltaX = x - resizeData.startX;
+            const deltaY = y - resizeData.startY;
 
             let newSize = resizeData.startWidth;
             let newX = resizeData.startLeft;
@@ -169,8 +180,8 @@
             cropSize = smallestSize;
             cropPos = { x: newX, y: newY };
         } else if (dragging) {
-            let newX = e.clientX - rect.left - dragOffset.x;
-            let newY = e.clientY - rect.top - dragOffset.y;
+            let newX = x - rect.left - dragOffset.x;
+            let newY = y - rect.top - dragOffset.y;
 
             newX = Math.max(0, Math.min(newX, imageSize.width - cropSize));
             newY = Math.max(0, Math.min(newY, imageSize.height - cropSize));
@@ -323,6 +334,9 @@
             on:mousemove={handleDrag}
             on:mouseup={endDrag}
             on:mouseleave={endDrag}
+            on:touchstart|preventDefault={startDrag}
+            on:touchmove={handleDrag}
+            on:touchend={endDrag}
         >
             <div class="relative inline-block">
                 <img
@@ -344,6 +358,8 @@
                         class="cropper-overlay absolute border-2 border-black border-dashed cursor-move"
                         on:mousedown={startDrag}
                         on:mousemove={updateCropperCursor}
+                        on:touchstart={startDrag}
+                        on:touchmove={handleDrag}
                     >
                         <img
                             src={croppedImage}

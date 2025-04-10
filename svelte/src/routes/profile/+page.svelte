@@ -101,7 +101,7 @@
 </script>
 
 <Navbar />
-<p class="mt-10 text-center text-4xl">Profile settings</p>
+<p class="mt-10 text-center text-xl">Profile Settings</p>
 
 <div class="space-y-4 p-4 max-w-md m-auto">
     <!-- Static info: Email and username  -->
