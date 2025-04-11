@@ -25,3 +25,22 @@ CREATE TABLE friendships (
 
 CREATE INDEX ON friendships (receiver_uuid, status);
 CREATE INDEX ON friendships (sender_uuid, status);
+
+
+CREATE OR REPLACE FUNCTION prevent_cross_friendship()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM friendships
+    WHERE sender_uuid = NEW.receiver_uuid AND receiver_uuid = NEW.sender_uuid
+  ) THEN
+    RAISE EXCEPTION 'Friendship already exists in reverse';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_cross_friendship
+BEFORE INSERT ON friendships
+FOR EACH ROW
+EXECUTE FUNCTION prevent_cross_friendship();
