@@ -19,7 +19,7 @@ export async function POST({ locals, request }) {
     const searchQuery = body.searchQuery
 
     if (!USERNAME_REGEX.test(searchQuery) && !NAME_REGEX.test(searchQuery)) {
-        error(400)
+        return json({})
     }
 
     const response = await searchUser(searchQuery)

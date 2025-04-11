@@ -82,7 +82,7 @@
     <div class="border border-gray-200 rounded-lg shadow-sm">
         <div class="mt-10 flex flex-col items-center pb-10">
             <svg
-                class="w-20 h-20 text-gray-500 dark:text-white"
+                class="w-20 h-20 text-gray-500"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

@@ -80,7 +80,7 @@
             class="inline-flex items-center px-3 text-gray-900 bg-gray-400 border border-e-0 border-gray-300 rounded-s-md"
         >
             <svg
-                class="w-4 h-4 text-gray-800 dark:text-white"
+                class="w-4 h-4 text-gray-800"
                 width="24"
                 height="24"
                 fill="none"
@@ -146,7 +146,7 @@
                     class="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md"
                 >
                     <svg
-                        class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                        class="w-4 h-4 text-gray-500"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >

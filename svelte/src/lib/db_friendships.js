@@ -94,8 +94,25 @@ export async function sendFriendRequest(sender_uuid, receiver_uuid) {
  */
 export async function getFriendshipStatus(user_uuid, other_profile_uuid) {
     try {
-        // get uuid from given userId
-        const res = await pool.query('SELECT status, created_at FROM friendships WHERE sender_uuid = $1 AND receiver_uuid = $2', [user_uuid, other_profile_uuid])
+        // get status of friendship, with the small change of detecting when the user is still missing accepting said
+        // friendship, to display a button on the profile page too
+
+        const res = await pool.query(`
+        SELECT 
+            (
+                CASE 
+                WHEN sender_uuid = $2 AND receiver_uuid = $1 AND status = 'PENDING' THEN 'PENDING_YOU'
+                ELSE status::text 
+                END
+            ) AS status, 
+
+            created_at 
+        FROM friendships 
+        WHERE 
+            (sender_uuid = $1 AND receiver_uuid = $2) 
+            OR 
+            (sender_uuid = $2 AND receiver_uuid = $1)
+        `, [user_uuid, other_profile_uuid])
         if (res.rows.length < 1) {
             return null
         }
