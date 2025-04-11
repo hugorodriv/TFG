@@ -6,6 +6,7 @@
     export let data;
     let accountData;
     let loading = true;
+    let confirmFriensdhipDeletion = false;
 
     let userNotFound = true;
     let isOwnProfile = false;
@@ -42,6 +43,22 @@
         const response = await fetch("../api/accept-friend-request", {
             method: "POST",
             body: JSON.stringify({ sender_uuid }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const body = await response.json();
+        return body.success;
+    }
+
+    /**
+     * @param {String} receiver_uuid
+     */
+    async function cancelFriendship(receiver_uuid) {
+        const response = await fetch("../api/delete-friendship", {
+            method: "POST",
+            body: JSON.stringify({ receiver_uuid }),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -241,6 +258,62 @@
                             >
                                 Already friends :)
                             </p>
+
+                            <!-- Cancel friendship button -->
+                            {#if confirmFriensdhipDeletion}
+                                <button
+                                    on:click={async (e) => {
+                                        const success = await cancelFriendship(
+                                            profile.uuid,
+                                        );
+                                        if (success) {
+                                            e.target.innerText = "REMOVED";
+                                        }
+                                    }}
+                                    class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                                >
+                                    <span class="flex items-center gap-2">
+                                        <svg
+                                            class="w-5 h-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"
+                                            />
+                                        </svg>
+                                        Confirm
+                                    </span>
+                                </button>
+                            {:else}
+                                <button
+                                    on:click={async (e) => {
+                                        confirmFriensdhipDeletion = true;
+                                    }}
+                                    class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                                >
+                                    <span class="flex items-center gap-2">
+                                        <svg
+                                            class="w-5 h-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"
+                                            />
+                                        </svg>
+                                        Remove
+                                    </span>
+                                </button>
+                            {/if}
                         {/if}
                     {:else}
                         <div class="flex mt-4 md:mt-6">
