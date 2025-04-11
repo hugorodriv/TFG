@@ -8,11 +8,12 @@ export async function getPendingFriendships(uuid) {
     const status = 'PENDING'
     try {
         // Get pending friend requests sent by the user with receiver username
-        const { rows } = await pool.query(
-            'SELECT f.*, p.name as sender_name, p.img_url as sender_img_url, p.username as sender_username FROM friendships f ' +
-            'JOIN profiles p ON f.sender_uuid = p.uuid ' +
-            'WHERE f.receiver_uuid = $1 AND f.status = $2',
-            [uuid, status]
+        const query = `
+            SELECT f.*, p.name as sender_name, p.img_url as sender_img_url, p.username as sender_username 
+            FROM friendships f  
+            JOIN profiles p ON f.sender_uuid = p.uuid  
+            WHERE f.receiver_uuid = $1 AND f.status = $2`
+        const { rows } = await pool.query(query, [uuid, status]
         );
 
         return { success: true, pending: rows }
@@ -29,13 +30,13 @@ export async function getSentPendingFriendships(uuid) {
     const status = 'PENDING'
     try {
 
+        const query =
+            `SELECT f.*, p.name as receiver_name, p.img_url as receiver_img_url, p.username as receiver_username
+            FROM friendships f  
+            JOIN profiles p ON f.receiver_uuid = p.uuid 
+            WHERE f.sender_uuid = $1 AND f.status = $2`
         // Get sent and pending friend requests
-        const { rows } = await pool.query(
-            'SELECT f.*, p.name as receiver_name, p.img_url as receiver_img_url, p.username as receiver_username FROM friendships f ' +
-            'JOIN profiles p ON f.receiver_uuid = p.uuid ' +
-            'WHERE f.sender_uuid = $1 AND f.status = $2',
-            [uuid, status]
-        );
+        const { rows } = await pool.query(query, [uuid, status]);
         return { success: true, pending: rows }
     } catch (error) {
         console.log(error)
@@ -79,7 +80,10 @@ export async function searchUser(searchQuery) {
 export async function sendFriendRequest(sender_uuid, receiver_uuid) {
     const status = 'PENDING'
     try {
-        await pool.query('INSERT INTO friendships (sender_uuid, receiver_uuid, status) VALUES ($1, $2, $3)', [sender_uuid, receiver_uuid, status]);
+        const query = `
+            INSERT INTO friendships
+            (sender_uuid, receiver_uuid, status) VALUES ($1, $2, $3)`
+        await pool.query(query, [sender_uuid, receiver_uuid, status]);
 
         return true;
     } catch (error) {
@@ -177,10 +181,10 @@ export async function acceptFriendship(sender_uuid, receiver_uuid) {
         const status = 'ACCEPTED'
 
         const query = `
-  UPDATE friendships
-  SET status = $3
-  WHERE sender_uuid = $1 AND receiver_uuid = $2 AND status = 'PENDING'
-`
+                UPDATE friendships
+                SET status = $3
+                WHERE sender_uuid = $1 AND receiver_uuid = $2 AND status = 'PENDING'
+        `
 
         const res = await pool.query(query, [sender_uuid, receiver_uuid, status])
 
@@ -200,7 +204,9 @@ export async function acceptFriendship(sender_uuid, receiver_uuid) {
  */
 export async function deleteFriendship(sender_uuid, receiver_uuid) {
     try {
-        const res = await pool.query('DELETE FROM friendships WHERE (sender_uuid = $1 AND receiver_uuid = $2) OR (sender_uuid = $2 AND receiver_uuid = $1)', [sender_uuid, receiver_uuid])
+        const query = `DELETE FROM friendships WHERE 
+            (sender_uuid = $1 AND receiver_uuid = $2) OR (sender_uuid = $2 AND receiver_uuid = $1)`
+        const res = await pool.query(query, [sender_uuid, receiver_uuid])
 
         if (res?.rowCount && res.rowCount > 0) {
             return { success: true }
