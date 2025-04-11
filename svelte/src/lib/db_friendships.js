@@ -176,7 +176,13 @@ export async function acceptFriendship(sender_uuid, receiver_uuid) {
     try {
         const status = 'ACCEPTED'
 
-        const res = await pool.query('UPDATE friendships SET status = $3 WHERE sender_uuid = $1 AND receiver_uuid = $2', [sender_uuid, receiver_uuid, status])
+        const query = `
+  UPDATE friendships
+  SET status = $3
+  WHERE sender_uuid = $1 AND receiver_uuid = $2 AND status = 'PENDING'
+`
+
+        const res = await pool.query(query, [sender_uuid, receiver_uuid, status])
 
         if (res?.rowCount && res.rowCount > 0) {
             return { success: true }
