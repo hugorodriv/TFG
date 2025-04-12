@@ -42,7 +42,7 @@
             );
 
             if (cameras.length === 0) {
-                camError = "Your device doesnt have a camera";
+                camError = "Your device doesnt have a compatible camera";
             }
         } catch (err) {
             console.error("Error checking camera:", err);
@@ -92,7 +92,7 @@
             <!-- Display picture -->
             <p>{location.resolved}</p>
             <div
-                class="relative w-full aspect-square bg-gray-100 rounded-lg shadow-md overflow-hidden"
+                class="relative w-full bg-gray-100 rounded-lg shadow-md overflow-hidden"
             >
                 <img
                     src={preview}

@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgis/postgis
     container_name: postgres_container
     restart: unless-stopped
     environment:

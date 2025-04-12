@@ -1,5 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS citext;
 
+-- Profiles
 CREATE TABLE profiles (
     _id SERIAL PRIMARY KEY NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     uuid UUID UNIQUE DEFAULT gen_random_uuid(),
@@ -11,6 +12,7 @@ CREATE TABLE profiles (
 );
 
 
+-- Friendships
 CREATE TYPE friendship_status AS ENUM ('PENDING', 'ACCEPTED', 'DECLINED');
 
 CREATE TABLE friendships (
@@ -44,3 +46,19 @@ CREATE TRIGGER check_cross_friendship
 BEFORE INSERT ON friendships
 FOR EACH ROW
 EXECUTE FUNCTION prevent_cross_friendship();
+
+-- Posts
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE TABLE posts (
+    post_uuid UUID PRIMARY KEY,
+    profile UUID REFERENCES profiles(uuid),
+    private_img_url VARCHAR(2048),
+    text VARCHAR(2048),
+    created_at TIMESTAMP DEFAULT NOW(),
+    location GEOMETRY(POINT, 4326),
+    CONSTRAINT chk_location CHECK (ST_IsValid(location))
+);
+
+CREATE INDEX idx_posts_user_id ON posts(profile);
+CREATE INDEX idx_posts_location ON posts USING GIST(location);
+
