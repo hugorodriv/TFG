@@ -15,7 +15,7 @@ export async function uploadPost(profile_uuid, text, location, resolved_location
             INSERT INTO posts
             (profile, text, location, resolved_location) VALUES ($1, $2, $3, $4)
             RETURNING post_uuid`
-        const res = await pool.query(query, [profile_uuid, text, location]);
+        const res = await pool.query(query, [profile_uuid, text, location, resolved_location]);
 
         // return the post UUID
         return res.rows[0].post_uuid;
@@ -33,7 +33,7 @@ export async function getUserPosts(uuid) {
         // Get pending friend requests sent by the user with receiver username
         const query = `
             SELECT post_uuid, text, location, created_at FROM posts
-            WHERE profile = $1`
+            WHERE profile = $1 ORDER BY created_at DESC`
         let { rows } = await pool.query(query, [uuid]);
 
         // now, with this object that contains all the posts UUIDs, we have to
@@ -64,7 +64,7 @@ export async function getPostInfo(post_uuid, user_uuid, location) {
     // TODO: Is poster's friend
     // TODO: Is close to the post
     const query = `
-            SELECT text, location, resolved_location, created_at, profile FROM posts
+            SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
             WHERE post_uuid = $1 AND profile = $2 LIMIT 1`
     try {
         const res = await pool.query(query, [post_uuid, user_uuid]);
@@ -87,4 +87,24 @@ export async function getPostInfo(post_uuid, user_uuid, location) {
         console.log(error)
         return { success: false }
     }
+}
+
+export async function checkAndRemovePost(post_uuid, user_uuid) {
+    // function also checks if user_uuid is actually the owner of the post
+    console.log(post_uuid, user_uuid)
+
+    const query = `
+DELETE FROM posts WHERE post_uuid = $1 AND profile = $2
+`
+    try {
+        const res = await pool.query(query, [post_uuid, user_uuid]);
+        if (res && res.rowCount && res.rowCount > 0) {
+            return { success: true }
+        }
+        return { success: false }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
+    }
+
 }

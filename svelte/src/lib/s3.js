@@ -118,6 +118,9 @@ export async function getUploadPostLink(post_uuid) {
         throw new Error('Failed to generate upload URL');
     }
 }
+/**
+ * @param {any} post_uuid
+ */
 function postLinkCacheHandling(post_uuid) {
     // this function does not check if user has permission to fetch post,
     // its only designed for, in the case they do, avoid unnecessary hits to S3
@@ -166,4 +169,23 @@ export async function getViewableLinks(post_uuid_arr) {
     );
 
     return links;
+}
+
+/**
+ * @param {String} post_uuid
+ */
+export async function removePostS3(post_uuid) {
+    const filename = `posts/${post_uuid}.jpeg`
+    const delParams = {
+        Bucket: S3_BUCKET_NAME,
+        Key: filename,
+    };
+
+
+    try {
+        await s3Client.send(new DeleteObjectCommand(delParams));
+        return { success: true }
+    } catch (e) {
+        return { error: e }
+    }
 }

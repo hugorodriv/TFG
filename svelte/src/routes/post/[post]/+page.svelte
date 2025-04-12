@@ -9,16 +9,70 @@
     if (data?.success) {
         notFound = false;
     }
+    let confirmDeletePost = false;
     const post = data.post;
     const owner = data.isOwner;
-
-    console.log(post);
 
     let loading = true;
 
     onMount(() => {
         loading = false;
     });
+
+    async function removePost() {
+        const response = await fetch("/api/remove-post", {
+            method: "POST",
+            body: JSON.stringify({
+                post_uuid: post.post_uuid,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        try {
+            const data = await response.json();
+            if (data?.success) {
+                return true;
+            }
+        } catch (error) {
+            alert("Error removing post");
+            return false;
+        }
+        return false;
+    }
+
+    function getTimeAgo(timestamp) {
+        const now = new Date();
+        const pastDate = new Date(timestamp);
+        const diffMs = now - pastDate;
+
+        // Convert to seconds
+        const diffSec = Math.floor(diffMs / 1000);
+
+        if (diffSec < 60) {
+            return `${diffSec} seconds ago`;
+        }
+
+        // Convert to minutes
+        const diffMin = Math.floor(diffSec / 60);
+
+        if (diffMin < 60) {
+            return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
+        }
+
+        // Convert to hours
+        const diffHr = Math.floor(diffMin / 60);
+
+        if (diffHr < 24) {
+            return `${diffHr} hour${diffHr !== 1 ? "s" : ""} ago`;
+        }
+
+        // Convert to days
+        const diffDay = Math.floor(diffHr / 24);
+
+        return `${diffDay} day${diffDay !== 1 ? "s" : ""} ago`;
+    }
 </script>
 
 {#if loading}
@@ -57,6 +111,10 @@
     {:else}
         <div class="space-y-4 p-4 max-w-md m-auto">
             <div class="text-center items-center justify-center">
+                <div>
+                    <p>{post.resolved_location}</p>
+                    <p>{getTimeAgo(post.created_at)}</p>
+                </div>
                 <img
                     alt="post"
                     class="rounded-lg shadow-lg m-auto w-11/12"
@@ -66,6 +124,28 @@
             <div>
                 <p>{post.text}</p>
             </div>
+            {#if owner}
+                {#if confirmDeletePost}
+                    <button
+                        class="bg-red-500 px-5 py-2 rounded font-bold shadow"
+                        on:click={async (e) => {
+                            const success = await removePost();
+                            if (success) {
+                                e.target.innerText = "POST REMOVED";
+                            }
+                        }}>Confirm remove post</button
+                    >
+                {:else}
+                    <button
+                        class="bg-red-200 px-5 py-2 rounded font-bold shadow"
+                        on:click={() => {
+                            confirmDeletePost = true;
+                        }}
+                    >
+                        Remove</button
+                    >
+                {/if}
+            {/if}
         </div>
     {/if}
     <Bottombar />
