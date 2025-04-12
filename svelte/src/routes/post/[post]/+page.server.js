@@ -30,7 +30,7 @@ export const load = async (event) => {
     const location = event.url.searchParams.get("location")
     const postInfo = await getPostInfo(post_uuid, user_uuid, location)
 
-    if (postInfo?.success && postInfo.postInfo) {
+    if (postInfo?.success && postInfo.postInfo && postInfo.postInfo.length > 0) {
         let profileIsOwner = postInfo.postInfo[0].profile === user_uuid
         return { success: true, post: postInfo.postInfo[0], isOwner: profileIsOwner }
     }

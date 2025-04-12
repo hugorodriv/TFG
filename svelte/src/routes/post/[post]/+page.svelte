@@ -127,23 +127,55 @@
             {#if owner}
                 {#if confirmDeletePost}
                     <button
-                        class="bg-red-500 px-5 py-2 rounded font-bold shadow"
                         on:click={async (e) => {
                             const success = await removePost();
                             if (success) {
                                 e.target.innerText = "POST REMOVED";
                             }
-                        }}>Confirm remove post</button
+                        }}
+                        class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
+                        <span class="flex items-center gap-2">
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                            Confirm
+                        </span>
+                    </button>
                 {:else}
                     <button
-                        class="bg-red-200 px-5 py-2 rounded font-bold shadow"
                         on:click={() => {
                             confirmDeletePost = true;
                         }}
+                        class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
-                        Remove</button
-                    >
+                        <span class="flex items-center gap-2">
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                            Remove
+                        </span>
+                    </button>
                 {/if}
             {/if}
         </div>
