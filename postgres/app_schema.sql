@@ -50,9 +50,8 @@ EXECUTE FUNCTION prevent_cross_friendship();
 -- Posts
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE TABLE posts (
-    post_uuid UUID PRIMARY KEY,
+    post_uuid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     profile UUID REFERENCES profiles(uuid),
-    private_img_url VARCHAR(2048),
     text VARCHAR(2048),
     created_at TIMESTAMP DEFAULT NOW(),
     location GEOMETRY(POINT, 4326),

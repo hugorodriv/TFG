@@ -80,3 +80,41 @@ export async function removePfpS3(uuid) {
         return { error: e }
     }
 }
+
+/**
+ * @param {String} post_uuid
+ */
+export async function getPrivateLinkPost(post_uuid) {
+    return `https://${S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/posts/${post_uuid}.jpeg`;
+}
+
+
+/**
+ * @param {String} post_uuid
+ */
+export async function getUploadPostLink(post_uuid) {
+    // unique filename
+    const filename = `posts/${post_uuid}.jpeg`;
+
+
+    const uploadParams = {
+        Bucket: S3_BUCKET_NAME,
+        Key: filename,
+        ContentType: "image/jpg"
+    };
+
+    try {
+        const uploadUrl = await getSignedUrl(
+            s3Client,
+            new PutObjectCommand(uploadParams),
+            { expiresIn: 120 } // expires in 2 minutes
+        );
+
+        return {
+            uploadUrl,
+        };
+    } catch (error) {
+        console.error('Error generating pre-signed URL:', error);
+        throw new Error('Failed to generate upload URL');
+    }
+}
