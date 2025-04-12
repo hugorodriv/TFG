@@ -20,7 +20,6 @@
         pfp = localStorage.getItem("pfp");
         loading = false;
     });
-    console.log(posts);
 </script>
 
 {#if loading}
@@ -72,9 +71,16 @@
         </div>
         <div class="grid grid-cols-3 gap-1">
             {#each posts as post}
-                <div class="rounded-lg overflow-hidden shadow-lg">
-                    <img alt="Post" class="w-full h-48 object-cover" />
-                </div>
+                <a href="/post/{post.post_uuid}">
+                    <div class="rounded-lg overflow-hidden shadow-lg">
+                        <img
+                            loading="lazy"
+                            src={post.img_url}
+                            alt="Post"
+                            class="w-full h-48 object-cover"
+                        />
+                    </div>
+                </a>
             {/each}
         </div>
     </div>

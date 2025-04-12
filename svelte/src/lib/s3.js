@@ -118,6 +118,20 @@ export async function getUploadPostLink(post_uuid) {
         throw new Error('Failed to generate upload URL');
     }
 }
+function postLinkCacheHandling(post_uuid) {
+    // this function does not check if user has permission to fetch post,
+    // its only designed for, in the case they do, avoid unnecessary hits to S3
+
+
+}
+
+const getTruncatedHourTime = () => {
+    const d = new Date();
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d;
+};
 
 /**
  * @param {String[]} post_uuid_arr
@@ -126,17 +140,26 @@ export async function getViewableLinks(post_uuid_arr) {
     if (!post_uuid_arr) {
         return
     }
+
+
+    const truncatedTime = getTruncatedHourTime();
+
     const links = await Promise.all(
         post_uuid_arr.map(async (uuid) => {
             const params = {
                 Bucket: S3_BUCKET_NAME,
                 Key: `posts/${uuid}.jpeg`,
+                ResponseCacheControl: 'public, max-age=3600',
+                ResponseContentType: 'image/jpeg'
             };
 
             const url = await getSignedUrl(
                 s3Client,
                 new GetObjectCommand(params),
-                { expiresIn: 120 } // expires in 2 minutes
+                {
+                    expiresIn: 3600,
+                    signingDate: truncatedTime
+                }
             );
             return url;
         })

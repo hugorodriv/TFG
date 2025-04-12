@@ -97,11 +97,9 @@
                 }
             }
 
-            // Set canvas dimensions
             canvas.width = width;
             canvas.height = height;
 
-            // Draw resized image
             ctx.drawImage(image, 0, 0, width, height);
 
             // Convert to JPEG blob
