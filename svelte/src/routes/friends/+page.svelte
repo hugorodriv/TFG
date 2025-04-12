@@ -37,7 +37,7 @@
 {:else}
     <Navbar />
 
-    <div class="space-y-4 p-4 max-w-md m-auto {loading ? 'hidden' : 'shown'}">
+    <div class="space-y-4 p-4 max-w-md m-auto">
         {#if data.pending.length > 0}
             <p class="text-center text-xl">New friend requests</p>
         {/if}

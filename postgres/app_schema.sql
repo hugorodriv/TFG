@@ -53,6 +53,7 @@ CREATE TABLE posts (
     post_uuid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     profile UUID REFERENCES profiles(uuid),
     text VARCHAR(2048),
+    resolved_location VARCHAR(300),
     created_at TIMESTAMP DEFAULT NOW(),
     location GEOMETRY(POINT, 4326),
     CONSTRAINT chk_location CHECK (ST_IsValid(location))

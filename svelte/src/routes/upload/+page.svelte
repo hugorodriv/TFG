@@ -135,6 +135,7 @@
             method: "POST",
             body: JSON.stringify({
                 location: locationInfo,
+                resolved_location: location.resolved,
                 postText: postText,
             }),
             headers: {

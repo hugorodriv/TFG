@@ -27,6 +27,7 @@ export async function POST({ locals, request }) {
 
     // const location = await body.location
     const recievedLocation = await body.location
+    const resolved_location = await body.resolved_location
     const location =
     {
         "type": "Point",
@@ -34,7 +35,7 @@ export async function POST({ locals, request }) {
     }
     const text = await body.postText
 
-    const post_uuid = await uploadPost(profile_uuid, text, location)
+    const post_uuid = await uploadPost(profile_uuid, text, location, resolved_location)
 
     if (!post_uuid) {
         error(500)
