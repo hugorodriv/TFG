@@ -122,5 +122,5 @@
         {/if}
     </div>
 
-    <Bottombar />
+    <Bottombar friendsActive={true} />
 {/if}

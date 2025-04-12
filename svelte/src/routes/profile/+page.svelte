@@ -1,4 +1,5 @@
 <script>
+    import { signOut } from "@auth/sveltekit/client";
     import Bottombar from "../Bottombar.svelte";
     import Navbar from "../Navbar.svelte";
     import { onMount } from "svelte";
@@ -43,29 +44,42 @@
     <Navbar />
 
     <div class="space-y-4 p-4 max-w-md m-auto">
-        <div class="border border-gray-200 rounded-lg shadow-sm">
-            <div class="mt-10 flex flex-col items-center pb-10">
+        <div
+            class="grid grid-cols-[auto_1fr] items-center gap-4 border border-gray-200 rounded-lg shadow-sm"
+        >
+            <div class="px-5 mt-10 flex flex-col items-center pb-10">
                 <img
-                    class="drop-shadow-lg w-20 h-20 mb-3 rounded-full shadow-lg"
+                    class="w-20 h-20 rounded-full shadow-lg"
                     src={pfp}
                     alt="pfp"
                 />
-                <p class="mb-1 text-xl font-medium text-gray-900">
-                    {accountData.name}
-                </p>
-                <p class="text-sm text-gray-500">
-                    @{accountData.username}
-                </p>
-                <p class="mt-2 px-5 text-sm text-gray-600">
-                    {accountData.bio}
-                </p>
-
-                <div class="flex mt-4">
+            </div>
+            <div class="w-full space-y-2">
+                <div>
+                    <p class="text-xl font-medium text-gray-900">
+                        {accountData.name}
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        @{accountData.username}
+                    </p>
+                    <p class="text-sm text-gray-800">
+                        {accountData.bio}
+                    </p>
+                </div>
+                <div class="space-x-2">
                     <a
                         href="/settings"
-                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800"
-                        >Edit profile</a
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-800"
                     >
+                        Edit profile
+                    </a>
+                    <a
+                        href="./signout/"
+                        on:click|preventDefault={() => signOut()}
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-800"
+                    >
+                        Log out
+                    </a>
                 </div>
             </div>
         </div>
@@ -84,5 +98,5 @@
             {/each}
         </div>
     </div>
-    <Bottombar />
+    <Bottombar profileActive={true} />
 {/if}
