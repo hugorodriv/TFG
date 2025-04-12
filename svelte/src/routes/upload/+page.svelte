@@ -7,7 +7,7 @@
     let uploading = false;
     let successfulUpload = false;
 
-    let postImage;
+    let compressedFile;
 
     /**
      * @type {string}
@@ -65,14 +65,70 @@
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Create preview
-        postImage = file;
+        compressImage(file);
+    }
+
+    function compressImage(img) {
+        const MAX_DIMENSION = 1080;
+        const JPEG_QUALITY = 0.7;
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const reader = new FileReader();
+        const image = new Image();
+
+        reader.onload = (e) => {
+            image.src = e.target.result;
+        };
+
+        image.onload = () => {
+            let width = image.naturalWidth;
+            let height = image.naturalHeight;
+
+            if (width > height) {
+                if (width > MAX_DIMENSION) {
+                    height = Math.round((height * MAX_DIMENSION) / width);
+                    width = MAX_DIMENSION;
+                }
+            } else {
+                if (height > MAX_DIMENSION) {
+                    width = Math.round((width * MAX_DIMENSION) / height);
+                    height = MAX_DIMENSION;
+                }
+            }
+
+            // Set canvas dimensions
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw resized image
+            ctx.drawImage(image, 0, 0, width, height);
+
+            // Convert to JPEG blob
+            canvas.toBlob(
+                (blob) => {
+                    if (!blob) {
+                        return;
+                    }
+
+                    compressedFile = new File([blob], img.name, {
+                        type: "image/jpeg",
+                        lastModified: Date.now(),
+                    });
+                },
+                "image/jpeg",
+                JPEG_QUALITY,
+            );
+        };
+
+        // Start reading the file
+        reader.readAsDataURL(img);
     }
     async function uploadPicture() {
         uploading = true;
         //
 
-        if (!location || !postImage) {
+        if (!location || !compressedFile) {
             return;
         }
         const locationInfo = { lat: location.lat, long: location.lon };
@@ -98,7 +154,7 @@
             const response_put = await fetch(body.uploadLink, {
                 method: "PUT",
                 headers: myHeaders,
-                body: postImage,
+                body: compressedFile,
             });
 
             if (!response_put.ok) {
@@ -187,21 +243,21 @@
                 >
                     {camError}
                 </div>
-            {:else if postImage}
+            {:else if compressedFile}
                 <!-- Display picture -->
                 <p>{location.resolved}</p>
                 <div
                     class="relative w-full bg-gray-100 rounded-lg shadow-md overflow-hidden"
                 >
                     <img
-                        src={URL.createObjectURL(postImage)}
+                        src={URL.createObjectURL(compressedFile)}
                         alt="Camera preview"
                         class="w-full h-full object-cover"
                     />
                     <button
                         on:click={() => {
                             if (!successfulUpload) {
-                                postImage = null;
+                                compressedFile = null;
                             }
                         }}
                         class="absolute top-2 right-2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md"

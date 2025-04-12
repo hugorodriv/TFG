@@ -57,7 +57,10 @@
                         height: img.clientHeight,
                     };
 
-                    cropSize = Math.min(imageSize.width, imageSize.height);
+                    cropSize = Math.min(
+                        imageSize.width / 2,
+                        imageSize.height / 2,
+                    );
 
                     cropPos = { x: 0, y: 0 };
                     cropActive = true;

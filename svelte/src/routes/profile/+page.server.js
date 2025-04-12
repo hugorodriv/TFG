@@ -1,6 +1,8 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
-import { deleteAccount, fetchAccData, updateAccDetails } from "$lib/db.js"
+import { getPendingFriendships, getSentPendingFriendships, getFriendList } from '$lib/db_friendships';
+import { getUserUUID } from '$lib/db';
+import { getUserPosts } from '$lib/db_posts';
 
 
 /**
@@ -14,61 +16,30 @@ export async function load(event) {
         throw redirect(303, '/');
     }
 
-    // user exists but not a new acc
+    // user exists but hasnt created acc yet
     if (await isNewAccount(session.user)) {
         throw redirect(303, '/');
     }
 
-    const accData = await fetchAccData(session?.user?.id)
-    const email = session.user?.email
+    const userId = session?.user?.id;
 
-    return {
-        accData,
-        email
-    };
-}
-
-
-export const actions = {
-    // TODO: Re-populate store (for updating Navbar )
-    updateDetails: async ({ request, locals }) => {
-        const session = await locals.auth();
-        const userId = session?.user?.id;
-
-        const formData = await request.formData();
-        const name = String(formData.get('name')).slice(0, 20);
-        const bio = String(formData.get('bio')).slice(0, 500);
-
-        if (name.length < 1) {
-            return { error: true }
-        }
-
-        const correct = await updateAccDetails(userId, { name: name, bio: bio })
-
-        if (correct) {
-            return {
-                success: true,
-                data: { name: name, bio: bio }
-            }
-        }
-
-        return {
-            error: true,
-            data: { name: name, bio: bio }
-        }
-    },
-    deleteAccount: async ({ request, locals }) => {
-
-        const session = await locals.auth();
-        const userId = session?.user?.id;
-        console.log("Removing account", userId)
-
-        const correct = await deleteAccount(userId)
-
-        if (correct) {
-            return
-        } else {
-            return { error: true }
-        }
+    if (!userId) {
+        throw redirect(303, "/")
     }
+
+    const uuid = await getUserUUID(userId)
+
+    if (!uuid) {
+        throw redirect(303, "/")
+    }
+
+
+    // TODO: Get user posts
+    const posts = await getUserPosts(uuid)
+    if (posts?.success) {
+        return { posts: posts.posts }
+    }
+
 }
+
+

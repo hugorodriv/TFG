@@ -316,9 +316,9 @@
                             {/if}
                         {/if}
                     {:else}
-                        <div class="flex mt-4 md:mt-6">
+                        <div class="flex mt-4">
                             <a
-                                href="/profile"
+                                href="/settings"
                                 class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-800"
                                 >Edit profile</a
                             >

@@ -12,7 +12,7 @@ export async function load(event) {
 
     // user exists but not a new acc
     if (!await isNewAccount(session.user)) {
-        throw redirect(303, '/profile/');
+        throw redirect(303, '/');
     }
 
     // new acc

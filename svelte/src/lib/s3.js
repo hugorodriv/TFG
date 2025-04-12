@@ -1,6 +1,6 @@
 import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, S3_BUCKET_NAME } from "$env/static/private";
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 // Configure AWS S3 Client
@@ -117,4 +117,30 @@ export async function getUploadPostLink(post_uuid) {
         console.error('Error generating pre-signed URL:', error);
         throw new Error('Failed to generate upload URL');
     }
+}
+
+/**
+ * @param {String[]} post_uuid_arr
+ */
+export async function getViewableLinks(post_uuid_arr) {
+    if (!post_uuid_arr) {
+        return
+    }
+    const links = await Promise.all(
+        post_uuid_arr.map(async (uuid) => {
+            const params = {
+                Bucket: S3_BUCKET_NAME,
+                Key: `posts/${uuid}.jpeg`,
+            };
+
+            const url = await getSignedUrl(
+                s3Client,
+                new GetObjectCommand(params),
+                { expiresIn: 120 } // expires in 2 minutes
+            );
+            return url;
+        })
+    );
+
+    return links;
 }
