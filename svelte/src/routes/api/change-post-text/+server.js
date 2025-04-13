@@ -33,10 +33,7 @@ export async function POST({ locals, request }) {
     const res = await checkAndChangePostText(post_uuid, user_uuid, newText)
 
     if (res?.success) {
-        const ress3 = await removePostS3(post_uuid)
-        if (ress3?.success) {
-            return json({ "success": true })
-        }
+        return json({ "success": true })
     }
     error(500)
 
