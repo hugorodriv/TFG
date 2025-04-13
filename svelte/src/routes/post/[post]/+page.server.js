@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
-import { getPostInfo } from '$lib/db_posts.js';
+import { checkAndGetPostInfo } from '$lib/db_posts.js';
 import { getUserUUID } from '$lib/db.js';
 
 
@@ -28,7 +28,7 @@ export const load = async (event) => {
     const post_uuid = pathname.substring(6)
 
     const location = event.url.searchParams.get("location")
-    const postInfo = await getPostInfo(post_uuid, user_uuid, location)
+    const postInfo = await checkAndGetPostInfo(post_uuid, user_uuid, location)
 
     if (postInfo?.success && postInfo.postInfo && postInfo.postInfo.length > 0) {
         let profileIsOwner = postInfo.postInfo[0].profile === user_uuid

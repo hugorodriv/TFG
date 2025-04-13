@@ -158,10 +158,8 @@
 
             if (!response_put.ok) {
                 alert("Error uploading post ");
-                console.log(response_put);
             } else {
                 successfulUpload = true;
-                console.log("Post uploaded");
             }
         }
 

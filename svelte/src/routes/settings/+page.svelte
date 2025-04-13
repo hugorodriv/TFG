@@ -49,7 +49,6 @@
 
         const myHeaders = new Headers({ "Content-Type": "image/*" });
         try {
-            console.log(finalProfilePicture);
             const response_put = await fetch(data.url, {
                 method: "PUT",
                 headers: myHeaders,
@@ -58,7 +57,6 @@
 
             if (!response_put.ok) {
                 alert("Error changing profile picture");
-                console.log(response_put);
             }
 
             // update localStorage for pfp

@@ -12,6 +12,7 @@
     let isOwnProfile = false;
     const profile = data.userdata;
     const friendshipStatus = data.friendshipStatus;
+    const posts = data.friendPosts;
     /**
      * @type {string}
      */
@@ -325,6 +326,20 @@
                         </div>
                     {/if}
                 </div>
+            </div>
+            <div class="grid grid-cols-3 gap-1">
+                {#each posts as post}
+                    <a href="/post/{post.post_uuid}">
+                        <div class="rounded-lg overflow-hidden shadow-lg">
+                            <img
+                                loading="lazy"
+                                src={post.img_url}
+                                alt="Post"
+                                class="w-full h-48 object-cover"
+                            />
+                        </div>
+                    </a>
+                {/each}
             </div>
         {/if}
     </div>

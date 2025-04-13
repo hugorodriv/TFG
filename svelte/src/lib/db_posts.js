@@ -32,7 +32,6 @@ export async function uploadPost(profile_uuid, text, location, resolved_location
  */
 export async function getUserPosts(uuid) {
     try {
-        // Get pending friend requests sent by the user with receiver username
         const query = `
             SELECT post_uuid, text, location, created_at FROM posts
             WHERE profile = $1 ORDER BY created_at DESC`
@@ -63,16 +62,20 @@ export async function getUserPosts(uuid) {
  * @param {any} user_uuid
  * @param {any} location
  */
-export async function getPostInfo(post_uuid, user_uuid, location) {
+export async function checkAndGetPostInfo(post_uuid, user_uuid, location) {
 
     // User has permission to view post if:
 
     // Is the poster
-    // TODO: Is poster's friend
+    // Is poster's friend
     // TODO: Is close to the post
     const query = `
-            SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
-            WHERE post_uuid = $1 AND profile = $2 LIMIT 1`
+        SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
+        WHERE post_uuid = $1 AND (
+            profile = $2 OR are_friends(profile, $2)
+        )
+        LIMIT 1
+`
     try {
         const res = await pool.query(query, [post_uuid, user_uuid]);
         let { rows } = res
@@ -102,11 +105,9 @@ export async function getPostInfo(post_uuid, user_uuid, location) {
  */
 export async function checkAndRemovePost(post_uuid, user_uuid) {
     // function also checks if user_uuid is actually the owner of the post
-    console.log(post_uuid, user_uuid)
-
     const query = `
-DELETE FROM posts WHERE post_uuid = $1 AND profile = $2
-`
+        DELETE FROM posts WHERE post_uuid = $1 AND profile = $2
+    `
     try {
         const res = await pool.query(query, [post_uuid, user_uuid]);
         if (res && res.rowCount && res.rowCount > 0) {

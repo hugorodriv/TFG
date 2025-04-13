@@ -28,6 +28,18 @@ CREATE TABLE friendships (
 CREATE INDEX ON friendships (receiver_uuid, status);
 CREATE INDEX ON friendships (sender_uuid, status);
 
+CREATE FUNCTION are_friends(uuid1 UUID, uuid2 UUID) RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM friendships
+        WHERE (
+            (sender_uuid = uuid1 AND receiver_uuid = uuid2) OR
+            (sender_uuid = uuid2 AND receiver_uuid = uuid1)
+        ) AND status = 'ACCEPTED'
+    );
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
 
 CREATE OR REPLACE FUNCTION prevent_cross_friendship()
 RETURNS TRIGGER AS $$

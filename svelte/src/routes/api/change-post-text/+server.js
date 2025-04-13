@@ -1,8 +1,7 @@
 import { json } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
-import { removePfpS3, removePostS3, uploadPresignedPfp } from "$lib/s3.js";
-import { getUserUUID, removePfpDB } from "$lib/db.js";
-import { checkAndChangePostText, checkAndRemovePost } from "$lib/db_posts.js";
+import { getUserUUID } from "$lib/db.js";
+import { checkAndChangePostText } from "$lib/db_posts.js";
 
 export async function POST({ locals, request }) {
 

@@ -46,7 +46,6 @@
     async function changePostText() {
         const newText = document?.getElementById("updatedPostText")?.value;
         if (newText === post.text) return;
-        console.log(newText);
 
         const response = await fetch("/api/change-post-text", {
             method: "POST",
@@ -271,7 +270,7 @@
                         >
                             <span class="flex items-center gap-2">
                                 <svg
-                                    class="w-5 h-5 text-gray-800 dark:text-white"
+                                    class="w-5 h-5 text-gray-800"
                                     aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="24"

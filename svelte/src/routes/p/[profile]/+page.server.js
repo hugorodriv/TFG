@@ -2,6 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
 import { fetchAccDataFromUsername, getUserUUID, USERNAME_REGEX } from '$lib/db.js';
 import { getFriendshipStatus } from '$lib/db_friendships.js';
+import { getUserPosts } from '$lib/db_posts.js';
 
 
 export const load = async (event) => {
@@ -37,6 +38,13 @@ export const load = async (event) => {
 
         const userUuid = await getUserUUID(userId)
         const friendshipStatus = await getFriendshipStatus(userUuid, userdata.uuid)
+
+        if (friendshipStatus === "ACCEPTED") {
+            const friendPosts = await getUserPosts(userdata.uuid)
+            if (friendPosts?.success) {
+                return { success: true, userdata: userdata, friendshipStatus: friendshipStatus, friendPosts: friendPosts.posts }
+            }
+        }
         return { success: true, userdata: userdata, friendshipStatus: friendshipStatus }
     } catch (error) {
         return { success: false }
