@@ -10,10 +10,12 @@
         notFound = false;
     }
     let confirmDeletePost = false;
+    let successfulUpdate = false;
     const post = data.post;
     const owner = data.isOwner;
 
     let loading = true;
+    let editingText = false;
 
     onMount(() => {
         loading = false;
@@ -24,6 +26,33 @@
             method: "POST",
             body: JSON.stringify({
                 post_uuid: post.post_uuid,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        try {
+            const data = await response.json();
+            if (data?.success) {
+                return true;
+            }
+        } catch (error) {
+            alert("Error removing post");
+            return false;
+        }
+        return false;
+    }
+    async function changePostText() {
+        const newText = document?.getElementById("updatedPostText")?.value;
+        if (newText === post.text) return;
+        console.log(newText);
+
+        const response = await fetch("/api/change-post-text", {
+            method: "POST",
+            body: JSON.stringify({
+                post_uuid: post.post_uuid,
+                newText: newText,
             }),
             headers: {
                 "Content-Type": "application/json",
@@ -109,7 +138,7 @@
             </div>
         </div>
     {:else}
-        <div class="space-y-4 p-4 max-w-md m-auto">
+        <div class="space-y-4 p-4 max-w-md m-auto w-11/12">
             <div class="text-center items-center justify-center">
                 <div>
                     <p>{post.resolved_location}</p>
@@ -117,13 +146,32 @@
                 </div>
                 <img
                     alt="post"
-                    class="rounded-lg shadow-lg m-auto w-11/12"
+                    class="rounded-lg shadow-lg m-auto"
                     src={post.img_url}
                 />
             </div>
-            <div>
-                <p>{post.text}</p>
-            </div>
+            {#if editingText}
+                <div
+                    class="p-4 m-auto bg-gray-100 border border-gray-300 my-2 rounded h-32 overflow-auto relative"
+                >
+                    <textarea
+                        maxlength="2048"
+                        value={post.text}
+                        id="updatedPostText"
+                        class="w-full h-full resize-none bg-transparent"
+                    ></textarea>
+                    <span class="absolute top-1 right-2 text-xs text-gray-500"
+                        >Editing</span
+                    >
+                </div>
+            {:else}
+                <div
+                    class="p-4 m-auto bg-gray-100 my-2 rounded h-32 overflow-auto"
+                >
+                    <p>{post.text}</p>
+                </div>
+            {/if}
+
             {#if owner}
                 {#if confirmDeletePost}
                     <button
@@ -176,6 +224,77 @@
                             Remove
                         </span>
                     </button>
+
+                    {#if editingText}
+                        <button
+                            on:click={async (e) => {
+                                const success = await changePostText();
+                                successfulUpdate = success || false;
+                            }}
+                            class="px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
+                        >
+                            <span class="flex items-center gap-2">
+                                <svg
+                                    class="w-5 h-5 text-white"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke="currentColor"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0
+                                    0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0
+                                    1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0
+                                    2.853l-6.844 6.844L8 14l.713-3.565
+                                    6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                                    />
+                                </svg>
+                                {#if successfulUpdate}
+                                    Post Updated
+                                {:else}
+                                    Submit
+                                {/if}
+                            </span>
+                        </button>
+                    {:else}
+                        <button
+                            on:click={() => {
+                                editingText = true;
+                            }}
+                            class="px-4 py-2.5 text-sm font-medium text-gray-800 hover:text-gray-900 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                        >
+                            <span class="flex items-center gap-2">
+                                <svg
+                                    class="w-5 h-5 text-gray-800 dark:text-white"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke="currentColor"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0
+                                    0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0
+                                    1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0
+                                    2.853l-6.844 6.844L8 14l.713-3.565
+                                    6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                                    />
+                                </svg>
+                                Edit Text
+                            </span>
+                        </button>
+                    {/if}
                 {/if}
             {/if}
         </div>

@@ -4,6 +4,8 @@ import { getPrivateLinkPost, getViewableLinks } from "./s3";
 /**
  * @param {String} profile_uuid
  * @param {String} text
+ * @param {{ type: string; coordinates: any[]; }} location
+ * @param {any} resolved_location
  */
 export async function uploadPost(profile_uuid, text, location, resolved_location) {
 
@@ -56,6 +58,11 @@ export async function getUserPosts(uuid) {
     }
 }
 
+/**
+ * @param {string} post_uuid
+ * @param {any} user_uuid
+ * @param {any} location
+ */
 export async function getPostInfo(post_uuid, user_uuid, location) {
 
     // User has permission to view post if:
@@ -89,6 +96,10 @@ export async function getPostInfo(post_uuid, user_uuid, location) {
     }
 }
 
+/**
+ * @param {any} post_uuid
+ * @param {any} user_uuid
+ */
 export async function checkAndRemovePost(post_uuid, user_uuid) {
     // function also checks if user_uuid is actually the owner of the post
     console.log(post_uuid, user_uuid)
@@ -98,6 +109,32 @@ DELETE FROM posts WHERE post_uuid = $1 AND profile = $2
 `
     try {
         const res = await pool.query(query, [post_uuid, user_uuid]);
+        if (res && res.rowCount && res.rowCount > 0) {
+            return { success: true }
+        }
+        return { success: false }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
+    }
+
+}
+
+/**
+ * @param {String} post_uuid
+ * @param {String} user_uuid
+ * @param {String} newText
+ */
+export async function checkAndChangePostText(post_uuid, user_uuid, newText) {
+    // function also checks if user_uuid is actually the owner of the post
+
+    const query = `
+        UPDATE posts
+        SET text = $3
+        WHERE post_uuid = $1 AND profile = $2
+    `;
+    try {
+        const res = await pool.query(query, [post_uuid, user_uuid, newText]);
         if (res && res.rowCount && res.rowCount > 0) {
             return { success: true }
         }
