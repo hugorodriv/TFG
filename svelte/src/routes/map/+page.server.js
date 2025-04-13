@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { isNewAccount } from "$lib/auth.js";
+import { getPendingFriendships, getSentPendingFriendships } from '$lib/db_friendships';
 
 
 /**

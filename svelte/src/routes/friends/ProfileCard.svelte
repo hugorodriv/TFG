@@ -86,21 +86,21 @@
 
 <li class="py-3">
     <span
-        class="p-3 flex items-center justify-between gap-4 rounded-lg border border-gray-100"
+        class="p-3 flex items-center justify-between gap-4 rounded-lg border border-gray-200"
     >
         <a class="flex max-w-48 w-full" href="/p/{username}">
             <div class="">
                 <img
-                    class="drop-shadow-lg w-10 h-10 rounded-full"
+                    class="drop-shadow-lg w-11 h-11 rounded-full"
                     alt="{username} profile"
                     src={image_data}
                 />
             </div>
             <div class="flex-1 min-w-0 ms-4">
-                <p class="text-sm font-medium text-gray-900 truncate">
+                <p class=" font-medium text-gray-900 truncate">
                     @{username}
                 </p>
-                <p class="text-sm text-gray-500 truncate">
+                <p class=" text-gray-500 truncate">
                     {name}
                 </p>
             </div>
@@ -109,7 +109,7 @@
             <!-- Accept friendship button -->
             <button
                 type="button"
-                class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
+                class="flex items-center gap-2 px-4 py-2.5 font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
                 on:click={async (e) => {
                     const success = await acceptFriendship(sender_uuid);
                     if (success) {
@@ -142,7 +142,7 @@
                             e.target.innerText = "REMOVED";
                         }
                     }}
-                    class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                    class="px-4 py-2.5 font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                 >
                     <span class="flex items-center gap-2">
                         <svg
@@ -170,7 +170,7 @@
                     on:click={async (e) => {
                         confirmFriensdhipDeletion = true;
                     }}
-                    class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                    class="px-4 py-2.5 font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                 >
                     <span class="flex items-center gap-2">
                         <svg
