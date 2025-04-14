@@ -30,7 +30,6 @@ export async function load(event) {
 
 
 export const actions = {
-    // TODO: Re-populate store (for updating Navbar )
     updateDetails: async ({ request, locals }) => {
         const session = await locals.auth();
         const userId = session?.user?.id;
@@ -47,8 +46,8 @@ export const actions = {
 
         if (correct) {
             return {
-                success: true,
-                data: { name: name, bio: bio }
+                dataChangeSuccess: true,
+                newData: { name: name, bio: bio }
             }
         }
 

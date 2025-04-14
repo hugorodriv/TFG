@@ -15,17 +15,31 @@
      */
     let pfp;
     let nameTooShort = false;
-    onMount(() => {
-        accountData = JSON.parse(localStorage.getItem("accData")) || null;
-        pfp = localStorage.getItem("pfp");
-        loading = false;
-    });
 
     export let data;
     const accData = data.accData;
     const email = data.email;
 
     export let form;
+    onMount(() => {
+        accountData = JSON.parse(localStorage.getItem("accData")) || null;
+        pfp = localStorage.getItem("pfp");
+    });
+    $: if (form?.dataChangeSuccess) {
+        console.log("is this firing?");
+        const newBio = form.newData.bio;
+        const newName = form.newData.name;
+        const oldAccountData = (accountData =
+            JSON.parse(localStorage.getItem("accData")) || null);
+        const newAccountData = {
+            ...oldAccountData,
+            name: newName,
+            bio: newBio,
+        };
+
+        localStorage.setItem("accData", JSON.stringify(newAccountData));
+    }
+    loading = false;
 
     let changingPfp = false;
     let detailsChanged = false;
@@ -43,7 +57,7 @@
 
         const data = await response_changePfpUrl.json();
         // console.log(data);
-        if (!data.success) {
+        if (!data.dataChangeSuccess) {
             // server side error
         }
 
@@ -343,11 +357,11 @@
 
         <!-- Change user details  -->
         {#if selection == 2}
-            {#if form?.success}
+            {#if form?.dataChangeSuccess}
                 <h1>Successfully updated</h1>
                 <h2>Refresh page to see changes</h2>
             {/if}
-            {#if !confirmAccountDeletionButton && !form?.success && !form?.error}
+            {#if !confirmAccountDeletionButton && !form?.dataChangeSuccess && !form?.error}
                 <form
                     class=""
                     method="POST"

@@ -62,7 +62,7 @@
                     <p class="text-sm text-gray-500">
                         @{accountData.username}
                     </p>
-                    <p class="text-sm text-gray-800">
+                    <p class="whitespace-break-spaces text-sm text-gray-800">
                         {accountData.bio}
                     </p>
                 </div>
