@@ -154,7 +154,7 @@
                 <div
                     class="p-4 m-auto bg-gray-100 my-2 rounded h-32 overflow-auto"
                 >
-                    <p>{post.text}</p>
+                    <p class="whitespace-break-spaces">{post.text}</p>
                 </div>
             {/if}
 
