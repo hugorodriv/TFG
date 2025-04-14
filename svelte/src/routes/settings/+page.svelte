@@ -24,6 +24,7 @@
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData")) || null;
         pfp = localStorage.getItem("pfp");
+        loading = false;
     });
     $: if (form?.dataChangeSuccess) {
         console.log("is this firing?");
@@ -39,7 +40,6 @@
 
         localStorage.setItem("accData", JSON.stringify(newAccountData));
     }
-    loading = false;
 
     let changingPfp = false;
     let detailsChanged = false;

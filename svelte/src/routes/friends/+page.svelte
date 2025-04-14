@@ -275,13 +275,15 @@
         <div class="flow-root">
             <ul role="list">
                 {#each data.sentPending as p}
-                    <ProfileCard
-                        name={p.receiver_name}
-                        username={p.receiver_username}
-                        img_url={p.receiver_img_url}
-                        sender_uuid={null}
-                        receiver_uuid={p.receiver_uuid}
-                    />
+                    <div class="opacity-60">
+                        <ProfileCard
+                            name={p.receiver_name}
+                            username={p.receiver_username}
+                            img_url={p.receiver_img_url}
+                            sender_uuid={null}
+                            receiver_uuid={p.receiver_uuid}
+                        />
+                    </div>
                 {/each}
             </ul>
         </div>

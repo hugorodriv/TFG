@@ -21,7 +21,8 @@
     onMount(() => {
         // if no img data, create blue bg and white letter (default pfp)
         const letter = name.slice(0, 1).toUpperCase();
-        const svg = `
+        if (!img_url) {
+            const svg = `
             <svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="64" cy="64" r="64" fill="#007BFF"/>
                 <text x="64" y="64" font-size="64" fill="white" font-family="sans-serif"
@@ -30,26 +31,9 @@
                 </text>
             </svg>`;
 
-        image_data = `data:image/svg+xml;base64,${btoa(svg)}`;
-        if (img_url) {
-            (async () => {
-                try {
-                    const response = await fetch(img_url);
-                    if (!response.ok) throw new Error("Failed to fetch image");
-
-                    const blob = await response.blob();
-
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = function () {
-                        const base64data = String(reader.result);
-
-                        image_data = base64data;
-                    };
-                } catch (error) {
-                    console.error("Error fetching image:", error);
-                }
-            })().then(() => {});
+            image_data = `data:image/svg+xml;base64,${btoa(svg)}`;
+        } else {
+            image_data = img_url;
         }
     });
     /**
@@ -91,7 +75,7 @@
         <a class="flex max-w-48 w-full" href="/p/{username}">
             <div class="">
                 <img
-                    class="drop-shadow-lg w-11 h-11 rounded-full"
+                    class="bg-white drop-shadow-lg w-11 h-11 rounded-full"
                     alt="{username} profile"
                     src={image_data}
                 />
