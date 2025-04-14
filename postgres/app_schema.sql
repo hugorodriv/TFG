@@ -19,7 +19,7 @@ CREATE TABLE friendships (
     sender_uuid UUID NOT NULL,
     receiver_uuid UUID NOT NULL,
     status friendship_status NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
     PRIMARY KEY (sender_uuid, receiver_uuid),
     FOREIGN KEY (sender_uuid) REFERENCES profiles(uuid) ON DELETE CASCADE,
     FOREIGN KEY (receiver_uuid) REFERENCES profiles(uuid) ON DELETE CASCADE

@@ -74,7 +74,7 @@
             <!-- Upload post -->
             <a
                 href="/upload"
-                class="flex flex-col items-center justify-center px-5 bg-blue-600 hover:bg-blue-700 rounded-full group"
+                class="flex flex-col items-center justify-center px-5 bg-blue-600 rounded-full group"
             >
                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 18 18">
                     <path

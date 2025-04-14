@@ -73,32 +73,19 @@
     function getTimeAgo(timestamp) {
         const now = new Date();
         const pastDate = new Date(timestamp);
-        const diffMs = now - pastDate;
+        const diffSec = (now - pastDate) / 1000;
 
-        // Convert to seconds
-        const diffSec = Math.floor(diffMs / 1000);
-
-        if (diffSec < 60) {
-            return `${diffSec} seconds ago`;
-        }
-
-        // Convert to minutes
         const diffMin = Math.floor(diffSec / 60);
-
         if (diffMin < 60) {
             return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
         }
 
-        // Convert to hours
         const diffHr = Math.floor(diffMin / 60);
-
         if (diffHr < 24) {
             return `${diffHr} hour${diffHr !== 1 ? "s" : ""} ago`;
         }
 
-        // Convert to days
         const diffDay = Math.floor(diffHr / 24);
-
         return `${diffDay} day${diffDay !== 1 ? "s" : ""} ago`;
     }
 </script>
