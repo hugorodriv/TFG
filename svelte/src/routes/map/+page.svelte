@@ -12,7 +12,7 @@
         const bounds = L.latLng(location.lat, location.lon).toBounds(20000);
 
         const map = L.map(mapContainer, {
-            zoomControl: false, // Disable zoom controls
+            zoomControl: false,
         }).setView([location.lat, location.lon], 10);
         map.options.zoomSnap = 0;
         map.options.zoomDelta = 0;
