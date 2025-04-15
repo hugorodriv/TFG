@@ -6,7 +6,7 @@
      */
     function getTimeAgo(timestamp) {
         const now = new Date();
-        const pastDate = new Date(timestamp);
+        const pastDate = new Date(Date.parse(timestamp + "Z"));
         const diffMs = now - pastDate;
 
         // Convert to seconds

@@ -72,7 +72,7 @@
 
     function getTimeAgo(timestamp) {
         const now = new Date();
-        const pastDate = new Date(timestamp);
+        const pastDate = new Date(Date.parse(timestamp + "Z"));
         const diffSec = (now - pastDate) / 1000;
 
         const diffMin = Math.floor(diffSec / 60);
