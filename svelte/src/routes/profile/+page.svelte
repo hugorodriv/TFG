@@ -19,10 +19,7 @@
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
         pfp = localStorage.getItem("pfp");
-        //timeout for testing
-        setTimeout(() => {
-            loading = false;
-        }, 1000);
+        loading = false;
     });
 </script>
 
