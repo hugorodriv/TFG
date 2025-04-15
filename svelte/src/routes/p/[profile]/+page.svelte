@@ -173,6 +173,7 @@
             >
                 <div class="px-5 mt-10 flex flex-col items-center pb-10">
                     <img
+                        loading="lazy"
                         src={image_data}
                         class="w-20 h-20 rounded-full shadow-lg"
                         alt="pfp"
@@ -223,7 +224,7 @@
                                 </p>
                             {/if}
                         {:else if friendshipStatus === "PENDING"}
-                            <p class="text-gray-800 text-sm">
+                            <p class=" font-bold text-gray-800 text-sm">
                                 Friend request pending
                             </p>
                         {:else if friendshipStatus === "PENDING_YOU"}

@@ -23,24 +23,7 @@
 
         image_data = `data:image/svg+xml;base64,${btoa(svg)}`;
         if (img_url) {
-            (async () => {
-                try {
-                    const response = await fetch(img_url);
-                    if (!response.ok) throw new Error("Failed to fetch image");
-
-                    const blob = await response.blob();
-
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = function () {
-                        const base64data = String(reader.result);
-
-                        image_data = base64data;
-                    };
-                } catch (error) {
-                    console.error("Error fetching image:", error);
-                }
-            })().then(() => {});
+            image_data = img_url;
         }
     });
 </script>

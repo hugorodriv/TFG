@@ -19,7 +19,21 @@
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
         pfp = localStorage.getItem("pfp");
-        loading = false;
+        const imgs = document.images;
+        let count = imgs.length;
+
+        if (count === 0) loading = false;
+
+        for (const img of imgs) {
+            if (img.complete) count--;
+            else {
+                img.onload = img.onerror = () => {
+                    if (--count === 0) loading = false;
+                };
+            }
+        }
+
+        if (count === 0) loading = false;
     });
 </script>
 
