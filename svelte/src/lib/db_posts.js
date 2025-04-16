@@ -146,3 +146,47 @@ export async function checkAndChangePostText(post_uuid, user_uuid, newText) {
     }
 
 }
+
+export async function getPostsWithinDistance(reqRadius, reqCenter, userPosition, number, user_uuid) {
+    const ALLOWED_RADIUS = 10000
+    const query = `
+        SELECT 
+            post_uuid, 
+            profile,
+            ST_X(location::geometry) AS lon,
+            ST_Y(location::geometry) AS lat
+        FROM posts
+        WHERE ST_DWithin(
+            location::geography,
+            ST_MakePoint($1, $2)::geography,
+            $3
+        ) AND ST_DWithin(
+            location::geography,
+            ST_MakePoint($4, $5)::geography,
+            $6
+        ) AND profile != $8
+        ORDER BY created_at DESC
+        LIMIT $7 + 1;
+    `;
+    try {
+
+        const res = await pool.query(query, [
+            userPosition.lng,
+            userPosition.lat,
+            ALLOWED_RADIUS,
+            reqCenter.lng,
+            reqCenter.lat,
+            reqRadius,
+            number,
+            user_uuid
+        ]);
+        // await pool.query(query, [radius, center.lat, center.lng, number, profile_uuid]);
+        if (res && res.rowCount) {
+            return { success: true, posts: res.rows }
+        }
+        return { success: true }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
+    }
+}

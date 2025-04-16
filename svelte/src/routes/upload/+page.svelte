@@ -145,8 +145,6 @@
 
         const body = await response.json();
 
-        // TODO: Compress Image
-
         if (body.uploadLink) {
             const myHeaders = new Headers({ "Content-Type": "image/*" });
 
