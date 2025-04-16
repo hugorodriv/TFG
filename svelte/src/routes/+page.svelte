@@ -23,7 +23,7 @@
     let allPostsLoaded = false;
 
     const LOC_REFRESH_MINUTES = 10;
-    onMount(async () => {
+    onMount(() => {
         if (!session) {
             localStorage.clear();
         } else {
@@ -41,7 +41,7 @@
 
             // load initial posts
             if (location) {
-                await loadMorePosts();
+                handleScroll();
             }
             // Set up scroll event listener
             window.addEventListener("scroll", handleScroll);
@@ -50,6 +50,8 @@
                 window.removeEventListener("scroll", handleScroll);
             };
         }
+
+        loading = false;
     });
     onDestroy(() => {
         try {

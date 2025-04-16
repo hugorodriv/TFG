@@ -18,13 +18,7 @@
      * @type {{ lat: any; lon: any; }}
      */
     let location;
-    /**
-     * @type {{ options: { zoomSnap: number; zoomDelta: number; }; attributionControl: { remove: () => void; }; on: (arg0: string, arg1: () => Promise<void>) => void; getCenter: () => any; getBounds: () => { (): any; new (): any; getNorthEast: { (): any; new (): any; }; }; eachLayer: (arg0: (layer: any) => void) => void; }}
-     */
     let map;
-    /**
-     * @type {{ map: any; circle: any; tileLayer: any; Marker: any; divIcon: any; marker: any; default?: any; Bounds?: any; Browser?: any; CRS?: any; Canvas?: any; Circle?: any; CircleMarker?: any; Class?: any; Control?: any; DivIcon?: any; DivOverlay?: any; DomEvent?: any; DomUtil?: any; Draggable?: any; Evented?: any; FeatureGroup?: any; GeoJSON?: any; GridLayer?: any; Handler?: any; Icon?: any; ImageOverlay?: any; LatLng?: any; LatLngBounds?: any; Layer?: any; LayerGroup?: any; LineUtil?: any; Map?: any; Mixin?: any; Path?: any; Point?: any; PolyUtil?: any; Polygon?: any; Polyline?: any; Popup?: any; PosAnimation?: any; Projection?: any; Rectangle?: any; Renderer?: any; SVG?: any; SVGOverlay?: any; TileLayer?: any; Tooltip?: any; Transformation?: any; Util?: any; VideoOverlay?: any; bind?: any; bounds?: any; canvas?: any; circleMarker?: any; control?: any; extend?: any; featureGroup?: any; geoJSON?: any; geoJson?: any; gridLayer?: any; icon?: any; imageOverlay?: any; latLng?: any; latLngBounds?: any; layerGroup?: any; point?: any; polygon?: any; polyline?: any; popup?: any; rectangle?: any; setOptions?: any; stamp?: any; svg?: any; svgOverlay?: any; tooltip?: any; transformation?: any; version?: any; videoOverlay?: any; noConflict?: () => any; }}
-     */
     let L;
     /**
      * @type {any[]}
@@ -44,13 +38,12 @@
         location = JSON.parse(localStorage.getItem("location") || "null");
 
         L = await import("leaflet");
-        // const bounds = L.latLng(location.lat, location.lon).toBounds(50_000);
 
         map = L.map(mapContainer, {
             zoomControl: false,
             zoomAnimation: false,
             fadeAnimation: false,
-        }).setView([location.lat, location.lon], 10);
+        }).setView([location.lat, location.lon], 15);
         map.options.zoomSnap = 0;
         map.options.zoomDelta = 0;
         // map.setMaxBounds(bounds);
@@ -63,11 +56,12 @@
                 maxZoom: 18,
             },
         ).addTo(map);
+
         L.circle([location.lat, location.lon], {
             radius: RADIUS,
             weight: 0,
-            color: "rgb(37 99 235)",
-            fillOpacity: 0.2,
+            color: "black",
+            fillOpacity: 0.15,
         }).addTo(map);
 
         map.on("moveend zoomend", async () => {
@@ -150,7 +144,6 @@
             }
         });
 
-        console.log(relevantPosts.length);
         relevantPosts
             .sort((a, b) => a.post_uuid.localeCompare(b.post_uuid))
             .forEach((p) => {
