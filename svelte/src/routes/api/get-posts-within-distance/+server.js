@@ -26,9 +26,9 @@ export async function POST({ locals, request }) {
         error(500)
     }
 
-    const { userPosition, reqRadius, reqCenter, number } = await request.json();
+    const { userPosition, bounds, number } = await request.json();
 
-    const resDB = await getPostsWithinDistance(reqRadius, reqCenter, userPosition, number, user_uuid)
+    const resDB = await getPostsWithinDistance(bounds.NE.lat, bounds.NE.lng, bounds.SW.lat, bounds.SW.lng, userPosition, number, user_uuid)
     if (!resDB?.posts?.length || !resDB?.success) {
         return json({ "success": true })
     }

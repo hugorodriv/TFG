@@ -147,7 +147,14 @@ export async function checkAndChangePostText(post_uuid, user_uuid, newText) {
 
 }
 
-export async function getPostsWithinDistance(reqRadius, reqCenter, userPosition, number, user_uuid) {
+/**
+ * @param {Number} reqRadius
+ * @param {{ lng: any; lat: any; }} reqCenter
+ * @param {{ lng: any; lat: any; }} userPosition
+ * @param {Number} number
+ * @param {Number} user_uuid
+ */
+export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPosition, number, user_uuid) {
     const ALLOWED_RADIUS = 10000
     const query = `
         SELECT 
@@ -160,13 +167,12 @@ export async function getPostsWithinDistance(reqRadius, reqCenter, userPosition,
             location::geography,
             ST_MakePoint($1, $2)::geography,
             $3
-        ) AND ST_DWithin(
-            location::geography,
-            ST_MakePoint($4, $5)::geography,
-            $6
-        ) 
+        ) AND ST_Within(
+            location::geometry,
+            ST_MakeEnvelope($4, $5, $6, $7, 4326)::geometry
+            ) 
         ORDER BY created_at DESC
-        LIMIT $7 + 1;
+        LIMIT $8 + 1;
     `;
     try {
 
@@ -174,9 +180,10 @@ export async function getPostsWithinDistance(reqRadius, reqCenter, userPosition,
             userPosition.lng,
             userPosition.lat,
             ALLOWED_RADIUS,
-            reqCenter.lng,
-            reqCenter.lat,
-            reqRadius,
+            neLng,
+            neLat,
+            swLng,
+            swLat,
             number
         ]);
         // await pool.query(query, [radius, center.lat, center.lng, number, profile_uuid]);

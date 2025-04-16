@@ -71,43 +71,31 @@
         }).addTo(map);
 
         map.on("moveend zoomend", async () => {
-            const center = map.getCenter();
-
-            const mapBoundNorthEast = map.getBounds().getNorthEast();
-            const radius = mapBoundNorthEast.distanceTo(map.getCenter()) * 0.7;
-            console.log(map.getBounds());
-            await populateMapWithPosts(center, radius);
+            const bounds = map.getBounds();
+            await populateMapWithPosts(bounds);
         });
 
-        await populateMapWithPosts(
-            { lat: location.lat, lng: location.lon },
-            RADIUS,
-        );
+        // Bounds for displaying some results first map open
+        let tBounds = L.latLng(location.lat, location.lon).toBounds(20_000);
+
+        await populateMapWithPosts(tBounds);
     });
-    /**
-     * @param {{ lat: any; lng: any; }} center
-     * @param {number} radius
-     */
-    async function populateMapWithPosts(center, radius) {
-        relevantPosts = localPostsCache.filter((p, index) => {
-            if (index > MAX_POSTS) {
+    async function populateMapWithPosts(bounds) {
+        relevantPosts = localPostsCache.filter(
+            function (p) {
+                const res = bounds.contains({ lat: p.lat, lng: p.lon });
+                if (res && this.count <= MAX_POSTS) {
+                    this.count += 1;
+                    return true;
+                }
                 return false;
-            }
-            const distanceWithUser = getDistance(
-                center.lat,
-                center.lng,
-                p.lat,
-                p.lon,
-            );
-            if (distanceWithUser <= radius) {
-                return true;
-            }
-            return false;
-        });
+            },
+            { count: 0 },
+        );
 
         if (relevantPosts.length < MAX_POSTS) {
             if (timeoutId) {
-                clearTimeout(timeoutId); // Clear the existing timeout
+                clearTimeout(timeoutId);
             }
 
             const missingPosts = MAX_POSTS - relevantPosts.length;
@@ -118,8 +106,7 @@
                         lat: location.lat,
                         lng: location.lon,
                     },
-                    reqCenter: center,
-                    reqRadius: radius,
+                    bounds: { NE: bounds._northEast, SW: bounds._southWest },
                     number: missingPosts,
                 }),
                 headers: {
@@ -163,6 +150,7 @@
             }
         });
 
+        console.log(relevantPosts.length);
         relevantPosts
             .sort((a, b) => a.post_uuid.localeCompare(b.post_uuid))
             .forEach((p) => {
