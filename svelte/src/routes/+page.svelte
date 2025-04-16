@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
     import Auth from "./auth.svelte";
     import Navbar from "./Navbar.svelte";
@@ -23,7 +23,7 @@
     let allPostsLoaded = false;
 
     const LOC_REFRESH_MINUTES = 10;
-    onMount(() => {
+    onMount(async () => {
         if (!session) {
             localStorage.clear();
         } else {
@@ -41,7 +41,7 @@
 
             // load initial posts
             if (location) {
-                loadMorePosts();
+                await loadMorePosts();
             }
             // Set up scroll event listener
             window.addEventListener("scroll", handleScroll);
@@ -50,6 +50,9 @@
                 window.removeEventListener("scroll", handleScroll);
             };
         }
+    });
+    onDestroy(() => {
+        window.removeEventListener("scroll", handleScroll);
     });
 
     let timeoutId;
@@ -129,6 +132,24 @@
             loadMorePosts();
         }
     }
+    function getPostLink(post_uuid) {
+        const user_uuid = accountData?.uuid;
+        const timestamp = Date.now();
+
+        // Combine the data
+        const data = {
+            l: [location?.lat, location?.lon],
+            u: user_uuid,
+            t: timestamp,
+            p: post_uuid,
+        };
+
+        // Convert to base64 encoding
+        const encoded = btoa(JSON.stringify(data));
+
+        // Generate the link
+        return `/post/${encodeURIComponent(encoded)}`;
+    }
 </script>
 
 {#if loading}
@@ -167,7 +188,7 @@
                 on:scroll={handleScroll}
             >
                 {#each localPostsCache as post}
-                    <a href="/post/{post.post_uuid}">
+                    <a href={getPostLink(post.post_uuid)}>
                         <div class=" overflow-hidden">
                             <img
                                 loading="lazy"
@@ -210,6 +231,7 @@
         {/if}
     </div>
 {/if}
+
 <!-- Icons -->
 <!-- map: Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc. -->
 <!-- rest: https://github.com/themesberg/flowbite-icons -->

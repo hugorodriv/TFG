@@ -1,6 +1,8 @@
 import { pool } from "./db";
 import { getPrivateLinkPost, getViewableLinks } from "./s3";
 
+const ALLOWED_RADIUS = 10_000
+
 /**
  * @param {String} profile_uuid
  * @param {String} text
@@ -68,16 +70,31 @@ export async function checkAndGetPostInfo(post_uuid, user_uuid, location) {
 
     // Is the poster
     // Is poster's friend
-    // TODO: Is close to the post
-    const query = `
+    // Is close to the post
+    let queryStr, args
+    if (location?.lat && location?.lon) {
+        queryStr = `
+        SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
+        WHERE post_uuid = $1 AND ST_DWithin(
+            location::geography,
+            ST_MakePoint($3, $2)::geography,
+            $4
+        )
+        LIMIT 1
+        `
+        args = [post_uuid, location.lat, location.lon, ALLOWED_RADIUS]
+    } else {
+        queryStr = `
         SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
         WHERE post_uuid = $1 AND (
             profile = $2 OR are_friends(profile, $2)
         )
         LIMIT 1
-`
+        `
+        args = [post_uuid, user_uuid]
+    }
     try {
-        const res = await pool.query(query, [post_uuid, user_uuid]);
+        const res = await pool.query(queryStr, args);
         let { rows } = res
         // now, with this object that contains all the posts UUIDs, we have to
         // generate an array of links with which the user can see the objects
@@ -157,7 +174,6 @@ export async function checkAndChangePostText(post_uuid, user_uuid, newText) {
  * @param {any} user_uuid
  */
 export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPosition, number, user_uuid) {
-    const ALLOWED_RADIUS = 10_000
     const query = `
         SELECT 
             post_uuid, 
@@ -188,7 +204,6 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
             swLat,
             number
         ]);
-        // await pool.query(query, [radius, center.lat, center.lng, number, profile_uuid]);
         if (res && res.rowCount) {
             return { success: true, posts: res.rows }
         }
@@ -199,7 +214,6 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
     }
 }
 export async function getPostsClose(userPosition, starting, ending, user_uuid) {
-    const ALLOWED_RADIUS = 10_000
     const limit = ending - starting + 1
     const query = `
         SELECT 
@@ -234,7 +248,6 @@ export async function getPostsClose(userPosition, starting, ending, user_uuid) {
             starting,
             user_uuid
         ]);
-        // await pool.query(query, [radius, center.lat, center.lng, number, profile_uuid]);
         if (res && res.rowCount) {
             return { success: true, posts: res.rows }
         }

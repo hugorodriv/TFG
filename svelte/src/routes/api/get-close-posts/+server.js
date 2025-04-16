@@ -44,7 +44,6 @@ export async function POST({ locals, request }) {
         post_url: "/post/" + post.post_uuid,
         img_url: img_urls[index] || null,
     }));
-    console.log(postsWithLink)
     return json({ "success": true, posts: postsWithLink })
 
 

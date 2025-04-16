@@ -4,7 +4,9 @@ import { checkAndGetPostInfo } from '$lib/db_posts.js';
 import { getUserUUID } from '$lib/db.js';
 
 
+const UUID_REGEX = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
 export const load = async (event) => {
+    const LINK_MAX_TIME_MINS = 5
     const session = await event.locals.auth();
 
     // user not logged
@@ -24,10 +26,36 @@ export const load = async (event) => {
     }
 
     const pathname = event.url.pathname
+    const pathData = pathname.substring(6)
 
-    const post_uuid = pathname.substring(6)
+    let location
+    let post_uuid
+    if (!UUID_REGEX.test(pathData)) {
+        try {
+            const decoded = decodeURIComponent(pathname)
+            //invalid uuid
+            const decodedData = Buffer.from(decoded.substring(6), 'base64').toString();
+            const jsonObj = JSON.parse(decodedData)
 
-    const location = event.url.searchParams.get("location")
+            if (jsonObj.u !== user_uuid) {
+                console.log("Unallowed user")
+                return { success: false }
+            } else if (jsonObj.t + LINK_MAX_TIME_MINS * 60 * 1000 <= Date.now()) {
+                console.log("Link expired")
+                return { success: false }
+            }
+            location = {
+                lat: jsonObj.l[0],
+                lon: jsonObj.l[1],
+            }
+            post_uuid = jsonObj.p
+        } catch (error) {
+            return { success: false }
+        }
+    } else {
+        post_uuid = pathData
+    }
+
     const postInfo = await checkAndGetPostInfo(post_uuid, user_uuid, location)
 
     if (postInfo?.success && postInfo.postInfo && postInfo.postInfo.length > 0) {
