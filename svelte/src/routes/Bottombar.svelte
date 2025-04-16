@@ -14,7 +14,7 @@
     let pfp;
     let accountData;
     let loading = true;
-    let showWarning = true;
+    let showWarning = false;
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
         pfp = localStorage.getItem("pfp");
