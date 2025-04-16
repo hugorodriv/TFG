@@ -164,7 +164,7 @@ export async function getPostsWithinDistance(reqRadius, reqCenter, userPosition,
             location::geography,
             ST_MakePoint($4, $5)::geography,
             $6
-        ) AND profile != $8
+        ) 
         ORDER BY created_at DESC
         LIMIT $7 + 1;
     `;
@@ -177,8 +177,7 @@ export async function getPostsWithinDistance(reqRadius, reqCenter, userPosition,
             reqCenter.lng,
             reqCenter.lat,
             reqRadius,
-            number,
-            user_uuid
+            number
         ]);
         // await pool.query(query, [radius, center.lat, center.lng, number, profile_uuid]);
         if (res && res.rowCount) {

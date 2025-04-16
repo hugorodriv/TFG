@@ -279,6 +279,3 @@
     ></div>
     <Bottombar mapActive={true} />
 </div>
-
-<style>
-</style>
