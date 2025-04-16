@@ -10,14 +10,35 @@
     const MAX_POSTS = 5;
     const RADIUS = 10_000; //in meters
 
+    /**
+     * @type {HTMLDivElement}
+     */
     let mapContainer;
+    /**
+     * @type {{ lat: any; lon: any; }}
+     */
     let location;
+    /**
+     * @type {{ options: { zoomSnap: number; zoomDelta: number; }; attributionControl: { remove: () => void; }; on: (arg0: string, arg1: () => Promise<void>) => void; getCenter: () => any; getBounds: () => { (): any; new (): any; getNorthEast: { (): any; new (): any; }; }; eachLayer: (arg0: (layer: any) => void) => void; }}
+     */
     let map;
+    /**
+     * @type {{ map: any; circle: any; tileLayer: any; Marker: any; divIcon: any; marker: any; default?: any; Bounds?: any; Browser?: any; CRS?: any; Canvas?: any; Circle?: any; CircleMarker?: any; Class?: any; Control?: any; DivIcon?: any; DivOverlay?: any; DomEvent?: any; DomUtil?: any; Draggable?: any; Evented?: any; FeatureGroup?: any; GeoJSON?: any; GridLayer?: any; Handler?: any; Icon?: any; ImageOverlay?: any; LatLng?: any; LatLngBounds?: any; Layer?: any; LayerGroup?: any; LineUtil?: any; Map?: any; Mixin?: any; Path?: any; Point?: any; PolyUtil?: any; Polygon?: any; Polyline?: any; Popup?: any; PosAnimation?: any; Projection?: any; Rectangle?: any; Renderer?: any; SVG?: any; SVGOverlay?: any; TileLayer?: any; Tooltip?: any; Transformation?: any; Util?: any; VideoOverlay?: any; bind?: any; bounds?: any; canvas?: any; circleMarker?: any; control?: any; extend?: any; featureGroup?: any; geoJSON?: any; geoJson?: any; gridLayer?: any; icon?: any; imageOverlay?: any; latLng?: any; latLngBounds?: any; layerGroup?: any; point?: any; polygon?: any; polyline?: any; popup?: any; rectangle?: any; setOptions?: any; stamp?: any; svg?: any; svgOverlay?: any; tooltip?: any; transformation?: any; version?: any; videoOverlay?: any; noConflict?: () => any; }}
+     */
     let L;
+    /**
+     * @type {any[]}
+     */
     let relevantPosts;
     const placedCoords = [];
+    /**
+     * @type {any[]}
+     */
     let localPostsCache = [];
 
+    /**
+     * @type {number | null | undefined}
+     */
     let timeoutId = null;
     onMount(async () => {
         location = JSON.parse(localStorage.getItem("location") || "null");
@@ -62,6 +83,10 @@
             RADIUS,
         );
     });
+    /**
+     * @param {{ lat: any; lng: any; }} center
+     * @param {number} radius
+     */
     async function populateMapWithPosts(center, radius) {
         relevantPosts = localPostsCache.filter((p, index) => {
             if (index > MAX_POSTS) {
@@ -110,7 +135,7 @@
                 localPostsCache = [
                     ...localPostsCache,
                     ...body.posts.filter(
-                        (newPost) =>
+                        (/** @type {{ post_uuid: any; }} */ newPost) =>
                             !localPostsCache.some(
                                 (cachedPost) =>
                                     cachedPost.post_uuid === newPost.post_uuid,
@@ -120,10 +145,11 @@
                 relevantPosts = [
                     ...relevantPosts,
                     ...body.posts.filter(
-                        (newPost) =>
+                        (/** @type {{ post_uuid: any; }} */ newPost) =>
                             !relevantPosts.some(
-                                (cachedPost) =>
-                                    cachedPost.post_uuid === newPost.post_uuid,
+                                (
+                                    /** @type {{ post_uuid: any; }} */ cachedPost,
+                                ) => cachedPost.post_uuid === newPost.post_uuid,
                             ),
                     ),
                 ];
@@ -131,7 +157,7 @@
         }
 
         // Clear old posts
-        map.eachLayer((layer) => {
+        map.eachLayer((/** @type {{ remove: () => void; }} */ layer) => {
             if (layer instanceof L.Marker) {
                 layer.remove();
             }
@@ -183,11 +209,20 @@
                 marker.addTo(map);
             });
     }
+    /**
+     * @param {number} deg
+     */
     function deg2rad(deg) {
         return deg * (Math.PI / 180);
     }
 
     // Haversine distance formula. Probably unnecessary for such small distances...
+    /**
+     * @param {number} lat1
+     * @param {number} lon1
+     * @param {number} lat2
+     * @param {number} lon2
+     */
     function getDistance(lat1, lon1, lat2, lon2) {
         const R = 6371000; // Redius of the earth. Assuming a perfect sphere
         const dLat = deg2rad(lat2 - lat1);
@@ -206,6 +241,11 @@
     // We dont want posts to perfectly overlap.
     // If we move them around randomly that would be inconsistant accross page renders
     // so we can take a hash of the UUID. a simple one would do
+    /**
+     * @param {number} lat
+     * @param {number} lon
+     * @param {any} uuid
+     */
     function adjustIfOverlapping(lat, lon, uuid) {
         const threshold = 0.0001;
 
