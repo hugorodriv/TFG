@@ -160,7 +160,7 @@ export async function getViewableLinks(post_uuid_arr) {
                 s3Client,
                 new GetObjectCommand(params),
                 {
-                    expiresIn: 3600,
+                    expiresIn: 7200,
                     signingDate: truncatedTime
                 }
             );

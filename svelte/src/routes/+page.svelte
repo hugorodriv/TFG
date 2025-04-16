@@ -52,7 +52,9 @@
         }
     });
     onDestroy(() => {
-        window.removeEventListener("scroll", handleScroll);
+        try {
+            window.removeEventListener("scroll", handleScroll);
+        } catch {}
     });
 
     let timeoutId;

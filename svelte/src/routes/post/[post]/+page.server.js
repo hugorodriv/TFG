@@ -3,10 +3,10 @@ import { isNewAccount } from "$lib/auth.js";
 import { checkAndGetPostInfo } from '$lib/db_posts.js';
 import { getUserUUID } from '$lib/db.js';
 
-
 const UUID_REGEX = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+const LINK_MAX_TIME_MINS = 5
+
 export const load = async (event) => {
-    const LINK_MAX_TIME_MINS = 5
     const session = await event.locals.auth();
 
     // user not logged
@@ -33,7 +33,6 @@ export const load = async (event) => {
     if (!UUID_REGEX.test(pathData)) {
         try {
             const decoded = decodeURIComponent(pathname)
-            //invalid uuid
             const decodedData = Buffer.from(decoded.substring(6), 'base64').toString();
             const jsonObj = JSON.parse(decodedData)
 
@@ -63,6 +62,4 @@ export const load = async (event) => {
         return { success: true, post: postInfo.postInfo[0], isOwner: profileIsOwner }
     }
     return { success: false }
-
-
 }
