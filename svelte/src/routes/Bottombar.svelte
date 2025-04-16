@@ -1,5 +1,7 @@
 <script>
     import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
+    import LocationPrompt from "./LocationPrompt.svelte";
 
     export let homeActive = false;
     export let mapActive = false;
@@ -12,15 +14,42 @@
     let pfp;
     let accountData;
     let loading = true;
+    let showWarning = true;
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
         pfp = localStorage.getItem("pfp");
         loading = false;
     });
+    async function launchProtected(route) {
+        const location = JSON.parse(localStorage.getItem("location") || "null");
+        const permission = await navigator.permissions.query({
+            name: "geolocation",
+        });
+        if (permission.state === "granted" && location.lat) {
+            goto(route);
+        } else {
+            localStorage.setItem("location", "null");
+            showWarning = true;
+            setTimeout(() => {
+                showWarning = false;
+            }, 3000);
+        }
+    }
 </script>
 
 <!-- svelte-ignore a11y_consider_explicit_label -->
 <div class="pb-24">
+    {#if showWarning}
+        <div
+            class="-translate-y-16 fixed bottom-8 left-1/2 z-50 w-full max-w-md
+            -translate-x-1/2 px-6 py-3 bg-gray-600 text-white text-center
+            rounded-full shadow-lg"
+        >
+            <p class="text-sm font-medium">
+                Location is required for this action
+            </p>
+        </div>
+    {/if}
     <div
         class="mt-10 fixed z-50 w-11/12 max-w-lg h-16 -translate-x-1/2 bottom-4 left-1/2 bg-white border border-gray-300 rounded-full"
     >
@@ -46,8 +75,10 @@
             </a>
 
             <!-- Map -->
-            <a
-                href="/map"
+            <button
+                on:click={async () => {
+                    await launchProtected("/map");
+                }}
                 class="flex flex-col items-center justify-center px-5 group"
             >
                 <svg
@@ -69,11 +100,13 @@
                         48zm48-1.5l120-45.7 0-284.6L408 136.5l0 284.6z"
                     />
                 </svg>
-            </a>
+            </button>
 
             <!-- Upload post -->
-            <a
-                href="/upload"
+            <button
+                on:click={async () => {
+                    await launchProtected("/upload");
+                }}
                 class="flex flex-col items-center justify-center px-5 bg-blue-600 rounded-full group"
             >
                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 18 18">
@@ -85,7 +118,7 @@
                         d="M9 1v16M1 9h16"
                     />
                 </svg>
-            </a>
+            </button>
 
             <!-- Friends -->
             <a
