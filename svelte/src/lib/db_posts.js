@@ -198,3 +198,49 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
         return { success: false }
     }
 }
+export async function getPostsClose(userPosition, starting, ending, user_uuid) {
+    const ALLOWED_RADIUS = 10_000
+    const limit = ending - starting + 1
+    const query = `
+        SELECT 
+            post_uuid, 
+            profile,
+            created_at,
+            ST_X(location::geometry) AS lon,
+            ST_Y(location::geometry) AS lat
+        FROM (
+            SELECT *,
+                ST_Distance(
+                    location::geography,
+                    ST_MakePoint($1, $2)::geography
+                ) AS dist
+            FROM posts
+        WHERE ST_DWithin(
+            location::geography,
+            ST_MakePoint($1, $2)::geography,
+            $3
+        ) AND profile != $6
+        )
+        ORDER BY dist ASC
+        LIMIT $4 OFFSET $5;
+    `;
+    try {
+
+        const res = await pool.query(query, [
+            userPosition.lng,
+            userPosition.lat,
+            ALLOWED_RADIUS,
+            limit,
+            starting,
+            user_uuid
+        ]);
+        // await pool.query(query, [radius, center.lat, center.lng, number, profile_uuid]);
+        if (res && res.rowCount) {
+            return { success: true, posts: res.rows }
+        }
+        return { success: true }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
+    }
+}

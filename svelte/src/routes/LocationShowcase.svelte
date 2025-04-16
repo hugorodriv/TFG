@@ -47,5 +47,5 @@
     {:else}
         <p>{location.resolved}</p>
     {/if}
-    <p>{getTimeAgo(location.timestamp)}</p>
+    <!-- <p>{getTimeAgo(location.timestamp)}</p> -->
 </div>
