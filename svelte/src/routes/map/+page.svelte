@@ -48,18 +48,13 @@
 
         map = L.map(mapContainer, {
             zoomControl: false,
+            zoomAnimation: false,
+            fadeAnimation: false,
         }).setView([location.lat, location.lon], 10);
         map.options.zoomSnap = 0;
         map.options.zoomDelta = 0;
         // map.setMaxBounds(bounds);
         map.attributionControl.remove();
-
-        L.circle([location.lat, location.lon], {
-            radius: RADIUS,
-            weight: 0,
-            color: "rgb(37 99 235)",
-            fillOpacity: 0.2,
-        }).addTo(map);
 
         L.tileLayer(
             "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png",
@@ -68,13 +63,19 @@
                 maxZoom: 18,
             },
         ).addTo(map);
+        L.circle([location.lat, location.lon], {
+            radius: RADIUS,
+            weight: 0,
+            color: "rgb(37 99 235)",
+            fillOpacity: 0.2,
+        }).addTo(map);
 
         map.on("moveend zoomend", async () => {
             const center = map.getCenter();
 
             const mapBoundNorthEast = map.getBounds().getNorthEast();
             const radius = mapBoundNorthEast.distanceTo(map.getCenter()) * 0.7;
-
+            console.log(map.getBounds());
             await populateMapWithPosts(center, radius);
         });
 
@@ -109,7 +110,6 @@
                 clearTimeout(timeoutId); // Clear the existing timeout
             }
 
-            console.log("requesting more");
             const missingPosts = MAX_POSTS - relevantPosts.length;
             const response = await fetch("./api/get-posts-within-distance", {
                 method: "POST",
