@@ -7,7 +7,7 @@
     import "leaflet.markercluster/dist/MarkerCluster.css";
     import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-    const MAX_POSTS = 5;
+    const MAX_POSTS = 10;
     const RADIUS = 10_000; //in meters
 
     /**

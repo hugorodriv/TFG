@@ -148,14 +148,16 @@ export async function checkAndChangePostText(post_uuid, user_uuid, newText) {
 }
 
 /**
- * @param {Number} reqRadius
- * @param {{ lng: any; lat: any; }} reqCenter
+ * @param {any} neLat
+ * @param {any} neLng
+ * @param {any} swLat
+ * @param {any} swLng
  * @param {{ lng: any; lat: any; }} userPosition
- * @param {Number} number
- * @param {Number} user_uuid
+ * @param {any} number
+ * @param {any} user_uuid
  */
 export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPosition, number, user_uuid) {
-    const ALLOWED_RADIUS = 10000
+    const ALLOWED_RADIUS = 10_000
     const query = `
         SELECT 
             post_uuid, 
