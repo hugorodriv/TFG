@@ -1,8 +1,6 @@
 <script>
     import { onMount } from "svelte";
 
-    import { goto } from "$app/navigation";
-
     export let data;
     onMount(() => {
         localStorage.clear();
@@ -27,7 +25,7 @@
                 `data:image/svg+xml;base64,${btoa(svg)}`,
             );
             if (typeof window !== "undefined") {
-                goto("/");
+                window.location.href = "/";
             }
         } else {
             (async () => {
@@ -54,7 +52,7 @@
             })().then(() => {
                 // automatic redirect after populating. show link in case redirect doesnt work
                 if (typeof window !== "undefined") {
-                    goto("/");
+                    window.location.href = "/";
                 }
             });
         }
@@ -63,7 +61,7 @@
             setTimeout(() => {
                 const link = document.getElementById("link");
                 if (link) link.style.display = "block";
-            }, 500);
+            }, 2000);
         }
     });
 </script>

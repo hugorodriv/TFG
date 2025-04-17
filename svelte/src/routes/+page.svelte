@@ -22,8 +22,11 @@
     let loadingMorePosts = false;
     let allPostsLoaded = false;
 
+    let localPostsCache = [];
+    let currentNumberOfPosts = 0;
+
     const LOC_REFRESH_MINUTES = 10;
-    onMount(() => {
+    onMount(async () => {
         if (!session) {
             localStorage.clear();
         } else {
@@ -41,7 +44,7 @@
 
             // load initial posts
             if (location) {
-                handleScroll();
+                await loadMorePosts();
             }
             // Set up scroll event listener
             window.addEventListener("scroll", handleScroll);
@@ -59,16 +62,10 @@
         } catch {}
     });
 
-    let timeoutId;
-    let localPostsCache = [];
-    let currentNumberOfPosts = 0;
-
     async function loadMorePosts() {
-        if (loadingMorePosts || allPostsLoaded) return;
+        console.log("here");
+        if (loadingMorePosts || allPostsLoaded || !location) return;
         loadingMorePosts = true;
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
 
         try {
             const response = await fetch("./api/get-close-posts", {
@@ -91,7 +88,7 @@
                 return;
             }
             if (body.success && body.posts.length > 0) {
-                currentNumberOfPosts += 2;
+                currentNumberOfPosts += body.posts.length;
                 localPostsCache = [...localPostsCache, ...body.posts];
             } else {
                 allPostsLoaded = true;
@@ -187,13 +184,10 @@
                 {/if}
             </div>
 
-            <div
-                class="no-scrollbar grid grid-cols-1 gap-2"
-                on:scroll={handleScroll}
-            >
+            <div class=" grid grid-cols-1 gap-2" on:scroll={handleScroll}>
                 {#each localPostsCache as post}
                     <a href={getPostLink(post.post_uuid)}>
-                        <div class=" overflow-hidden">
+                        <div class="overflow-hidden">
                             <img
                                 loading="lazy"
                                 src={post.img_url}
@@ -222,9 +216,7 @@
                     </svg>
                 </div>
             {:else if allPostsLoaded && localPostsCache.length > 0}
-                <div class="text-center text-gray-500 py-4">
-                    No more posts to load
-                </div>
+                <div class="text-center text-gray-500 py-4">No more posts</div>
             {:else if localPostsCache.length === 0 && location}
                 <div class="text-center text-gray-500 py-4">
                     No posts found in your area
@@ -239,14 +231,3 @@
 <!-- Icons -->
 <!-- map: Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc. -->
 <!-- rest: https://github.com/themesberg/flowbite-icons -->
-
-<style>
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-</style>

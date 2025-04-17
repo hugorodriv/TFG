@@ -1,28 +1,5 @@
 <script>
     export let location;
-
-    /**
-     * @param {Number} timestamp
-     */
-    function getTimeAgo(timestamp) {
-        const now = new Date();
-        const pastDate = new Date(timestamp);
-        const diffMs = now - pastDate;
-
-        // Convert to seconds
-        const diffSec = Math.floor(diffMs / 1000);
-
-        if (diffSec < 60) {
-            return `${diffSec} seconds ago`;
-        }
-
-        // Convert to minutes
-        const diffMin = Math.floor(diffSec / 60);
-
-        if (diffMin < 60) {
-            return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
-        }
-    }
 </script>
 
 <div class="text-center space-y-1 p-4 max-w-md m-auto">
