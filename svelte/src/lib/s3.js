@@ -118,15 +118,6 @@ export async function getUploadPostLink(post_uuid) {
         throw new Error('Failed to generate upload URL');
     }
 }
-/**
- * @param {any} post_uuid
- */
-function postLinkCacheHandling(post_uuid) {
-    // this function does not check if user has permission to fetch post,
-    // its only designed for, in the case they do, avoid unnecessary hits to S3
-
-
-}
 
 const getTruncatedHourTime = () => {
     const d = new Date();
