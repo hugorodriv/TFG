@@ -51,9 +51,9 @@
         </div>
     {/if}
     <div
-        class="border-t-gray-400 border-t-1 py-1 bg-white fixed mt-10 -translate-x-1/2 left-1/2 bottom-0 w-full"
+        class="border-t-gray-400 bg-white border-t-1 fixed mt-10 -translate-x-1/2 left-1/2 bottom-0 w-full"
     >
-        <div class=" max-w-[400px] w-11/12 m-auto h-16">
+        <div class="max-w-[400px] w-11/12 m-auto h-14">
             <div class="grid grid-cols-5 h-full mx-auto">
                 <!-- Home button -->
                 <a
