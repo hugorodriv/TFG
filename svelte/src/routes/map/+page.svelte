@@ -276,8 +276,8 @@
 <div class="h-screen flex flex-col">
     <Navbar />
     <div
-        class="mt-5 mx-auto flex-1 overflow-hidden rounded-lg w-11/12"
         bind:this={mapContainer}
+        class="py-2 mx-auto rounded-lg z-0 h-full max-h-[calc(100vh-100px)] w-full"
     ></div>
     <Bottombar mapActive={true} />
 </div>

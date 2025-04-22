@@ -38,7 +38,7 @@
 
 <!-- svelte-ignore a11y_consider_explicit_label -->
 
-<div class="pb-24">
+<div class="pb-12">
     {#if showWarning}
         <div
             class="-translate-y-9 w-10/12 fixed bottom-12 left-1/2 z-50 max-w-md
