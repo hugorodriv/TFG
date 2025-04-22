@@ -49,9 +49,6 @@
             // Set up scroll event listener
             window.addEventListener("scroll", handleScroll);
             loading = false;
-            return () => {
-                window.removeEventListener("scroll", handleScroll);
-            };
         }
 
         loading = false;
