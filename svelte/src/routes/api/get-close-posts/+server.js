@@ -39,9 +39,9 @@ export async function POST({ locals, request }) {
     if (!img_urls) {
         error(500)
     }
+
     const postsWithLink = resDB.posts.map((post, index) => ({
         ...post,
-        post_url: "/post/" + post.post_uuid,
         img_url: img_urls[index] || null,
     }));
     return json({ "success": true, posts: postsWithLink })

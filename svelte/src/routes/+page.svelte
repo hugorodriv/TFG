@@ -150,6 +150,21 @@
         // Generate the link
         return `/post/${encodeURIComponent(encoded)}`;
     }
+
+    function getPosterPfp(pfp_url, poster_name) {
+        if (pfp_url) return pfp_url;
+
+        const letter = poster_name.slice(0, 1).toUpperCase();
+        const svg = `
+            <svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="64" cy="64" r="64" fill="#007BFF"/>
+                <text x="64" y="64" font-size="64" fill="white" font-family="sans-serif"
+                    text-anchor="middle" dominant-baseline="central">
+                    ${letter}
+                </text>
+            </svg>`;
+        return `data:image/svg+xml;base64,${btoa(svg)}`;
+    }
 </script>
 
 {#if loading}
@@ -183,20 +198,44 @@
                 {/if}
             </div>
 
-            <div class=" grid grid-cols-1 gap-2" on:scroll={handleScroll}>
+            <ul class=" grid grid-cols-1 gap-8" on:scroll={handleScroll}>
                 {#each localPostsCache as post}
-                    <a href={getPostLink(post.post_uuid)}>
-                        <div class="overflow-hidden">
+                    <li>
+                        <a
+                            href={"../p/" + post.username}
+                            class="w-11/12 py-1 m-auto flex items-center gap-3"
+                        >
                             <img
-                                loading="lazy"
-                                src={post.img_url}
-                                alt="Post"
-                                class="text-center m-auto rounded w-11/12 h-full object-cover"
+                                src={getPosterPfp(
+                                    post.pfp_url,
+                                    post.poster_name,
+                                )}
+                                alt="profile"
+                                class="shadow-lg w-10 h-10 rounded-full"
                             />
-                        </div>
-                    </a>
+                            <div>
+                                <p class="font-semibold">{post.poster_name}</p>
+                                <p class="text-sm text-gray-500">
+                                    {post.resolved_location}
+                                </p>
+                            </div>
+                            <div class="ml-auto text-sm text-gray-400">
+                                {getTimeAgo(post.created_at)}
+                            </div>
+                        </a>
+                        <a href={getPostLink(post.post_uuid)}>
+                            <div class="overflow-hidden">
+                                <img
+                                    loading="lazy"
+                                    src={post.img_url}
+                                    alt="Post"
+                                    class="text-center m-auto rounded w-11/12 h-full object-cover"
+                                />
+                            </div>
+                        </a>
+                    </li>
                 {/each}
-            </div>
+            </ul>
             {#if loadingMorePosts}
                 <div class="no-scrollbar flex justify-center items-center py-4">
                     <svg

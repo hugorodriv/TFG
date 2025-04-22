@@ -244,27 +244,33 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
 export async function getPostsClose(userPosition, starting, ending, user_uuid) {
     const limit = ending - starting + 1
     const query = `
+    SELECT 
+        post_uuid, 
+        profile,
+        created_at,
+        pfp_url,
+        username,
+        poster_name,
+        resolved_location
+    FROM (
         SELECT 
-            post_uuid, 
-            profile,
-            created_at,
-            ST_X(location::geometry) AS lon,
-            ST_Y(location::geometry) AS lat
-        FROM (
-            SELECT *,
-                ST_Distance(
-                    location::geography,
-                    ST_MakePoint($1, $2)::geography
-                ) AS dist
-            FROM posts
-        WHERE ST_DWithin(
-            location::geography,
-            ST_MakePoint($1, $2)::geography,
-            $3
-        ) AND profile != $6
-        )
+            posts.post_uuid, 
+            posts.profile,
+            posts.created_at,
+            posts.resolved_location,
+            ST_Distance(location::geography, ST_MakePoint($1, $2)::geography) AS dist,
+            profiles.img_url as pfp_url,
+            profiles.username,
+            profiles.name as poster_name
+        FROM posts JOIN profiles ON profiles.uuid = posts.profile
+            WHERE ST_DWithin(
+                location::geography,
+                ST_MakePoint($1, $2)::geography,
+                $3
+            ) AND posts.profile != $6
         ORDER BY dist ASC
-        LIMIT $4 OFFSET $5;
+        LIMIT $4 OFFSET $5
+    ) AS sub
     `;
     try {
 
