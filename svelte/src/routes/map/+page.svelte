@@ -34,8 +34,29 @@
      * @type {number | null | undefined}
      */
     let timeoutId = null;
+    function getPostLink(post_uuid) {
+        const user_uuid = accountData?.uuid;
+        const timestamp = Date.now();
+
+        // Combine the data
+        const data = {
+            l: [location?.lat, location?.lon],
+            u: user_uuid,
+            t: timestamp,
+            p: post_uuid,
+        };
+
+        // Convert to base64 encoding
+        const encoded = btoa(JSON.stringify(data));
+
+        // Generate the link
+        return `/post/${encodeURIComponent(encoded)}`;
+    }
+
+    let accountData;
     onMount(async () => {
         location = JSON.parse(localStorage.getItem("location") || "null");
+        accountData = JSON.parse(localStorage.getItem("accData") || "{}");
 
         L = await import("leaflet");
 
@@ -184,7 +205,7 @@
 
                     zIndexOffset: zIndex, // Apply the zIndex offset based on post_uuid
                 }).on("click", () => {
-                    window.location.href = p.post_url;
+                    window.location.href = getPostLink(p.post_uuid);
                 });
 
                 marker.addTo(map);
