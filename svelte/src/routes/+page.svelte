@@ -63,7 +63,6 @@
     });
 
     async function loadMorePosts() {
-        console.log("here");
         if (loadingMorePosts || allPostsLoaded || !location) return;
         loadingMorePosts = true;
 

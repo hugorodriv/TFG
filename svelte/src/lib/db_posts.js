@@ -1,5 +1,5 @@
 import { pool } from "./db";
-import { getPrivateLinkPost, getViewableLinks } from "./s3";
+import { getViewableLinks } from "./s3";
 
 const ALLOWED_RADIUS = 10_000
 
@@ -188,7 +188,7 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
         ) AND ST_Within(
             location::geometry,
             ST_MakeEnvelope($4, $5, $6, $7, 4326)::geometry
-            ) 
+            ) AND profile != $9
         ORDER BY created_at DESC
         LIMIT $8 + 1;
     `;
@@ -202,7 +202,8 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
             neLat,
             swLng,
             swLat,
-            number
+            number,
+            user_uuid
         ]);
         if (res && res.rowCount) {
             return { success: true, posts: res.rows }
@@ -213,6 +214,13 @@ export async function getPostsWithinDistance(neLat, neLng, swLat, swLng, userPos
         return { success: false }
     }
 }
+
+/**
+ * @param {{ lng: any; lat: any; }} userPosition
+ * @param {number} starting
+ * @param {number} ending
+ * @param {any} user_uuid
+ */
 export async function getPostsClose(userPosition, starting, ending, user_uuid) {
     const limit = ending - starting + 1
     const query = `
