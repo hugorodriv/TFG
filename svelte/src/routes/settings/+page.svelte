@@ -455,7 +455,6 @@
                 </button>
             {/if}
         {/if}
-
-        <Bottombar />
     </div>
+    <Bottombar />
 {/if}
