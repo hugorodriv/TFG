@@ -17,8 +17,26 @@
     let loading = true;
     let editingText = false;
 
+    let pfp_data;
+
     onMount(() => {
         loading = false;
+
+        if (post.pfp_url) {
+            pfp_data = post.pfp_url;
+        } else {
+            // if no img data, create blue bg and white letter (default pfp)
+            const letter = post.poster_name.slice(0, 1).toUpperCase();
+            const svg = `
+            <svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="64" cy="64" r="64" fill="#007BFF"/>
+                <text x="64" y="64" font-size="64" fill="white" font-family="sans-serif"
+                    text-anchor="middle" dominant-baseline="central">
+                    ${letter}
+                </text>
+            </svg>`;
+            pfp_data = `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
     });
 
     async function removePost() {
@@ -124,18 +142,28 @@
             </div>
         </div>
     {:else}
-        <div class="space-y-4 p-4 max-w-md m-auto w-11/12">
-            <div class="text-center items-center justify-center">
-                <div>
-                    <p>{post.resolved_location}</p>
-                    <p>{getTimeAgo(post.created_at)}</p>
-                </div>
+        <div class="space-y-2 p-4 max-w-md m-auto w-11/12">
+            <a href={"../p/" + post.username} class=" flex items-center gap-3">
                 <img
-                    alt="post"
-                    class="rounded-lg shadow-lg m-auto"
-                    src={post.img_url}
+                    alt="profile"
+                    src={pfp_data}
+                    class="shadow-lg w-10 h-10 rounded-full"
                 />
-            </div>
+                <div>
+                    <p class="font-semibold">{post.poster_name}</p>
+                    <p class="text-sm text-gray-500">
+                        {post.resolved_location}
+                    </p>
+                </div>
+                <div class="ml-auto text-sm text-gray-400">
+                    {getTimeAgo(post.created_at)}
+                </div>
+            </a>
+            <img
+                alt="post"
+                class="rounded-lg shadow-lg m-auto"
+                src={post.img_url}
+            />
             {#if editingText}
                 <div
                     class="p-4 m-auto bg-gray-100 border border-gray-300 my-2 rounded h-32 overflow-auto relative"

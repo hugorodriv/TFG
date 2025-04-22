@@ -74,7 +74,17 @@ export async function checkAndGetPostInfo(post_uuid, user_uuid, location) {
     let queryStr, args
     if (location?.lat && location?.lon) {
         queryStr = `
-        SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
+        SELECT 
+    posts.post_uuid, 
+    posts.text, 
+    posts.resolved_location, 
+    posts.created_at, 
+    posts.profile ,
+    profiles.img_url as pfp_url,
+    profiles.username,
+    profiles.name as poster_name
+
+    FROM posts JOIN profiles ON profiles.uuid = posts.profile
         WHERE post_uuid = $1 AND ST_DWithin(
             location::geography,
             ST_MakePoint($3, $2)::geography,
@@ -85,7 +95,17 @@ export async function checkAndGetPostInfo(post_uuid, user_uuid, location) {
         args = [post_uuid, location.lat, location.lon, ALLOWED_RADIUS]
     } else {
         queryStr = `
-        SELECT post_uuid, text, resolved_location, created_at, profile FROM posts
+        SELECT 
+    posts.post_uuid, 
+    posts.text, 
+    posts.resolved_location, 
+    posts.created_at, 
+    posts.profile ,
+    profiles.img_url as pfp_url,
+    profiles.username,
+    profiles.name as poster_name
+
+    FROM posts JOIN profiles ON profiles.uuid = posts.profile
         WHERE post_uuid = $1 AND (
             profile = $2 OR are_friends(profile, $2)
         )
