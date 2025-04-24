@@ -231,7 +231,6 @@
 
 <Navbar />
 <div class="space-y-4 p-4 max-w-md m-auto">
-    <p class="text-center text-3xl mt-4">Upload</p>
     {#if !location?.lat || isLocationExpired}
         <a
             href="/"
@@ -248,7 +247,11 @@
         </div>
     {:else if imgCompressed}
         <!-- Display picture -->
-        <p>{location.resolved}</p>
+        <div
+            class="mt-10 text-center w-full p-3 bg-blue-100 border border-blue-300 rounded-md"
+        >
+            {location?.resolved}
+        </div>
         <div
             class="relative w-full bg-gray-100 rounded-lg shadow-md overflow-hidden"
         >
@@ -262,6 +265,7 @@
                 on:click={() => {
                     if (!successfulUpload) {
                         compressedFile = null;
+                        imgCompressed = false;
                     }
                 }}
                 class="absolute top-2 right-2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
