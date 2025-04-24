@@ -8,7 +8,7 @@
         const diffSec = Math.floor((now - pastDate) / 1000);
 
         if (diffSec < 60) {
-            return `${diffSec} seconds${diffSec !== 1 ? "s" : ""} ago`;
+            return `${diffSec} second${diffSec !== 1 ? "s" : ""} ago`;
         }
         const diffMin = Math.floor(diffSec / 60);
         if (diffMin < 60) {
@@ -27,7 +27,7 @@
 
 <h1 class="text-3xl">Cont scrolling post feed:</h1>
 {#if location}
-    <p>Location: {location.lat}{location.lon}</p>
+    <p>Location: {location.lat} {location.lon}</p>
     <p>Location: {location.resolved}</p>
     <p>Timestamp: {location.timestamp}</p>
     <p>Date: {new Date(location.timestamp)}</p>
