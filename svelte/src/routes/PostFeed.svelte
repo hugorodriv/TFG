@@ -224,8 +224,9 @@
     {/if}
 {:else}
     <div class="text-center">
+        <p class="my-1">Getting your location</p>
         <svg
-            class="inline w-4 h-4 text-gray-200 animate-spin fill-blue-600"
+            class="inline w-6 h-6 text-gray-200 animate-spin fill-blue-600"
             viewBox="0 0 100 101"
             fill="none"
         >

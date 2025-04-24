@@ -59,9 +59,7 @@
                     class="flex flex-col items-center justify-center px-5 group"
                 >
                     <svg
-                        class="w-7 h-7 {homeActive
-                            ? 'active'
-                            : 'inactive'} hovered"
+                        class="w-7 h-7 {homeActive ? 'active' : 'inactive'}"
                         fill="none"
                         viewBox="0 0 24 24"
                     >
@@ -83,9 +81,7 @@
                     class="flex flex-col items-center justify-center px-5 group"
                 >
                     <svg
-                        class="w-7 h-7 {mapActive
-                            ? 'active'
-                            : 'inactive'} hovered"
+                        class="w-7 h-7 {mapActive ? 'active' : 'inactive'}"
                         fill="currentColor"
                         viewBox="0 0 576 512"
                     >
@@ -133,9 +129,7 @@
                     class="flex flex-col items-center justify-center px-5 group"
                 >
                     <svg
-                        class="w-7 h-7 {friendsActive
-                            ? 'active'
-                            : 'inactive'} hovered"
+                        class="w-7 h-7 {friendsActive ? 'active' : 'inactive'}"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -181,8 +175,5 @@
     }
     .inactive {
         color: gray;
-    }
-    .hovered:hover {
-        color: #2563eb;
     }
 </style>

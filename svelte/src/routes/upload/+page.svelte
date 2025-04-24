@@ -2,12 +2,12 @@
     import { locationStore } from "$lib/stores/location";
     import Bottombar from "../Bottombar.svelte";
     import Navbar from "../Navbar.svelte";
-    import { onMount } from "svelte";
-
+    import { onMount, onDestroy } from "svelte";
     let uploading = false;
     let successfulUpload = false;
 
     let compressedFile;
+    let imgCompressed = false;
 
     $: isLocationExpired = locationStore.isExpired();
     /**
@@ -43,7 +43,14 @@
         });
         checkCameraAvailability().then(() => {});
     });
-
+    onDestroy(() => {
+        if (compressedFile) {
+            const displayUrl = URL.createObjectURL(compressedFile);
+            if (displayUrl && displayUrl.startsWith("blob:")) {
+                URL.revokeObjectURL(displayUrl);
+            }
+        }
+    });
     async function updateLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
@@ -91,47 +98,93 @@
         const MAX_DIMENSION = 1080;
         const JPEG_QUALITY = 0.7;
 
-        const reader = new FileReader();
+        try {
+            const reader = new FileReader();
 
-        reader.onload = (e) => {
-            const image = new Image();
-            image.onload = () => {
-                let width = image.naturalWidth;
-                let height = image.naturalHeight;
-
-                if (width > height && width > MAX_DIMENSION) {
-                    height = Math.round((height * MAX_DIMENSION) / width);
-                    width = MAX_DIMENSION;
-                } else if (height > MAX_DIMENSION) {
-                    width = Math.round((width * MAX_DIMENSION) / height);
-                    height = MAX_DIMENSION;
-                }
-
-                const canvas = document.createElement("canvas");
-                canvas.width = width;
-                canvas.height = height;
-
-                canvas.getContext("2d").drawImage(image, 0, 0, width, height);
-
-                canvas.toBlob(
-                    (blob) => {
-                        if (!blob) return;
-
-                        compressedFile = new File([blob], img.name, {
-                            type: "image/jpeg",
-                            lastModified: Date.now(),
-                        });
-
-                        URL.revokeObjectURL(image.src);
-                    },
-                    "image/jpeg",
-                    JPEG_QUALITY,
-                );
+            reader.onerror = (error) => {
+                console.error("FileReader error:", error);
+                alert("Failed to process image");
             };
-            image.src = e.target.result;
-        };
 
-        reader.readAsDataURL(img);
+            reader.onload = (e) => {
+                try {
+                    const image = new Image();
+
+                    image.onerror = (error) => {
+                        console.error("Image loading error:", error);
+                        alert("Failed to load image");
+                    };
+
+                    image.onload = () => {
+                        try {
+                            let width = image.naturalWidth;
+                            let height = image.naturalHeight;
+
+                            if (width > height && width > MAX_DIMENSION) {
+                                height = Math.round(
+                                    (height * MAX_DIMENSION) / width,
+                                );
+                                width = MAX_DIMENSION;
+                            } else if (height > MAX_DIMENSION) {
+                                width = Math.round(
+                                    (width * MAX_DIMENSION) / height,
+                                );
+                                height = MAX_DIMENSION;
+                            }
+
+                            const canvas = document.createElement("canvas");
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            const ctx = canvas.getContext("2d");
+                            if (!ctx) {
+                                throw new Error("Failed to get canvas context");
+                            }
+
+                            ctx.drawImage(image, 0, 0, width, height);
+
+                            canvas.toBlob(
+                                (blob) => {
+                                    if (!blob) {
+                                        console.error("Blob creation failed");
+                                        return;
+                                    }
+
+                                    compressedFile = new File(
+                                        [blob],
+                                        img.name,
+                                        {
+                                            type: "image/jpeg",
+                                            lastModified: Date.now(),
+                                        },
+                                    );
+
+                                    imgCompressed = true;
+                                    URL.revokeObjectURL(image.src);
+                                },
+                                "image/jpeg",
+                                JPEG_QUALITY,
+                            );
+                        } catch (canvasError) {
+                            console.error(
+                                "Canvas operation error:",
+                                canvasError,
+                            );
+                            alert("Failed to process image");
+                        }
+                    };
+                    image.src = e.target.result;
+                } catch (imageError) {
+                    console.error("Image creation error:", imageError);
+                    alert("Failed to process image");
+                }
+            };
+
+            reader.readAsDataURL(img);
+        } catch (readerError) {
+            console.error("FileReader setup error:", readerError);
+            alert("Failed to read image file");
+        }
     }
     async function uploadPicture() {
         uploading = true;
@@ -193,7 +246,7 @@
         >
             {camError}
         </div>
-    {:else if compressedFile}
+    {:else if imgCompressed}
         <!-- Display picture -->
         <p>{location.resolved}</p>
         <div
@@ -201,6 +254,7 @@
         >
             <img
                 src={URL.createObjectURL(compressedFile)}
+                loading="lazy"
                 alt="Camera preview"
                 class="w-full h-full object-cover"
             />
@@ -319,14 +373,16 @@
             </label>
         </button>
 
-        <input
-            bind:this={inputElement}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            on:change={handleCameraInput}
-            class="hidden"
-        />
+        <form>
+            <input
+                bind:this={inputElement}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                on:change|preventDefault={handleCameraInput}
+                class="hidden"
+            />
+        </form>
     {/if}
 </div>
 <Bottombar />
