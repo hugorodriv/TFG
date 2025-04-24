@@ -68,7 +68,7 @@
                 (device) => device.kind === "videoinput",
             );
 
-            if (cameras.length === 1) {
+            if (cameras.length === 0) {
                 camError = "Your device doesnt have a compatible camera";
             }
         } catch (err) {
@@ -80,6 +80,7 @@
      * @param {{ target: { files: any[]; }; }} event
      */
     function handleCameraInput(event) {
+        event.preventDefault();
         const file = event.target.files?.[0];
         if (!file) return;
 
@@ -90,54 +91,47 @@
         const MAX_DIMENSION = 1080;
         const JPEG_QUALITY = 0.7;
 
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
         const reader = new FileReader();
-        const image = new Image();
 
         reader.onload = (e) => {
-            image.src = e.target.result;
-        };
+            const image = new Image();
+            image.onload = () => {
+                let width = image.naturalWidth;
+                let height = image.naturalHeight;
 
-        image.onload = () => {
-            let width = image.naturalWidth;
-            let height = image.naturalHeight;
-
-            if (width > height) {
-                if (width > MAX_DIMENSION) {
+                if (width > height && width > MAX_DIMENSION) {
                     height = Math.round((height * MAX_DIMENSION) / width);
                     width = MAX_DIMENSION;
-                }
-            } else {
-                if (height > MAX_DIMENSION) {
+                } else if (height > MAX_DIMENSION) {
                     width = Math.round((width * MAX_DIMENSION) / height);
                     height = MAX_DIMENSION;
                 }
-            }
 
-            canvas.width = width;
-            canvas.height = height;
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
 
-            ctx.drawImage(image, 0, 0, width, height);
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(image, 0, 0, width, height);
 
-            // Convert to JPEG blob
-            canvas.toBlob(
-                (blob) => {
-                    if (!blob) {
-                        return;
-                    }
+                canvas.toBlob(
+                    (blob) => {
+                        if (!blob) return;
 
-                    compressedFile = new File([blob], img.name, {
-                        type: "image/jpeg",
-                        lastModified: Date.now(),
-                    });
-                },
-                "image/jpeg",
-                JPEG_QUALITY,
-            );
+                        compressedFile = new File([blob], img.name, {
+                            type: "image/jpeg",
+                            lastModified: Date.now(),
+                        });
+
+                        URL.revokeObjectURL(image.src);
+                    },
+                    "image/jpeg",
+                    JPEG_QUALITY,
+                );
+            };
+            image.src = e.target.result;
         };
 
-        // Start reading the file
         reader.readAsDataURL(img);
     }
     async function uploadPicture() {
