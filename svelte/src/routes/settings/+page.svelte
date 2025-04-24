@@ -27,7 +27,6 @@
         loading = false;
     });
     $: if (form?.dataChangeSuccess) {
-        console.log("is this firing?");
         const newBio = form.newData.bio;
         const newName = form.newData.name;
         const oldAccountData = (accountData =

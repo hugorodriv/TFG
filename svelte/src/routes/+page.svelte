@@ -15,6 +15,7 @@
     let accountData;
     let pfp;
 
+    // Location
     $: isLocationExpired = locationStore.isExpired();
     let locationError;
     let locationPermission = null;
@@ -37,7 +38,6 @@
         loading = false;
     });
 
-    // Location
     async function checkPermissionStatus() {
         try {
             const permission = await navigator.permissions.query({
