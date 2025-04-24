@@ -12,7 +12,6 @@ const defaultLocationData = {
 };
 
 async function resolveCoordinates(lat, lon) {
-    // Return a promise for the fetch operation
     const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
         {
@@ -61,7 +60,7 @@ const createLocationStore = () => {
 
                 locationStore.update(currentValue => ({
                     ...currentValue,
-                    resolved: "Couldnt determine city"
+                    resolved: "-"
                 }));
             }
         },
