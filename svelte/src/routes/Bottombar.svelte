@@ -20,14 +20,12 @@
         loading = false;
     });
     async function launchProtected(route) {
-        const location = JSON.parse(localStorage.getItem("location") || "null");
         const permission = await navigator.permissions.query({
             name: "geolocation",
         });
-        if (permission.state === "granted" && location.lat) {
+        if (permission.state === "granted") {
             goto(route);
         } else {
-            localStorage.setItem("location", "null");
             showWarning = true;
             setTimeout(() => {
                 showWarning = false;

@@ -3,6 +3,8 @@
     import Bottombar from "../Bottombar.svelte";
     import Navbar from "../Navbar.svelte";
 
+    import { locationStore } from "$lib/stores/location";
+
     import "leaflet/dist/leaflet.css";
     import "leaflet.markercluster/dist/MarkerCluster.css";
     import "leaflet.markercluster/dist/MarkerCluster.Default.css";
@@ -18,7 +20,13 @@
      * @type {{ lat: any; lon: any; }}
      */
     let location;
+    /**
+     * @type {{ options: { zoomSnap: number; zoomDelta: number; }; attributionControl: { remove: () => void; }; on: (arg0: string, arg1: () => Promise<void>) => void; getBounds: () => any; eachLayer: (arg0: (layer: { remove: () => void; }) => void) => void; }}
+     */
     let map;
+    /**
+     * @type {{ map: any; tileLayer: any; circle: any; latLng: any; Marker: any; divIcon: any; marker: any; default?: any; Bounds?: any; Browser?: any; CRS?: any; Canvas?: any; Circle?: any; CircleMarker?: any; Class?: any; Control?: any; DivIcon?: any; DivOverlay?: any; DomEvent?: any; DomUtil?: any; Draggable?: any; Evented?: any; FeatureGroup?: any; GeoJSON?: any; GridLayer?: any; Handler?: any; Icon?: any; ImageOverlay?: any; LatLng?: any; LatLngBounds?: any; Layer?: any; LayerGroup?: any; LineUtil?: any; Map?: any; Mixin?: any; Path?: any; Point?: any; PolyUtil?: any; Polygon?: any; Polyline?: any; Popup?: any; PosAnimation?: any; Projection?: any; Rectangle?: any; Renderer?: any; SVG?: any; SVGOverlay?: any; TileLayer?: any; Tooltip?: any; Transformation?: any; Util?: any; VideoOverlay?: any; bind?: any; bounds?: any; canvas?: any; circleMarker?: any; control?: any; extend?: any; featureGroup?: any; geoJSON?: any; geoJson?: any; gridLayer?: any; icon?: any; imageOverlay?: any; latLngBounds?: any; layerGroup?: any; point?: any; polygon?: any; polyline?: any; popup?: any; rectangle?: any; setOptions?: any; stamp?: any; svg?: any; svgOverlay?: any; tooltip?: any; transformation?: any; version?: any; videoOverlay?: any; noConflict?: () => any; }}
+     */
     let L;
     /**
      * @type {any[]}
@@ -29,34 +37,18 @@
      * @type {any[]}
      */
     let localPostsCache = [];
-
     /**
      * @type {number | null | undefined}
      */
     let timeoutId = null;
-    function getPostLink(post_uuid) {
-        const user_uuid = accountData?.uuid;
-        const timestamp = Date.now();
-
-        // Combine the data
-        const data = {
-            l: [location?.lat, location?.lon],
-            u: user_uuid,
-            t: timestamp,
-            p: post_uuid,
-        };
-
-        // Convert to base64 encoding
-        const encoded = btoa(JSON.stringify(data));
-
-        // Generate the link
-        return `/post/${encodeURIComponent(encoded)}`;
-    }
-
+    /**
+     * @type {{ uuid: any; }}
+     */
     let accountData;
+
     onMount(async () => {
-        location = JSON.parse(localStorage.getItem("location") || "null");
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
+        location = locationStore.getData();
 
         L = await import("leaflet");
 
@@ -95,6 +87,31 @@
 
         await populateMapWithPosts(tBounds);
     });
+
+    /**
+     * @param {any} post_uuid
+     */
+    function getPostLink(post_uuid) {
+        const user_uuid = accountData?.uuid;
+        const timestamp = Date.now();
+
+        // Combine the data
+        const data = {
+            l: [location?.lat, location?.lon],
+            u: user_uuid,
+            t: timestamp,
+            p: post_uuid,
+        };
+
+        // Convert to base64 encoding
+        const encoded = btoa(JSON.stringify(data));
+
+        // Generate the link
+        return `/post/${encodeURIComponent(encoded)}`;
+    }
+    /**
+     * @param {{ contains: (arg0: { lat: any; lng: any; }) => any; _northEast: any; _southWest: any; }} bounds
+     */
     async function populateMapWithPosts(bounds) {
         relevantPosts = localPostsCache.filter(
             function (p) {
