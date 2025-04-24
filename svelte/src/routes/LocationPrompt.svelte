@@ -134,3 +134,4 @@
         </div>
     </div>
 {/if}
+<button on:click={getLocation}>GET LOC</button>
