@@ -223,10 +223,11 @@
         </div>
     {/if}
 {:else}
+    <!-- Skeleton -->
     <div class="text-center">
-        <p class="my-1">Getting your location</p>
+        <p class="text-lg font-medium my-2">Getting your location</p>
         <svg
-            class="inline w-6 h-6 text-gray-200 animate-spin fill-blue-600"
+            class="inline w-8 h-8 text-gray-200 animate-spin fill-blue-600"
             viewBox="0 0 100 101"
             fill="none"
         >
@@ -239,5 +240,22 @@
                 fill="currentFill"
             />
         </svg>
+
+        <ul class="skeleton-list w-11/12 mx-auto mt-4 grid gap-8">
+            {#each Array(3) as _}
+                <li class="text-center animate-pulse space-y-4 w-full">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-gray-300 rounded-full w-10 h-10"></div>
+                        <div class="flex-1">
+                            <div
+                                class="h-4 bg-gray-300 rounded w-1/4 mb-2"
+                            ></div>
+                            <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-300 rounded h-128"></div>
+                </li>
+            {/each}
+        </ul>
     </div>
 {/if}

@@ -49,12 +49,14 @@
         </div>
     {/if}
     <div
-        class="fixed bottom-14 w-full h-4 bg-gradient-to-b from-transparent to-white/30"
+        class="left-0 fixed bottom-11 w-full h-4 bg-gradient-to-b from-transparent to-white/30"
     >
         <div
-            class="bg-white fixed bottom-0 w-full border-t border-gray-200 shadow-md"
+            class="w-full h-14 bg-white bottom-0 translate-y-1 max-w-screen-xl mx-auto border-t border-gray-200"
         >
-            <div class="max-w-[400px] w-11/12 m-auto h-14">
+            <div
+                class="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-[400px] w-11/12 m-auto h-14"
+            >
                 <div class="grid grid-cols-5 h-full mx-auto">
                     <!-- Home button -->
                     <a
