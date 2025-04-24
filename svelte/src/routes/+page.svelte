@@ -6,9 +6,7 @@
     import Auth from "./auth.svelte";
     import Navbar from "./Navbar.svelte";
     import Bottombar from "./Bottombar.svelte";
-    // import LocationPrompt from "./LocationPrompt.svelte";
-    // import LocationShowcase from "./LocationShowcase.svelte";
-    import PostFeed from "./locTest/PostFeed.svelte";
+    import PostFeed from "./PostFeed.svelte";
 
     let loading = true;
 
