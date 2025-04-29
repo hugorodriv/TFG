@@ -35,5 +35,5 @@
 </script>
 
 <nav class="bg-white shadow-sm py-3 px-6 flex items-center justify-center">
-    <a href="/" class=" text-xl font-bold text-gray-800">TFG</a>
+    <a href="/" class=" text-xl font-bold text-gray-800">SHARELLOC</a>
 </nav>

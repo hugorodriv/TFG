@@ -3,7 +3,7 @@
     let termsAccepted = false;
 </script>
 
-<p class="mt-10 text-center text-3xl">TFG</p>
+<p class="mt-10 text-center text-3xl">SHARELLOC</p>
 
 <div class="mt-5 text-center justify-center"></div>
 

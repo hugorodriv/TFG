@@ -16,7 +16,7 @@ async function resolveCoordinates(lat, lon) {
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
         {
             headers: {
-                "User-Agent": "TFG_HRR",
+                "User-Agent": "SHARELLOC.app",
             },
         },
     );
