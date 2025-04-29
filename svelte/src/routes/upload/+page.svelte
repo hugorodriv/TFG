@@ -14,10 +14,6 @@
      * @type {string}
      */
     let camError;
-    /**
-     * @type {HTMLInputElement}
-     */
-    let inputElement;
 
     /**
      * @type {{ uuid: String; }}
@@ -88,15 +84,20 @@
      */
     function handleCameraInput(event) {
         event.preventDefault();
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        compressImage(file);
+        const target_file = event.target.files[0];
+        if (!target_file) {
+            console.log("No file provided");
+            alert("No file selected");
+            return;
+        }
+        compressImage(target_file);
     }
 
     function compressImage(img) {
         const MAX_DIMENSION = 1080;
         const JPEG_QUALITY = 0.7;
+
+        imgCompressed = false;
 
         try {
             const reader = new FileReader();
@@ -145,11 +146,6 @@
 
                             canvas.toBlob(
                                 (blob) => {
-                                    if (!blob) {
-                                        console.error("Blob creation failed");
-                                        return;
-                                    }
-
                                     compressedFile = new File(
                                         [blob],
                                         img.name,
@@ -339,7 +335,7 @@
         {/if}
         <button
             on:click={() => {
-                inputElement.click();
+                document.getElementById("inputElement").click();
             }}
             class="flex items-center justify-center w-full"
         >
@@ -379,7 +375,7 @@
 
         <form>
             <input
-                bind:this={inputElement}
+                id="inputElement"
                 type="file"
                 accept="image/*"
                 capture="environment"
