@@ -1,3 +1,5 @@
+import { dev } from '$app/environment';
+
 // Google
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Google from "@auth/core/providers/google";
@@ -14,7 +16,9 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     adapter: PostgresAdapter(pool),
     providers: [
         Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET }),
-        GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET })
+
+        // Only include github config in dev env
+        ...(dev ? [GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET })] : [])
     ],
     secret: AUTH_SECRET,
     callbacks: {
