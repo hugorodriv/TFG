@@ -1,0 +1,20 @@
+services:
+  sveltekit-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sveltekit
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ".env"
+    restart: unless-stopped
+    networks:
+      - sharelloc
+
+networks:
+  sharelloc:
+    name: sharelloc
+    external: true

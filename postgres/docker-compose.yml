@@ -12,7 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - postgres_network
+      - sharelloc
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
@@ -25,7 +25,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
-      - postgres_network
+      - sharelloc
 
 volumes:
   pgdata:
@@ -34,5 +34,6 @@ volumes:
     driver: local
 
 networks:
-  postgres_network:
-    driver: bridge
+  sharelloc:
+    name: sharelloc
+    external: true
