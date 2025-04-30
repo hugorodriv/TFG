@@ -1,5 +1,6 @@
 <script>
     import Bottombar from "../../Bottombar.svelte";
+    import { dev } from "$app/environment";
     import Navbar from "../../Navbar.svelte";
     import { onMount } from "svelte";
 
@@ -90,7 +91,12 @@
 
     function getTimeAgo(timestamp) {
         const now = new Date();
-        const pastDate = new Date(Date.parse(timestamp + "Z"));
+        let pastDate;
+        if (dev) {
+            pastDate = new Date(Date.parse(timestamp + "Z"));
+        } else {
+            pastDate = new Date(Date.parse(timestamp));
+        }
         const diffSec = (now - pastDate) / 1000;
 
         const diffMin = Math.floor(diffSec / 60);
