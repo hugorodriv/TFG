@@ -1,9 +1,18 @@
 <script>
     export let post;
+    /**
+     * @type {{ uuid: any; }}
+     */
     export let accountData;
+    /**
+     * @type {{ lat: any; lon: any; }}
+     */
     export let location;
     let loaded = false;
 
+    /**
+     * @param {any} post_uuid
+     */
     function getPostLink(post_uuid) {
         const user_uuid = accountData?.uuid;
         const timestamp = Date.now();
@@ -23,6 +32,10 @@
         return `/post/${encodeURIComponent(encoded)}`;
     }
 
+    /**
+     * @param {any} pfp_url
+     * @param {string} poster_name
+     */
     function getPosterPfp(pfp_url, poster_name) {
         if (pfp_url) return pfp_url;
 
@@ -37,6 +50,9 @@
             </svg>`;
         return `data:image/svg+xml;base64,${btoa(svg)}`;
     }
+    /**
+     * @param {string | number | Date} timestamp
+     */
     function getTimeAgo(timestamp) {
         const now = new Date();
         const pastDate = new Date(timestamp);
