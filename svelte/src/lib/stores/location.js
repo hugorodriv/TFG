@@ -60,7 +60,7 @@ const createLocationStore = () => {
 
                 locationStore.update(currentValue => ({
                     ...currentValue,
-                    resolved: "-"
+                    resolved: ""
                 }));
             }
         },
