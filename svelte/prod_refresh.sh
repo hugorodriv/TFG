@@ -9,5 +9,6 @@ cd "$(dirname "$0")"
 
 git fetch
 git pull
+docker-compose build --force-recreate
 docker-compose down
-docker-compose up --build --force-recreate -d
+docker-compose up -d
