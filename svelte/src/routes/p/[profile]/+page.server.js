@@ -1,5 +1,4 @@
 import { redirect } from '@sveltejs/kit';
-import { isNewAccount } from "$lib/auth.js";
 import { fetchAccDataFromUsername, getUserUUID, USERNAME_REGEX } from '$lib/db.js';
 import { getFriendshipStatus } from '$lib/db_friendships.js';
 import { getUserPosts } from '$lib/db_posts.js';
@@ -10,11 +9,6 @@ export const load = async (event) => {
 
     // user not logged
     if (!session) {
-        throw redirect(303, '/');
-    }
-
-    // user logged in but is new account
-    if (session && await isNewAccount(session.user)) {
         throw redirect(303, '/');
     }
 

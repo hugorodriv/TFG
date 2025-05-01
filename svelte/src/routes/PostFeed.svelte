@@ -143,19 +143,6 @@
     }
 </script>
 
-<!---->
-<!-- {#if location.lat} -->
-<!--     <p>Location: {location.lat} {location.lon}</p> -->
-<!--     <p>Location: {location.resolved}</p> -->
-<!--     <p>Timestamp: {location.timestamp}</p> -->
-<!--     <p>Date: {new Date(location.timestamp)}</p> -->
-<!--     <p>Ago: {getTimeAgo(location.timestamp)}</p> -->
-<!--     <p class="mt-10">{JSON.stringify(location)}</p> -->
-<!-- {:else} -->
-<!--     <p>Error getting location</p> -->
-<!-- {/if} -->
-<!---->
-
 {#if location.lat}
     <div class="text-center space-y-1">
         <p class="text-lg font-semibold text-gray-800">
