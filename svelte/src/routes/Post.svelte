@@ -1,9 +1,18 @@
 <script>
     export let post;
+    /**
+     * @type {{ uuid: any; }}
+     */
     export let accountData;
+    /**
+     * @type {{ lat: any; lon: any; }}
+     */
     export let location;
     let loaded = false;
 
+    /**
+     * @param {any} post_uuid
+     */
     function getPostLink(post_uuid) {
         const user_uuid = accountData?.uuid;
         const timestamp = Date.now();
@@ -23,6 +32,10 @@
         return `/post/${encodeURIComponent(encoded)}`;
     }
 
+    /**
+     * @param {any} pfp_url
+     * @param {string} poster_name
+     */
     function getPosterPfp(pfp_url, poster_name) {
         if (pfp_url) return pfp_url;
 
@@ -37,9 +50,13 @@
             </svg>`;
         return `data:image/svg+xml;base64,${btoa(svg)}`;
     }
+    /**
+     * @param {string | number | Date} timestamp
+     */
     function getTimeAgo(timestamp) {
         const now = new Date();
         const pastDate = new Date(timestamp);
+        // @ts-ignore
         const diffSec = Math.floor((now - pastDate) / 1000);
 
         if (diffSec < 60) {
@@ -60,11 +77,11 @@
     }
 </script>
 
-{#if loaded}
-    <li>
+<li>
+    {#if loaded}
         <a
             href={"../p/" + post.username}
-            class="w-11/12 py-1 m-auto flex items-center gap-3"
+            class="w-11/12 m-auto flex items-center gap-3"
         >
             <img
                 src={getPosterPfp(post.pfp_url, post.poster_name)}
@@ -81,23 +98,8 @@
                 {getTimeAgo(post.created_at)}
             </div>
         </a>
-        <a href={getPostLink(post.post_uuid)}>
-            <div class="overflow-hidden">
-                <img
-                    on:load={() => {
-                        loaded = true;
-                    }}
-                    loading="lazy"
-                    src={post.img_url}
-                    alt="Post"
-                    class="text-center m-auto rounded w-11/12 h-full object-cover"
-                />
-            </div>
-        </a>
-    </li>
-{:else}
-    <li class="text-center animate-pulse space-y-4">
-        <div class="w-11/12 py-1 m-auto items-center gap-3">
+    {:else}
+        <div class="w-11/12 py-1 m-auto items-center gap-3 animate-pulse">
             <div class="flex items-center gap-3">
                 <div class="bg-gray-300 rounded-full w-10 h-10"></div>
                 <div class=" flex-1">
@@ -107,13 +109,18 @@
             </div>
             <div class="mt-3 bg-gray-300 rounded h-128"></div>
         </div>
-    </li>
-    <img
-        on:load={() => {
-            loaded = true;
-        }}
-        src={post.img_url}
-        alt="loading"
-        class="hidden"
-    />
-{/if}
+    {/if}
+
+    <a href={getPostLink(post.post_uuid)}>
+        <img
+            style:height={loaded ? "auto" : 0}
+            src={post.img_url}
+            alt="Post"
+            class="gap-y-3 py-6 text-center m-auto rounded-3xl w-11/12 object-cover"
+            loading="lazy"
+            on:load={() => {
+                loaded = true;
+            }}
+        />
+    </a>
+</li>
