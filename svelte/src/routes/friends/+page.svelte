@@ -72,7 +72,6 @@
 </script>
 
 {#if loading}
-    <Navbar />
     <div class="space-y-4 p-4 max-w-md m-auto">
         <div
             class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
@@ -122,16 +121,11 @@
     </div>
     <Bottombar />
 {:else}
-    <Navbar />
+    <Navbar text={"Friends"} />
 
     <div class="space-y-4 p-4 max-w-md m-auto">
         <!-- Search bar -->
 
-        <h2
-            class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
-        >
-            Add friends
-        </h2>
         <div class="mb-14">
             <div class="relative mb-1">
                 <div
