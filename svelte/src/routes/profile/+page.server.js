@@ -1,6 +1,4 @@
 import { redirect } from '@sveltejs/kit';
-import { isNewAccount } from "$lib/auth.js";
-import { getPendingFriendships, getSentPendingFriendships, getFriendList } from '$lib/db_friendships';
 import { getUserUUID } from '$lib/db';
 import { getUserPosts } from '$lib/db_posts';
 
@@ -13,11 +11,6 @@ export async function load(event) {
 
     // user not logged in
     if (!session) {
-        throw redirect(303, '/');
-    }
-
-    // user exists but hasnt created acc yet
-    if (await isNewAccount(session.user)) {
         throw redirect(303, '/');
     }
 
