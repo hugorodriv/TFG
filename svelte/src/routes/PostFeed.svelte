@@ -98,7 +98,7 @@
     </div>
     <ul class="mt-4 grid grid-cols-1 gap-8" on:scroll={handleScroll}>
         {#each localPostsCache as post}
-            <Post {post} {accountData} />
+            <Post {post} {location} {accountData} />
         {/each}
     </ul>
     {#if loadingMorePosts}

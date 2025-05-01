@@ -1,6 +1,7 @@
 <script>
     export let post;
     export let accountData;
+    export let location;
     let loaded = false;
 
     function getPostLink(post_uuid) {
