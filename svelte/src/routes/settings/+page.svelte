@@ -133,9 +133,7 @@
         </svg>
     </div>
 {:else}
-    <Navbar />
-    <p class="mt-10 text-center text-xl">Profile Settings</p>
-
+    <Navbar text={"Profile settings"} />
     <div class="space-y-4 p-4 max-w-md m-auto">
         <!-- Static info: Email and username  -->
         <div class="mb-5">

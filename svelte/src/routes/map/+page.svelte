@@ -289,7 +289,7 @@
 />
 
 <div class="h-screen flex flex-col">
-    <Navbar />
+    <Navbar text={"Map"} />
     <div
         bind:this={mapContainer}
         class="py-2 mx-auto rounded-lg z-0 h-full max-h-[calc(100vh-100px)] w-full"

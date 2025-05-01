@@ -225,7 +225,7 @@
     }
 </script>
 
-<Navbar />
+<Navbar text={"Upload"} />
 <div class="space-y-4 p-4 max-w-md m-auto">
     {#if !location?.lat || isLocationExpired}
         <a

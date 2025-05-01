@@ -24,8 +24,6 @@
 </script>
 
 {#if loading}
-    <Navbar />
-
     <div class="space-y-4 p-4 max-w-md m-auto">
         <div>
             <div
@@ -63,7 +61,7 @@
 
     <Bottombar profileActive={true} />
 {:else}
-    <Navbar />
+    <Navbar text={"Profile"} />
 
     <div class="space-y-4 p-4 max-w-md m-auto">
         <div
