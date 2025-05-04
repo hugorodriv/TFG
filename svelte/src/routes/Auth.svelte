@@ -4,14 +4,14 @@
     let termsAccepted = false;
 </script>
 
-<p class="mt-10 text-center text-3xl">SHARELLOC</p>
-
 <div class="mt-5 text-center justify-center"></div>
 
-<section class="justify-center bg-gray-50">
+<section class="justify-center">
     <div class="flex flex-col items-center justify-center px-6 py-8">
         <div class="w-full bg-white rounded-lg shadow">
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div
+                class="border border-gray-200 rounded-lg p-6 space-y-4 md:space-y-6 sm:p-8"
+            >
                 <h1
                     class="justify-center text-center text-xl font-bold leading-tight tracking-tight text-gray-900"
                 >
@@ -137,12 +137,16 @@
                     />
                     <label
                         for="terms"
-                        class="ms-2 text-sm font-medium text-gray-900"
+                        class="ml-4 ms-2 text-sm font-medium text-gray-900"
                         >I agree with the <a
                             href="/termsandconditions"
                             class="text-blue-600">terms and conditions</a
-                        ></label
-                    >
+                        >
+                        and with the
+                        <a href="/privacypolicy" class="text-blue-600"
+                            >privacy policy</a
+                        >
+                    </label>
                 </div>
             </div>
         </div>

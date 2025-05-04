@@ -129,7 +129,7 @@
             }
 
             const missingPosts = MAX_POSTS - relevantPosts.length;
-            const response = await fetch("./api/get-posts-within-distance", {
+            const response = await fetch("/api/get-posts-within-distance", {
                 method: "POST",
                 body: JSON.stringify({
                     userPosition: {

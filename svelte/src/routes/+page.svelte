@@ -3,7 +3,8 @@
 
     import { locationStore } from "$lib/stores/location";
 
-    import Auth from "./auth.svelte";
+    import Auth from "./Auth.svelte";
+    import Welcome from "./Welcome.svelte";
     import Navbar from "./Navbar.svelte";
     import Bottombar from "./Bottombar.svelte";
     import PostFeed from "./PostFeed.svelte";
@@ -96,14 +97,18 @@
 {:else}
     <div>
         {#if !session}
+            <Navbar />
             <Auth />
+            <Welcome />
         {:else}
             <Navbar />
 
             <div class="py-4 m-auto">
                 {#if !locationPermission && !locationError}
                     <!-- Please allow loc access -->
-                    <div class="border border-gray-200 rounded-lg shadow-sm">
+                    <div
+                        class="w-11/12 m-auto border border-gray-200 rounded-lg shadow-sm"
+                    >
                         <div class="mt-10 flex flex-col items-center pb-10">
                             <svg
                                 class="w-20 h-20 text-gray-500"
@@ -148,7 +153,9 @@
                     </div>
                 {:else if locationError}
                     <div class="border border-gray-200 rounded-lg shadow-sm">
-                        <div class="mt-10 flex flex-col items-center pb-10">
+                        <div
+                            class="w-11/12 m-auto mt-10 flex flex-col items-center pb-10"
+                        >
                             <svg
                                 class="w-20 h-20 text-gray-500"
                                 aria-hidden="true"
