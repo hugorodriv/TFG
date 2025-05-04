@@ -137,12 +137,16 @@
                     />
                     <label
                         for="terms"
-                        class="ms-2 text-sm font-medium text-gray-900"
+                        class="ml-4 ms-2 text-sm font-medium text-gray-900"
                         >I agree with the <a
                             href="/termsandconditions"
                             class="text-blue-600">terms and conditions</a
-                        ></label
-                    >
+                        ><br />
+                        and with the
+                        <a href="/privacypolicy" class="text-blue-600"
+                            >privacy policy</a
+                        >
+                    </label>
                 </div>
             </div>
         </div>
