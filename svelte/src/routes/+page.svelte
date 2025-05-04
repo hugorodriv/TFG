@@ -3,7 +3,8 @@
 
     import { locationStore } from "$lib/stores/location";
 
-    import Auth from "./auth.svelte";
+    import Auth from "./Auth.svelte";
+    import Welcome from "./Welcome.svelte";
     import Navbar from "./Navbar.svelte";
     import Bottombar from "./Bottombar.svelte";
     import PostFeed from "./PostFeed.svelte";
@@ -96,7 +97,9 @@
 {:else}
     <div>
         {#if !session}
+            <Navbar />
             <Auth />
+            <Welcome />
         {:else}
             <Navbar />
 
