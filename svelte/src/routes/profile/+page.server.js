@@ -27,7 +27,6 @@ export async function load(event) {
     }
 
 
-    // TODO: Get user posts
     const posts = await getUserPosts(uuid)
     if (posts?.success) {
         return { posts: posts.posts }
