@@ -1,6 +1,7 @@
 <script>
     import { enhance } from "$app/forms";
     import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
 
     import PictureCrop from "./pictureCrop.svelte";
     import Navbar from "../Navbar.svelte";
@@ -26,7 +27,9 @@
         pfp = localStorage.getItem("pfp");
         loading = false;
     });
+
     $: if (form?.dataChangeSuccess) {
+        loading = true;
         const newBio = form.newData.bio;
         const newName = form.newData.name;
         const oldAccountData = (accountData =
@@ -38,6 +41,9 @@
         };
 
         localStorage.setItem("accData", JSON.stringify(newAccountData));
+        setTimeout(() => {
+            goto("/profile/");
+        }, 300);
     }
 
     let changingPfp = false;
@@ -49,7 +55,6 @@
 
     let confirmAccountDeletionButton = false;
     let confirmRemovePfp = false;
-    let succesfullPfpChange = false;
 
     async function uploadPfp() {
         const response_changePfpUrl = await fetch(`/api/changePfp`);
@@ -81,7 +86,10 @@
                 localStorage.setItem("pfp", base64data);
                 pfp = base64data;
             };
-            succesfullPfpChange = true;
+            loading = true;
+            setTimeout(() => {
+                goto("/profile/");
+            }, 300);
         } catch (error) {
             alert("Error changing profile picture");
         }
@@ -92,8 +100,6 @@
 
         try {
             const data = await response_changePfpUrl.json();
-            succesfullPfpChange = true;
-
             // create default PFP
             const letter = accountData.name.slice(0, 1).toUpperCase();
             const svg = `
@@ -109,6 +115,10 @@
                 "pfp",
                 `data:image/svg+xml;base64,${btoa(svg)}`,
             );
+            loading = true;
+            setTimeout(() => {
+                goto("/profile/");
+            }, 300);
         } catch (error) {
             alert("Error removing pfp");
         }
@@ -280,11 +290,7 @@
                 Profile Picture
             </label>
 
-            {#if succesfullPfpChange}
-                <h1>Successfully updated</h1>
-                <h2>Refresh page to see changes</h2>
-            {/if}
-            {#if changingPfp && !succesfullPfpChange}
+            {#if changingPfp}
                 <!-- New profile picture selected and cropped -->
                 <div>
                     {#if finalProfilePicture}
@@ -311,7 +317,7 @@
                         <PictureCrop bind:finalProfilePicture />
                     {/if}
                 </div>
-            {:else if !succesfullPfpChange}
+            {:else}
                 <!-- Displaying current pfp and two buttons for either changing or deleting -->
                 <div class="text-center m-auto justify-center flex">
                     <img
@@ -354,11 +360,7 @@
 
         <!-- Change user details  -->
         {#if selection == 2}
-            {#if form?.dataChangeSuccess}
-                <h1>Successfully updated</h1>
-                <h2>Refresh page to see changes</h2>
-            {/if}
-            {#if !confirmAccountDeletionButton && !form?.dataChangeSuccess && !form?.error}
+            {#if !form?.dataChangeSuccess && !form?.error}
                 <form
                     class=""
                     method="POST"
