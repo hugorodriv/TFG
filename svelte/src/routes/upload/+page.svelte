@@ -72,7 +72,7 @@
             );
 
             if (cameras.length === 0) {
-                camError = "Your device doesnt have a compatible camera";
+                camError = "Your device doesn't have a compatible camera";
             }
         } catch (err) {
             console.error("Error checking camera:", err);
