@@ -97,11 +97,11 @@
 {:else}
     <div>
         {#if !session}
-            <Navbar />
+            <Navbar showBack={false} />
             <Auth />
             <Welcome />
         {:else}
-            <Navbar />
+            <Navbar showBack={false} />
 
             <div class="py-4 m-auto">
                 {#if !locationPermission && !locationError}

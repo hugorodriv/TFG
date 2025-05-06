@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     export let text;
+    export let showBack = true;
 
     /**
      * @type {{ name: String; username: String; }}
@@ -17,10 +18,41 @@
     });
 </script>
 
-<nav class="bg-white shadow-sm py-3 px-6 flex items-center justify-center">
-    {#if text}
-        <p class=" text-xl font-bold text-gray-800">{text}</p>
-    {:else}
-        <a href="/" class=" text-xl font-bold text-gray-800">SHARELLOC</a>
-    {/if}
+<nav class="bg-white shadow-sm py-3 px-6 flex items-center">
+    <!-- Back button container - fixed width to ensure positioning -->
+    <div class="w-8">
+        {#if showBack}
+            <button
+                on:click={() => {
+                    history.back();
+                }}
+                aria-label="Go back"
+                class="flex items-center justify-center p-1.5 rounded-full bg-gray-100 hover:bg-gray-200"
+            >
+                <svg
+                    class="w-5 h-5 text-gray-800"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M5 12h14M5 12l4-4m-4 4 4 4"
+                    />
+                </svg>
+            </button>
+        {/if}
+    </div>
+
+    <!-- Logo - centered with flex-grow -->
+    <div class="flex-grow text-center">
+        <p class="text-xl font-bold text-gray-800">{text || "SHARELLOC"}</p>
+    </div>
+
+    <!-- Spacer to balance the layout -->
+    <div class="w-8 flex-shrink-0"></div>
 </nav>
