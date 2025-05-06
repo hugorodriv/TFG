@@ -1,8 +1,10 @@
 <script>
-    import Bottombar from "../../Bottombar.svelte";
     import { dev } from "$app/environment";
-    import Navbar from "../../Navbar.svelte";
     import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
+
+    import Bottombar from "../../Bottombar.svelte";
+    import Navbar from "../../Navbar.svelte";
 
     export let data;
 
@@ -11,7 +13,6 @@
         notFound = false;
     }
     let confirmDeletePost = false;
-    let successfulUpdate = false;
     const post = data.post;
     const owner = data.isOwner;
 
@@ -54,7 +55,7 @@
         try {
             const data = await response.json();
             if (data?.success) {
-                return true;
+                goto("/profile");
             }
         } catch (error) {
             alert("Error removing post");
@@ -80,7 +81,9 @@
         try {
             const data = await response.json();
             if (data?.success) {
-                return true;
+                // refresh after successful Text editing
+                const thisPage = window.location.pathname;
+                goto("/").then(() => goto(thisPage));
             }
         } catch (error) {
             alert("Error removing post");
@@ -196,10 +199,7 @@
                 {#if confirmDeletePost}
                     <button
                         on:click={async (e) => {
-                            const success = await removePost();
-                            if (success) {
-                                e.target.innerText = "POST REMOVED";
-                            }
+                            await removePost();
                         }}
                         class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
@@ -248,8 +248,7 @@
                     {#if editingText}
                         <button
                             on:click={async (e) => {
-                                const success = await changePostText();
-                                successfulUpdate = success || false;
+                                await changePostText();
                             }}
                             class="px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
                         >
@@ -275,11 +274,7 @@
                                     6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                                     />
                                 </svg>
-                                {#if successfulUpdate}
-                                    Post Updated
-                                {:else}
-                                    Submit
-                                {/if}
+                                Submit
                             </span>
                         </button>
                     {:else}
