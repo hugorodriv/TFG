@@ -45,7 +45,7 @@ export async function POST({ locals, request }) {
 
     const uploadLink = await getUploadPostLink(post_uuid)
     if (uploadLink) {
-        return json({ success: true, uploadLink: uploadLink.uploadUrl })
+        return json({ success: true, uploadLink: uploadLink.uploadUrl, post_uuid: post_uuid })
     }
     error(500)
 
