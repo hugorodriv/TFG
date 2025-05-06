@@ -27,10 +27,8 @@
      * @type {number}
      */
     let delayTimer;
-    let searchError = false;
 
     async function updateSearchResults(e) {
-        searchError = false;
         clearTimeout(delayTimer);
 
         // either username or name
@@ -52,7 +50,7 @@
 
             const body = await response.json();
             if (!body.list) {
-                searchError = true;
+                searchResults = null;
                 return;
             }
 
@@ -64,7 +62,6 @@
             if (results.length >= 1) {
                 searchResults = results;
             } else {
-                searchError = true;
                 searchResults = null;
             }
         }, 300);
@@ -150,6 +147,7 @@
                     id="search"
                     class=" block w-full p-4 ps-10 text-gray-900 border border-gray-300 rounded-lg"
                     placeholder=" Search a name or username"
+                    maxlength="50"
                     on:keyup={updateSearchResults}
                 />
             </div>
@@ -158,84 +156,47 @@
             <div class="relative">
                 <div class="absolute inset-x-0 w-full z-40">
                     {#if searchResults}
-                        {#if searchError}
-                            <div
-                                class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8"
-                            >
-                                <div class="flow-root">
-                                    <ul
-                                        role="list"
-                                        class="divide-y divide-gray-200"
-                                    >
-                                        <li class="py-3">
-                                            <span class="flex items-center">
-                                                <div class="shrink-0"></div>
-                                                <div
-                                                    class="flex-1 min-w-0 ms-4"
-                                                >
-                                                    <p
-                                                        class="font-medium text-gray-900 truncate"
-                                                    >
-                                                        Please enter a valid
-                                                        search :)
-                                                    </p>
-                                                </div>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        {:else}
-                            <div
-                                class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8"
-                            >
-                                <div class="flow-root">
-                                    <ul
-                                        role="list"
-                                        class="divide-y divide-gray-200"
-                                    >
-                                        {#each searchResults as user}
-                                            <SearchProfileCard
-                                                name={user.name}
-                                                username={user.username}
-                                                img_url={user.img_url}
-                                            />
-                                        {:else}
-                                            <!-- skeleton -->
-                                            {#if !searchError}
-                                                {#each Array(3) as _}
-                                                    <li
-                                                        class="py-3 animate-pulse"
+                        <div
+                            class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8"
+                        >
+                            <div class="flow-root">
+                                <ul
+                                    role="list"
+                                    class="divide-y divide-gray-200"
+                                >
+                                    {#each searchResults as user}
+                                        <SearchProfileCard
+                                            name={user.name}
+                                            username={user.username}
+                                            img_url={user.img_url}
+                                        />
+                                    {:else}
+                                        <!-- skeleton -->
+                                        {#each Array(3) as _}
+                                            <li class="py-3 animate-pulse">
+                                                <div class="flex items-center">
+                                                    <div class="shrink-0">
+                                                        <div
+                                                            class="w-8 h-8 rounded-full bg-gray-300"
+                                                        ></div>
+                                                    </div>
+                                                    <div
+                                                        class="flex-1 min-w-0 ms-4 space-y-1"
                                                     >
                                                         <div
-                                                            class="flex items-center"
-                                                        >
-                                                            <div
-                                                                class="shrink-0"
-                                                            >
-                                                                <div
-                                                                    class="w-8 h-8 rounded-full bg-gray-300"
-                                                                ></div>
-                                                            </div>
-                                                            <div
-                                                                class="flex-1 min-w-0 ms-4 space-y-1"
-                                                            >
-                                                                <div
-                                                                    class="h-4 bg-gray-300 rounded w-1/2"
-                                                                ></div>
-                                                                <div
-                                                                    class="h-3 bg-gray-200 rounded w-1/3"
-                                                                ></div>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                {/each}
-                                            {/if}
+                                                            class="h-4 bg-gray-300 rounded w-1/2"
+                                                        ></div>
+                                                        <div
+                                                            class="h-3 bg-gray-200 rounded w-1/3"
+                                                        ></div>
+                                                    </div>
+                                                </div>
+                                            </li>
                                         {/each}
-                                    </ul>
-                                </div>
+                                    {/each}
+                                </ul>
                             </div>
-                        {/if}
+                        </div>
                     {/if}
                 </div>
             </div>

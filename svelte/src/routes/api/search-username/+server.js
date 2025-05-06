@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
-import { USERNAME_REGEX, NAME_REGEX } from "$lib/db.js";
 import { searchUser } from "$lib/db_friendships.js";
+const regex = /[a-zA-Z0-9._\- ]+/;
 
 export async function POST({ locals, request }) {
 
@@ -18,11 +18,16 @@ export async function POST({ locals, request }) {
     const body = await request.json()
     const searchQuery = body.searchQuery
 
-    if (!USERNAME_REGEX.test(searchQuery) && !NAME_REGEX.test(searchQuery)) {
-        return json({})
+    const match = searchQuery.match(regex);
+
+    const clean_string = match?.[0].trim().slice(0, 50);
+
+    if (!clean_string) {
+        return json({});
     }
 
-    const response = await searchUser(searchQuery)
+    const response = await searchUser(clean_string)
+
     if (response?.success) {
         return json({ list: response.results })
     } else {
