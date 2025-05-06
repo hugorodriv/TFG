@@ -1,8 +1,10 @@
 <script>
-    import Bottombar from "../../Bottombar.svelte";
     import { dev } from "$app/environment";
-    import Navbar from "../../Navbar.svelte";
     import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
+
+    import Bottombar from "../../Bottombar.svelte";
+    import Navbar from "../../Navbar.svelte";
 
     export let data;
 
@@ -11,7 +13,6 @@
         notFound = false;
     }
     let confirmDeletePost = false;
-    let successfulUpdate = false;
     const post = data.post;
     const owner = data.isOwner;
 
@@ -54,7 +55,7 @@
         try {
             const data = await response.json();
             if (data?.success) {
-                return true;
+                goto("/profile");
             }
         } catch (error) {
             alert("Error removing post");
@@ -80,7 +81,9 @@
         try {
             const data = await response.json();
             if (data?.success) {
-                return true;
+                // refresh after successful Text editing
+                const thisPage = window.location.pathname;
+                goto("/").then(() => goto(thisPage));
             }
         } catch (error) {
             alert("Error removing post");
@@ -149,22 +152,48 @@
         </div>
     {:else}
         <div class="space-y-2 p-4 max-w-md m-auto w-11/12">
-            <a href={"../p/" + post.username} class=" flex items-center gap-3">
-                <img
-                    alt="profile"
-                    src={pfp_data}
-                    class="shadow-lg w-10 h-10 rounded-full"
-                />
-                <div>
-                    <p class="font-semibold">{post.poster_name}</p>
-                    <p class="text-sm text-gray-500">
-                        {post.resolved_location}
-                    </p>
+            <div class=" flex items-center">
+                <div class="flex flex-row">
+                    <a href={"../p/" + post.username} class="flex space-x-4">
+                        <img
+                            alt="profile"
+                            src={pfp_data}
+                            class="shadow-lg w-10 h-10 rounded-full"
+                        />
+                        <div>
+                            <div class="flex-row flex">
+                                <p class="font-semibold">{post.poster_name}</p>
+                                <p class="ml-auto font-bold text-gray-400">·</p>
+                                <div
+                                    class="align-middle m-auto text-sm text-gray-400"
+                                >
+                                    {getTimeAgo(post.created_at)}
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500">
+                                {post.resolved_location}
+                            </p>
+                        </div>
+                    </a>
                 </div>
-                <div class="ml-auto text-sm text-gray-400">
-                    {getTimeAgo(post.created_at)}
-                </div>
-            </a>
+                <a
+                    aria-label="Navigate to post"
+                    href={`https://www.google.com/maps/place/${post.lat},${post.lon}`}
+                    class="flex flex-col items-center justify-center ml-auto p-2"
+                >
+                    <svg
+                        class="text-gray-600 w-8 h-8"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 576 512"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M408 120c0 54.6-73.1 151.9-105.2 192c-7.7 9.6-22 9.6-29.6 0C241.1 271.9 168 174.6 168 120C168 53.7 221.7 0 288 0s120 53.7 120 120zm8 80.4c3.5-6.9 6.7-13.8 9.6-20.6c.5-1.2 1-2.5 1.5-3.7l116-46.4C558.9 123.4 576 135 576 152l0 270.8c0 9.8-6 18.6-15.1 22.3L416 503l0-302.6zM137.6 138.3c2.4 14.1 7.2 28.3 12.8 41.5c2.9 6.8 6.1 13.7 9.6 20.6l0 251.4L32.9 502.7C17.1 509 0 497.4 0 480.4L0 209.6c0-9.8 6-18.6 15.1-22.3l122.6-49zM327.8 332c13.9-17.4 35.7-45.7 56.2-77l0 249.3L192 449.4 192 255c20.5 31.3 42.3 59.6 56.2 77c20.5 25.6 59.1 25.6 79.6 0zM288 152a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"
+                        />
+                    </svg>
+                    <span class="text-xs text-gray-600">Go</span>
+                </a>
+            </div>
             <img
                 alt="post"
                 class="rounded-lg shadow-lg m-auto"
@@ -196,10 +225,7 @@
                 {#if confirmDeletePost}
                     <button
                         on:click={async (e) => {
-                            const success = await removePost();
-                            if (success) {
-                                e.target.innerText = "POST REMOVED";
-                            }
+                            await removePost();
                         }}
                         class="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
@@ -248,8 +274,7 @@
                     {#if editingText}
                         <button
                             on:click={async (e) => {
-                                const success = await changePostText();
-                                successfulUpdate = success || false;
+                                await changePostText();
                             }}
                             class="px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
                         >
@@ -275,11 +300,7 @@
                                     6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                                     />
                                 </svg>
-                                {#if successfulUpdate}
-                                    Post Updated
-                                {:else}
-                                    Submit
-                                {/if}
+                                Submit
                             </span>
                         </button>
                     {:else}

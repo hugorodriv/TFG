@@ -79,7 +79,9 @@ export async function checkAndGetPostInfo(post_uuid, user_uuid, location) {
     posts.text, 
     posts.resolved_location, 
     posts.created_at, 
-    posts.profile ,
+    posts.profile,
+    ST_X(location::geometry) AS lon,
+    ST_Y(location::geometry) AS lat,
     profiles.img_url as pfp_url,
     profiles.username,
     profiles.name as poster_name
@@ -100,7 +102,9 @@ export async function checkAndGetPostInfo(post_uuid, user_uuid, location) {
     posts.text, 
     posts.resolved_location, 
     posts.created_at, 
-    posts.profile ,
+    posts.profile,
+    ST_X(location::geometry) AS lon,
+    ST_Y(location::geometry) AS lat,
     profiles.img_url as pfp_url,
     profiles.username,
     profiles.name as poster_name

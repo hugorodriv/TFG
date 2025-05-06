@@ -3,7 +3,7 @@ import { checkAndGetPostInfo } from '$lib/db_posts.js';
 import { getUserUUID } from '$lib/db.js';
 
 const UUID_REGEX = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
-const LINK_MAX_TIME_MINS = 5
+const LINK_MAX_TIME_MINS = 30
 
 export const load = async (event) => {
     const session = await event.locals.auth();

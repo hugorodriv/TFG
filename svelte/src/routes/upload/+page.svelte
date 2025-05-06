@@ -1,10 +1,12 @@
 <script>
     import { locationStore } from "$lib/stores/location";
+    import { onMount, onDestroy } from "svelte";
+    import { goto } from "$app/navigation";
+
     import Bottombar from "../Bottombar.svelte";
     import Navbar from "../Navbar.svelte";
-    import { onMount, onDestroy } from "svelte";
+
     let uploading = false;
-    let successfulUpload = false;
 
     let compressedFile;
     let imgCompressed = false;
@@ -71,8 +73,8 @@
                 (device) => device.kind === "videoinput",
             );
 
-            if (cameras.length === 0) {
-                camError = "Your device doesnt have a compatible camera";
+            if (cameras.length === 1) {
+                camError = "Your device doesn't have a compatible camera";
             }
         } catch (err) {
             console.error("Error checking camera:", err);
@@ -217,7 +219,11 @@
             if (!response_put.ok) {
                 alert("Error uploading post ");
             } else {
-                successfulUpload = true;
+                if (body?.post_uuid) {
+                    goto("/post/" + body.post_uuid);
+                } else {
+                    goto("/profile/");
+                }
             }
         }
 
@@ -259,10 +265,8 @@
             />
             <button
                 on:click={() => {
-                    if (!successfulUpload) {
-                        compressedFile = null;
-                        imgCompressed = false;
-                    }
+                    compressedFile = null;
+                    imgCompressed = false;
                 }}
                 class="absolute top-2 right-2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
                 aria-label="Reset"
@@ -290,7 +294,7 @@
             placeholder="Write something about your picture :)"
             maxlength="2048"
         ></textarea>
-        {#if !uploading && !successfulUpload}
+        {#if !uploading}
             <button
                 on:click={uploadPicture}
                 disabled={!location?.lat}
@@ -298,7 +302,7 @@
                 class="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                 >Upload</button
             >
-        {:else if !successfulUpload}
+        {:else}
             <div class="text-center">
                 <svg
                     class="inline w-8 h-8 text-gray-200 animate-spin fill-blue-600"
@@ -315,13 +319,6 @@
                     />
                 </svg>
             </div>
-        {:else if successfulUpload}
-            <button
-                disabled
-                type="button"
-                class="w-full text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-                >Uploaded</button
-            >
         {/if}
     {:else}
         <!-- Display upload button -->
