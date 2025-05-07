@@ -191,6 +191,10 @@
         if (!location.lat) {
             return;
         }
+
+        // refresh location
+        await updateLocation();
+        location = locationStore.getData();
         const locationInfo = { lat: location.lat, long: location.lon };
 
         const response = await fetch("./api/upload-post", {
