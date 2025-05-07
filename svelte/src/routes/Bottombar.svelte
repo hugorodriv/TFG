@@ -1,4 +1,5 @@
 <script>
+    import { locationStore } from "$lib/stores/location";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
 
@@ -20,10 +21,7 @@
         loading = false;
     });
     async function launchProtected(route) {
-        const permission = await navigator.permissions.query({
-            name: "geolocation",
-        });
-        if (permission.state === "granted") {
+        if (!locationStore.isExpired()) {
             goto(route);
         } else {
             showWarning = true;

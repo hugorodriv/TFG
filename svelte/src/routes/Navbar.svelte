@@ -24,7 +24,16 @@
         {#if showBack}
             <button
                 on:click={() => {
-                    history.back();
+                    const referrer = document.referrer;
+
+                    if (
+                        referrer &&
+                        new URL(referrer).hostname === window.location.hostname
+                    ) {
+                        history.back();
+                    } else {
+                        window.location.href = "/";
+                    }
                 }}
                 aria-label="Go back"
                 class="flex items-center justify-center p-1.5 rounded-full bg-gray-100 hover:bg-gray-200"

@@ -59,7 +59,6 @@
     }
 
     async function success(loc) {
-        // Store basic location data first
         locationStore.update(loc.coords.latitude, loc.coords.longitude);
     }
 
@@ -192,6 +191,10 @@
         if (!location.lat) {
             return;
         }
+
+        // refresh location
+        await updateLocation();
+        location = locationStore.getData();
         const locationInfo = { lat: location.lat, long: location.lon };
 
         const response = await fetch("./api/upload-post", {
