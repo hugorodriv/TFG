@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
     import { locationStore } from "$lib/stores/location";
 
@@ -15,17 +15,24 @@
     const session = data.session;
     let accountData;
     let pfp;
+    let checkLocInterval;
 
     // Location
     $: isLocationExpired = locationStore.isExpired();
     let locationError;
+
     let locationPermission = null;
     $: locationPermission;
 
+    function checkExpiration() {
+        isLocationExpired = locationStore.isExpired();
+    }
     onMount(async () => {
         if (!session) {
             localStorage.clear();
+            locationStore?.reset();
         } else {
+            checkLocInterval = setInterval(checkExpiration, 1000);
             await checkPermissionStatus();
             accountData = JSON.parse(localStorage.getItem("accData") || "{}");
             pfp = localStorage.getItem("pfp");
@@ -37,6 +44,9 @@
             }
         }
         loading = false;
+    });
+    onDestroy(() => {
+        if (checkLocInterval) clearInterval(checkLocInterval);
     });
 
     async function checkPermissionStatus() {
@@ -68,6 +78,7 @@
     async function success(loc) {
         // Store basic location data first
         locationStore.update(loc.coords.latitude, loc.coords.longitude);
+        isLocationExpired = false;
         locationError = false;
     }
 
@@ -104,7 +115,7 @@
             <Navbar showBack={false} />
 
             <div class="py-4 m-auto">
-                {#if !locationPermission && !locationError}
+                {#if (isLocationExpired || !locationStore) && !locationError}
                     <!-- Please allow loc access -->
                     <div
                         class="w-11/12 m-auto border border-gray-200 rounded-lg shadow-sm"

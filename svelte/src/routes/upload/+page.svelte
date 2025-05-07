@@ -59,7 +59,6 @@
     }
 
     async function success(loc) {
-        // Store basic location data first
         locationStore.update(loc.coords.latitude, loc.coords.longitude);
     }
 
