@@ -292,7 +292,7 @@
     crossorigin=""
 />
 
-<div class="h-screen flex flex-col">
+<div class="h-screen flex flex-col relative">
     <Navbar text={"Map"} />
     <div
         bind:this={mapContainer}
@@ -302,7 +302,7 @@
     <button
         on:click={centerMap}
         aria-label="center map"
-        class="shadow-md rounded-full p-3 bg-gray-100 hover:bg-gray-200 cursor-pointer absolute bottom-24 right-12"
+        class="shadow-md rounded-full p-3 bg-gray-100 hover:bg-gray-200 cursor-pointer fixed bottom-20 right-6 z-10"
     >
         <svg class="text-gray-800 w-8 h-8" viewBox="0 0 512 512">
             <path
