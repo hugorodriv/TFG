@@ -73,7 +73,7 @@
                 (device) => device.kind === "videoinput",
             );
 
-            if (cameras.length === 1) {
+            if (cameras.length === 0) {
                 camError = "Your device doesn't have a compatible camera";
             }
         } catch (err) {
