@@ -89,16 +89,51 @@
                 <div class="space-x-2">
                     <a
                         href="/settings"
-                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-800"
+                        class="px-4 py-2 inline-flex text-sm font-medium text-gray-800 hover:text-gray-900 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
-                        Edit profile
+                        <span class="flex items-center gap-2">
+                            <svg
+                                class="w-6 h-6"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="square"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M7 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h1m4-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm7.441 1.559a1.907 1.907 0 0 1 0 2.698l-6.069 6.069L10 19l.674-3.372 6.07-6.07a1.907 1.907 0 0 1 2.697 0Z"
+                                />
+                            </svg>
+                            Edit Profile
+                        </span>
                     </a>
+
                     <a
-                        href="./signout/"
+                        href="/signout/"
                         on:click|preventDefault={() => signOut()}
-                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-800"
+                        class="px-4 py-2 inline-flex text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
-                        Log out
+                        <span class="flex items-center gap-2">
+                            <svg
+                                class="w-6 h-6"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M18 18V6h-5v12h5Zm0 0h2M4 18h2.5m3.5-5.5V12M6 6l7-2v16l-7-2V6Z"
+                                />
+                            </svg>
+                            Log out
+                        </span>
                     </a>
                 </div>
             </div>

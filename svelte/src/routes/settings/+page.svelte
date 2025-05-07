@@ -214,9 +214,18 @@
                 document
                     ?.getElementById("dropdownSettings")
                     ?.classList.toggle("hidden");
+
+                document
+                    ?.getElementById("arrow")
+                    ?.classList.toggle("rotate-180");
             }}
             >Settings
-            <svg class="w-2.5 h-2.5 ml-3" fill="none" viewBox="0 0 10 6">
+            <svg
+                id="arrow"
+                class="w-2.5 h-2.5 ml-3"
+                fill="none"
+                viewBox="0 0 10 6"
+            >
                 <path
                     stroke="currentColor"
                     stroke-linecap="round"
@@ -240,6 +249,10 @@
                             selection = 1;
 
                             document
+                                ?.getElementById("arrow")
+                                ?.classList.toggle("rotate-180");
+
+                            document
                                 ?.getElementById("dropdownSettings")
                                 ?.classList.add("hidden");
                         }}>Profile Picture</button
@@ -249,6 +262,9 @@
                     <button
                         class="w-full block px-4 py-2 hover:bg-gray-100"
                         on:click={() => {
+                            document
+                                ?.getElementById("arrow")
+                                ?.classList.toggle("rotate-180");
                             selection = 2;
 
                             document
@@ -261,6 +277,9 @@
                     <button
                         class="w-full block px-4 py-2 hover:bg-gray-100"
                         on:click={() => {
+                            document
+                                ?.getElementById("arrow")
+                                ?.classList.toggle("rotate-180");
                             selection = 3;
 
                             document

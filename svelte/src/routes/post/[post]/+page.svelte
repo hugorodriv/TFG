@@ -313,8 +313,6 @@
                             <span class="flex items-center gap-2">
                                 <svg
                                     class="w-5 h-5 text-gray-800"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
                                     width="24"
                                     height="24"
                                     fill="none"
