@@ -2,6 +2,7 @@
     import { locationStore } from "$lib/stores/location";
     import { onMount, onDestroy } from "svelte";
     import { goto } from "$app/navigation";
+    import { dev } from "$app/environment";
 
     import Bottombar from "../Bottombar.svelte";
     import Navbar from "../Navbar.svelte";
@@ -73,7 +74,7 @@
                 (device) => device.kind === "videoinput",
             );
 
-            if (cameras.length === 0) {
+            if (cameras.length === 0 && !dev) {
                 camError = "Your device doesn't have a compatible camera";
             }
         } catch (err) {
