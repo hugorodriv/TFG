@@ -65,7 +65,7 @@
 
     <div class="space-y-4 p-4 max-w-md m-auto">
         <div
-            class="grid grid-cols-[auto_1fr] items-center gap-4 border border-gray-200 rounded-lg shadow-sm"
+            class="grid grid-cols-[auto_1fr] items-center gap-1 border border-gray-200 rounded-lg shadow-sm"
         >
             <div class="px-5 mt-10 flex flex-col items-center pb-10">
                 <img
@@ -86,12 +86,12 @@
                         {accountData.bio}
                     </p>
                 </div>
-                <div class="space-x-2">
+                <div class="space-x-2 space-y-2">
                     <a
                         href="/settings"
-                        class="px-4 py-2 inline-flex text-sm font-medium text-gray-800 hover:text-gray-900 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                        class="px-3 py-2 inline-flex text-sm font-medium text-gray-800 hover:text-gray-900 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
-                        <span class="flex items-center gap-2">
+                        <span class="flex items-center gap-1">
                             <svg
                                 class="w-6 h-6"
                                 width="24"
@@ -114,9 +114,9 @@
                     <a
                         href="/signout/"
                         on:click|preventDefault={() => signOut()}
-                        class="px-4 py-2 inline-flex text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                        class="px-3 py-2 inline-flex text-sm font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
                     >
-                        <span class="flex items-center gap-2">
+                        <span class="flex items-center gap-1">
                             <svg
                                 class="w-6 h-6"
                                 width="24"
