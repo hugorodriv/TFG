@@ -93,10 +93,10 @@
             </div>
             <div class="flex-1 min-w-0 ms-4">
                 <p class=" font-medium text-gray-900 truncate">
-                    @{username}
+                    {name}
                 </p>
                 <p class=" text-gray-500 truncate">
-                    {name}
+                    @{username}
                 </p>
             </div>
         </a>
