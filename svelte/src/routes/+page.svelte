@@ -118,9 +118,9 @@
                 {#if (isLocationExpired || !locationStore) && !locationError}
                     <!-- Please allow loc access -->
                     <div
-                        class="w-11/12 m-auto border border-gray-200 rounded-lg shadow-sm"
+                        class="bg-white w-11/12 m-auto border border-gray-300 rounded-lg shadow-sm"
                     >
-                        <div class="mt-10 flex flex-col items-center pb-10">
+                        <div class="mt-5 flex flex-col items-center pb-5">
                             <svg
                                 class="w-20 h-20 text-gray-500"
                                 aria-hidden="true"
@@ -163,10 +163,10 @@
                         </div>
                     </div>
                 {:else if locationError}
-                    <div class="border border-gray-200 rounded-lg shadow-sm">
-                        <div
-                            class="w-11/12 m-auto mt-10 flex flex-col items-center pb-10"
-                        >
+                    <div
+                        class="bg-white w-11/12 m-auto border border-gray-300 rounded-lg shadow-sm"
+                    >
+                        <div class="mt-5 flex flex-col items-center pb-5">
                             <svg
                                 class="w-20 h-20 text-gray-500"
                                 aria-hidden="true"

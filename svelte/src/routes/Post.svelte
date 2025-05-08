@@ -59,17 +59,14 @@
         // @ts-ignore
         const diffSec = Math.floor((now - pastDate) / 1000);
 
-        if (diffSec < 60) {
-            return `${diffSec} second${diffSec !== 1 ? "s" : ""} ago`;
-        }
         const diffMin = Math.floor(diffSec / 60);
         if (diffMin < 60) {
-            return `${diffMin} minute${diffMin !== 1 ? "s" : ""} ago`;
+            return `${diffMin}min ago`;
         }
 
         const diffHr = Math.floor(diffMin / 60);
         if (diffHr < 24) {
-            return `${diffHr} hour${diffHr !== 1 ? "s" : ""} ago`;
+            return `${diffHr}h ago`;
         }
 
         const diffDay = Math.floor(diffHr / 24);
@@ -77,11 +74,13 @@
     }
 </script>
 
-<li>
+<li
+    class="rounded-lg border border-gray-300 shadow-lg w-11/12 justify-center m-auto"
+>
     {#if loaded}
         <a
             href={"../p/" + post.username}
-            class="w-11/12 m-auto flex items-center gap-3"
+            class="bg-white rounded-t-lg px-2 py-2 m-auto flex items-center gap-3"
         >
             <img
                 src={getPosterPfp(post.pfp_url, post.poster_name)}
@@ -99,7 +98,7 @@
             </div>
         </a>
     {:else}
-        <div class="w-11/12 py-1 m-auto items-center gap-3 animate-pulse">
+        <div class="py-1 m-auto items-center gap-3 animate-pulse">
             <div class="flex items-center gap-3">
                 <div class="bg-gray-300 rounded-full w-10 h-10"></div>
                 <div class=" flex-1">
@@ -116,7 +115,7 @@
             style:height={loaded ? "auto" : 0}
             src={post.img_url}
             alt="Post"
-            class="gap-y-3 py-6 text-center m-auto rounded-3xl w-11/12 object-cover"
+            class="text-center m-auto rounded-b-lg object-cover"
             loading="lazy"
             on:load={() => {
                 loaded = true;
