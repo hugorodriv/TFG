@@ -9,7 +9,7 @@
 
     let loading = true;
 
-    let selection = 0; // 1: pfp, 2: bio&name, 3:accDeletion
+    let selection = 1; // 1: pfp, 2: bio&name, 3:accDeletion
     let accountData;
     /**
      * @type {string | null}
@@ -209,7 +209,7 @@
 
         <button
             id="dropdownRadioButton"
-            class="mt-5 w-full justify-center text-gray-900 bg-gray-200 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center"
+            class="border-gray-500 border shadow-lg mt-5 w-full justify-center text-gray-900 bg-gray-300 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center"
             on:click={() => {
                 document
                     ?.getElementById("dropdownSettings")
@@ -239,12 +239,12 @@
         <!-- Dropdown menu -->
         <div
             id="dropdownSettings"
-            class="hidden w-full z-40 text-center bg-white divide-y divide-gray-100 rounded-lg shadow-sm"
+            class="left-0 right-0 border border-gray-300 hidden absolute m-auto w-11/12 z-40 text-center bg-white divide-y rounded-lg shadow-sm"
         >
-            <ul class="py-2 text-sm">
-                <li>
+            <ul class="divide-y divide-gray-200 py-4 font-medium mx-10 text-sm">
+                <li class="">
                     <button
-                        class="w-full block px-4 py-2 hover:bg-gray-100"
+                        class="w-full block px-4 py-2"
                         on:click={() => {
                             selection = 1;
 
@@ -305,13 +305,9 @@
 
         <!-- Change profile picture -->
         {#if selection == 1}
-            <label for="pfp" class="block mb-1 font-semibold">
-                Profile Picture
-            </label>
-
-            {#if changingPfp}
-                <!-- New profile picture selected and cropped -->
-                <div>
+            <div class="rounded-lg px-5 py-3 bg-white">
+                {#if changingPfp}
+                    <!-- New profile picture selected and cropped -->
                     {#if finalProfilePicture}
                         <div class="text-center m-auto justify-center flex">
                             <img
@@ -327,7 +323,7 @@
                             <button
                                 type="button"
                                 on:click={() => uploadPfp()}
-                                class="bg-green-50 hover:bg-green-100 hover:text-green-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-lg"
+                                class="bg-green-50 hover:bg-green-100 hover:text-green-700 px-5 py-2 w-full font-medium text-gray-900 border-gray-200 border rounded-lg"
                             >
                                 Update
                             </button>
@@ -335,48 +331,47 @@
                     {:else}
                         <PictureCrop bind:finalProfilePicture />
                     {/if}
-                </div>
-            {:else}
-                <!-- Displaying current pfp and two buttons for either changing or deleting -->
-                <div class="text-center m-auto justify-center flex">
-                    <img
-                        class="drop-shadow-lg py-5"
-                        alt="current profile"
-                        src={pfp}
-                    />
-                </div>
-
-                {#if confirmRemovePfp}
-                    <button
-                        type="button"
-                        on:click={removePfp}
-                        class="w-full inline-flex shadow-xs text-center justify-center hover:bg-red-200 hover:text-red-700 px-4 py-2 font-medium text-gray-900 bg-red-100 border border-red-200 rounded-lg"
-                    >
-                        Remove
-                    </button>
                 {:else}
-                    <div
-                        class="w-full inline-flex shadow-xs text-center justify-center"
-                    >
+                    <!-- Displaying current pfp and two buttons for either changing or deleting -->
+                    <div class="text-center m-auto justify-center flex">
+                        <img
+                            class="drop-shadow-lg py-5"
+                            alt="current profile"
+                            src={pfp}
+                        />
+                    </div>
+
+                    {#if confirmRemovePfp}
                         <button
                             type="button"
-                            on:click={() => (changingPfp = true)}
-                            class="hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-l-lg"
-                        >
-                            Change
-                        </button>
-                        <button
-                            type="button"
-                            on:click={() => (confirmRemovePfp = true)}
-                            class="hover:bg-red-100 hover:text-red-700 max-w-24 px-4 py-2 font-medium text-gray-900 bg-red-50 border border-red-200 rounded-r-lg"
+                            on:click={removePfp}
+                            class="w-full inline-flex shadow-xs text-center justify-center hover:bg-red-200 hover:text-red-700 px-4 py-2 font-medium text-gray-900 bg-red-100 border border-red-200 rounded-lg"
                         >
                             Remove
                         </button>
-                    </div>
+                    {:else}
+                        <div
+                            class="w-full inline-flex shadow-xs text-center justify-center"
+                        >
+                            <button
+                                type="button"
+                                on:click={() => (changingPfp = true)}
+                                class="hover:bg-blue-100 hover:text-blue-700 w-full px-4 py-2 font-medium text-gray-900 border-gray-200 border rounded-l-lg"
+                            >
+                                Change
+                            </button>
+                            <button
+                                type="button"
+                                on:click={() => (confirmRemovePfp = true)}
+                                class="hover:bg-red-100 hover:text-red-700 max-w-24 px-4 py-2 font-medium text-gray-900 bg-red-50 border border-red-200 rounded-r-lg"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    {/if}
                 {/if}
-            {/if}
+            </div>
         {/if}
-
         <!-- Change user details  -->
         {#if selection == 2}
             {#if !form?.dataChangeSuccess && !form?.error}
@@ -414,7 +409,7 @@
                             value={accData.name}
                             id="name-input"
                             maxlength="20"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5"
+                            class="bg-white border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5"
                         />
                     </div>
 
@@ -427,7 +422,7 @@
                         >
                         <textarea
                             name="bio"
-                            class="min-h-48 my-2 block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                            class="min-h-48 my-2 block p-2.5 w-full text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Write your bio"
                             maxlength="500">{accData.bio}</textarea
                         >
@@ -436,13 +431,13 @@
                     {#if detailsChanged && !nameTooShort}
                         <button
                             type="submit"
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 focus:outline-none"
+                            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 font-medium rounded-lg px-5 py-2.5 focus:outline-none"
                             >Update</button
                         >
                     {:else}
                         <button
                             type="button"
-                            class="text-white bg-blue-400 cursor-not-allowed font-medium rounded-lg px-5 py-2.5 text-center"
+                            class="text-white bg-blue-300 cursor-not-allowed font-medium rounded-lg px-5 py-2.5 text-center"
                             disabled>Update</button
                         >
                     {/if}
@@ -451,27 +446,28 @@
         {/if}
 
         {#if selection == 3}
-            <p class="font-bold">Account deletion</p>
-            {#if confirmAccountDeletionButton}
-                <form method="POST" action="?/deleteAccount">
+            <div class="mt-10">
+                {#if confirmAccountDeletionButton}
+                    <form method="POST" action="?/deleteAccount">
+                        <button
+                            type="submit"
+                            class="text-white font-bold w-full inline-flex shadow-xs text-center justify-center hover:bg-red-900 px-4 py-2 bg-red-800 border border-red-200 rounded-lg"
+                        >
+                            Confirm delete account
+                        </button>
+                    </form>
+                {:else}
                     <button
-                        type="submit"
-                        class="text-white font-bold w-full inline-flex shadow-xs text-center justify-center hover:bg-red-900 px-4 py-2 bg-red-800 border border-red-200 rounded-lg"
+                        type="button"
+                        on:click={() => {
+                            confirmAccountDeletionButton = true;
+                        }}
+                        class="w-full inline-flex shadow-xs text-center justify-center hover:bg-red-200 hover:text-red-700 px-4 py-2 font-medium text-gray-900 bg-red-100 border border-red-200 rounded-lg"
                     >
-                        Confirm delete account
+                        Delete account
                     </button>
-                </form>
-            {:else}
-                <button
-                    type="button"
-                    on:click={() => {
-                        confirmAccountDeletionButton = true;
-                    }}
-                    class="w-full inline-flex shadow-xs text-center justify-center hover:bg-red-200 hover:text-red-700 px-4 py-2 font-medium text-gray-900 bg-red-100 border border-red-200 rounded-lg"
-                >
-                    Delete account
-                </button>
-            {/if}
+                {/if}
+            </div>
         {/if}
     </div>
     <Bottombar />

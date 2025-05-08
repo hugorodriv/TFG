@@ -71,21 +71,21 @@
 {#if loading}
     <div class="space-y-4 p-4 max-w-md m-auto">
         <div
-            class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
+            class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-300"
         >
             <div
                 class="h-6 bg-gray-300 rounded w-1/3 mx-auto animate-pulse"
             ></div>
         </div>
         <div class="mb-14 space-y-2">
-            <div class="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+            <div class="h-10 rounded-lg animate-pulse"></div>
         </div>
         <div class="py-4 flow-root">
             <ul role="list" class="">
                 {#each Array(2) as _}
                     <div class="mt-5">
                         <div
-                            class=" text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
+                            class=" text-xl font-semibold mb-4 pb-2 border-b border-gray-300"
                         >
                             <div
                                 class="h-6 bg-gray-300 rounded w-1/3 mx-auto animate-pulse"
@@ -105,7 +105,7 @@
                                             class="h-4 bg-gray-300 rounded w-1/2"
                                         ></div>
                                         <div
-                                            class="h-3 bg-gray-200 rounded w-1/3"
+                                            class="h-3 bg-gray-300 rounded w-1/3"
                                         ></div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                             stroke="currentColor"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            stroke-width="1.5"
+                            stroke-width="2"
                             d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                         />
                     </svg>
@@ -145,7 +145,7 @@
                 <input
                     autocomplete="off"
                     id="search"
-                    class=" block w-full p-4 ps-10 text-gray-900 border border-gray-300 rounded-lg"
+                    class=" block w-full font-medium p-4 ps-10 text-gray-900 border border-gray-300 bg-white rounded-lg"
                     placeholder=" Search a name or username"
                     maxlength="50"
                     on:keyup={updateSearchResults}
@@ -157,12 +157,12 @@
                 <div class="absolute inset-x-0 w-full z-40">
                     {#if searchResults}
                         <div
-                            class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8"
+                            class="w-full max-w-md p-4 bg-white border border-gray-300 rounded-lg shadow-sm sm:p-8"
                         >
                             <div class="flow-root">
                                 <ul
                                     role="list"
-                                    class="divide-y divide-gray-200"
+                                    class="divide-y divide-gray-300"
                                 >
                                     {#each searchResults as user}
                                         <SearchProfileCard
@@ -205,31 +205,31 @@
         <!-- Pending friend requests -->
         {#if data.pending.length > 0}
             <h2
-                class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
+                class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-300"
             >
                 Incoming Friend Requests
             </h2>
+            <div class="flow-root">
+                <ul role="list">
+                    {#each data.pending as p}
+                        <ProfileCard
+                            name={p.sender_name}
+                            username={p.sender_username}
+                            img_url={p.sender_img_url}
+                            sender_uuid={p.sender_uuid}
+                            receiver_uuid={null}
+                            acceptButton={true}
+                        />
+                    {/each}
+                </ul>
+            </div>
         {/if}
-        <div class="flow-root">
-            <ul role="list" class="">
-                {#each data.pending as p}
-                    <ProfileCard
-                        name={p.sender_name}
-                        username={p.sender_username}
-                        img_url={p.sender_img_url}
-                        sender_uuid={p.sender_uuid}
-                        receiver_uuid={null}
-                        acceptButton={true}
-                    />
-                {/each}
-            </ul>
-        </div>
 
         <!-- Friend list and requests -->
 
         {#if data.friendList.length > 0}
             <h2
-                class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
+                class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-300"
             >
                 Your Friends
             </h2>
@@ -249,32 +249,32 @@
             </div>
         {:else}
             <p class="my-5 text-center text">
-                No friends found! Try looking somebody up :)
+                No friends found! Try looking searching for someone :)
             </p>
         {/if}
         <!-- Sent requests -->
         {#if data.sentPending.length > 0}
             <h2
-                class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-200"
+                class="text-center text-xl font-semibold mb-4 pb-2 border-b border-gray-300"
             >
                 Sent Requests
             </h2>
+            <div class="flow-root">
+                <ul role="list">
+                    {#each data.sentPending as p}
+                        <div class="opacity-60">
+                            <ProfileCard
+                                name={p.receiver_name}
+                                username={p.receiver_username}
+                                img_url={p.receiver_img_url}
+                                sender_uuid={null}
+                                receiver_uuid={p.receiver_uuid}
+                            />
+                        </div>
+                    {/each}
+                </ul>
+            </div>
         {/if}
-        <div class="flow-root">
-            <ul role="list">
-                {#each data.sentPending as p}
-                    <div class="opacity-60">
-                        <ProfileCard
-                            name={p.receiver_name}
-                            username={p.receiver_username}
-                            img_url={p.receiver_img_url}
-                            sender_uuid={null}
-                            receiver_uuid={p.receiver_uuid}
-                        />
-                    </div>
-                {/each}
-            </ul>
-        </div>
     </div>
 
     <Bottombar friendsActive={true} />

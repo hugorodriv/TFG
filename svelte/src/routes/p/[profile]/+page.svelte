@@ -34,6 +34,9 @@
 
         const body = await response.json();
         if (body.success) {
+            // refresh
+            const thisPage = window.location.pathname;
+            goto("/").then(() => goto(thisPage));
             requestSent = true;
         }
     }
@@ -51,6 +54,11 @@
         });
 
         const body = await response.json();
+        if (body.success) {
+            // refresh
+            const thisPage = window.location.pathname;
+            goto("/").then(() => goto(thisPage));
+        }
         return body.success;
     }
 
@@ -67,6 +75,11 @@
         });
 
         const body = await response.json();
+        if (body.success) {
+            // refresh
+            const thisPage = window.location.pathname;
+            goto("/").then(() => goto(thisPage));
+        }
         return body.success;
     }
 
@@ -155,7 +168,7 @@
     <Navbar />
     <div class="space-y-4 p-4 max-w-md m-auto">
         {#if userNotFound}
-            <div class="border border-gray-200 rounded-lg shadow-sm">
+            <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="mt-10 flex flex-col items-center pb-10">
                     <img
                         class="drop-shadow-lg w-24 h-24 mb-3 rounded-full shadow-lg"
@@ -169,9 +182,9 @@
             </div>
         {:else}
             <div
-                class="grid grid-cols-[auto_1fr] items-center gap-4 border border-gray-200 rounded-lg shadow-sm"
+                class="bg-white grid grid-cols-[auto_1fr] items-center gap-4 border border-gray-300 rounded-lg shadow-sm"
             >
-                <div class="px-5 mt-10 flex flex-col items-center pb-10">
+                <div class="px-2 mt-8 flex flex-col items-center pb-8">
                     <img
                         loading="lazy"
                         src={image_data}
@@ -179,7 +192,7 @@
                         alt="pfp"
                     />
                 </div>
-                <div class="w-full space-y-2 my-2">
+                <div class="w-full space-y-2 my-2 px-2">
                     <div>
                         <p class="text-xl font-medium text-gray-900">
                             {profile.name}
@@ -198,13 +211,13 @@
                             {#if !requestSent}
                                 <button
                                     type="button"
-                                    class="mt-4 text-white bg-blue-600 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2"
+                                    class="w-full text-center font-medium justify-center text-white bg-blue-600 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5 inline-flex shadow items-center"
                                     on:click={async () => {
                                         await sendFriendRequest(profile.uuid);
                                     }}
                                 >
                                     <svg
-                                        class="w-6 h-6 text-white"
+                                        class="mr-1 w-6 h-6 text-white"
                                         width="24"
                                         height="24"
                                         fill="currentColor"

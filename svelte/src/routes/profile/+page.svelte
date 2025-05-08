@@ -64,8 +64,9 @@
     <Navbar text={"Profile"} />
 
     <div class="space-y-4 p-4 max-w-md m-auto">
+        <!-- Profile Card -->
         <div
-            class="grid grid-cols-[auto_1fr] items-center gap-1 border border-gray-200 rounded-lg shadow-sm"
+            class="bg-white grid grid-cols-[auto_1fr] items-center gap-1 border border-gray-300 rounded-lg shadow-sm"
         >
             <div class="px-5 mt-10 flex flex-col items-center pb-10">
                 <img
@@ -103,7 +104,7 @@
                                     stroke="currentColor"
                                     stroke-linecap="square"
                                     stroke-linejoin="round"
-                                    stroke-width="1.5"
+                                    stroke-width="2"
                                     d="M7 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h1m4-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm7.441 1.559a1.907 1.907 0 0 1 0 2.698l-6.069 6.069L10 19l.674-3.372 6.07-6.07a1.907 1.907 0 0 1 2.697 0Z"
                                 />
                             </svg>

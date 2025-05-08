@@ -68,7 +68,8 @@
 
                 //delay necessary for the loading of the image
                 cropFunction();
-            }, 200);
+                scroll(0, window?.innerHeight);
+            }, 300);
         };
     };
 
@@ -298,7 +299,7 @@
     }
 </script>
 
-<div class=" m-auto rounded p-5 mt-5 text-center">
+<div class=" m-auto rounded p-5 text-center">
     <div class="w-full inline-flex shadow-xs text-center justify-center">
         {#if !profilePic}
             <button
@@ -358,7 +359,7 @@
                             left: {cropPos.x}px; 
                             top: {cropPos.y}px;
                         "
-                        class="cropper-overlay absolute border-2 border-black border-dashed cursor-move"
+                        class="cropper-overlay absolute border-4 border-yellow-500 border-dashed cursor-move"
                         on:mousedown={startDrag}
                         on:mousemove={updateCropperCursor}
                         on:touchstart={startDrag}
@@ -367,7 +368,7 @@
                         <img
                             src={croppedImage}
                             alt="selected region"
-                            class="w-full h-auto rounded shadow-md"
+                            class="w-full h-auto shadow-md"
                         />
                     </div>
                 {/if}

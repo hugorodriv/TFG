@@ -254,12 +254,12 @@
     {:else if imgCompressed}
         <!-- Display picture -->
         <div
-            class="mt-10 text-center w-full p-3 bg-blue-100 border border-blue-300 rounded-md"
+            class="mt-10 text-center w-full p-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-600"
         >
             {location?.resolved}
         </div>
         <div
-            class="relative w-full bg-gray-100 rounded-lg shadow-md overflow-hidden"
+            class="relative w-full bg-white rounded-lg shadow-md overflow-hidden"
         >
             <img
                 src={URL.createObjectURL(compressedFile)}
@@ -294,8 +294,8 @@
         <textarea
             bind:value={postText}
             id="postText"
-            class="min-h-48 my-2 block p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Write something about your picture :)"
+            class="text-sm min-h-48 my-2 block p-2.5 w-full text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Write something about your picture"
             maxlength="2048"
         ></textarea>
         {#if !uploading}
@@ -303,7 +303,7 @@
                 on:click={uploadPicture}
                 disabled={!location?.lat}
                 type="button"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                class="mb-4 w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2"
                 >Upload</button
             >
         {:else}
@@ -329,7 +329,7 @@
 
         {#if !location?.lat || isLocationExpired}{:else}
             <div
-                class="mt-10 text-center w-full p-3 bg-blue-100 border border-blue-300 rounded-md"
+                class="mt-10 text-center w-full p-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-600"
             >
                 {location?.resolved}
             </div>
@@ -342,7 +342,7 @@
         >
             <label
                 for="upload"
-                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50"
+                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white"
             >
                 <div
                     class="flex flex-col items-center justify-center pt-5 pb-6"
@@ -385,5 +385,8 @@
             />
         </form>
     {/if}
+    <div class="w-full text-center text-[10px] text-gray-400 px- mt-auto">
+        Picture and exact location will be public
+    </div>
 </div>
 <Bottombar />

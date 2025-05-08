@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
     export let username;
     export let name;
     export let img_url;
@@ -49,6 +50,11 @@
         });
 
         const body = await response.json();
+        if (body.success) {
+            // refresh
+            const thisPage = window.location.pathname;
+            goto("/").then(() => goto(thisPage));
+        }
         return body.success;
     }
     /**
@@ -64,13 +70,18 @@
         });
 
         const body = await response.json();
+        if (body.success) {
+            // refresh
+            const thisPage = window.location.pathname;
+            goto("/").then(() => goto(thisPage));
+        }
         return body.success;
     }
 </script>
 
-<li class="py-3">
+<li class="py-1">
     <span
-        class="p-3 flex items-center justify-between gap-4 rounded-lg border border-gray-200"
+        class="bg-white p-3 flex items-center justify-between gap-4 rounded-lg border border-gray-300 shadow"
     >
         <a class="flex max-w-48 w-full" href="/p/{username}">
             <div class="">
@@ -82,10 +93,10 @@
             </div>
             <div class="flex-1 min-w-0 ms-4">
                 <p class=" font-medium text-gray-900 truncate">
-                    @{username}
+                    {name}
                 </p>
                 <p class=" text-gray-500 truncate">
-                    {name}
+                    @{username}
                 </p>
             </div>
         </a>
@@ -126,7 +137,7 @@
                             e.target.innerText = "REMOVED";
                         }
                     }}
-                    class="px-4 py-2.5 font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                    class="px-4 py-2.5 font-medium text-red-600 hover:text-red-800 hover:bg-gray-300 bg-gray-300 rounded-lg transition-colors"
                 >
                     <span class="flex items-center gap-2">
                         <svg
@@ -154,7 +165,7 @@
                     on:click={async (e) => {
                         confirmFriensdhipDeletion = true;
                     }}
-                    class="px-4 py-2.5 font-medium text-red-600 hover:text-red-800 hover:bg-gray-200 bg-gray-100 rounded-lg transition-colors"
+                    class="px-4 py-2.5 font-medium text-red-600 hover:text-red-800 hover:bg-gray-300 bg-gray-200 rounded-lg transition-colors"
                 >
                     <span class="flex items-center gap-2">
                         <svg
