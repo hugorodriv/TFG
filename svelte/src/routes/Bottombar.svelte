@@ -33,7 +33,6 @@
 </script>
 
 <!-- svelte-ignore a11y_consider_explicit_label -->
-
 <div class="pb-12">
     {#if showWarning}
         <div
@@ -50,7 +49,7 @@
         class="left-0 fixed bottom-11 w-full h-4 bg-gradient-to-b from-transparent to-white/30"
     >
         <div
-            class="w-full h-14 bg-white bottom-0 translate-y-1 max-w-screen-xl mx-auto border-t border-gray-200"
+            class="w-full h-14 bg-white bottom-0 translate-y-1 mx-auto border-t border-gray-200"
         >
             <div
                 class="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-[400px] w-11/12 m-auto h-14"
