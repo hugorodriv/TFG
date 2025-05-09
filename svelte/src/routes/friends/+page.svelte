@@ -242,7 +242,6 @@
                             img_url={p.friend_img_url}
                             sender_uuid={null}
                             receiver_uuid={p.friend_uuid}
-                            isFriend={true}
                         />
                     {/each}
                 </ul>
