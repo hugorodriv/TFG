@@ -19,7 +19,6 @@
 </script>
 
 <nav class="bg-white shadow-sm py-3 px-6 flex items-center">
-    <!-- Back button container - fixed width to ensure positioning -->
     <div class="w-8">
         {#if showBack}
             <button
@@ -57,11 +56,9 @@
         {/if}
     </div>
 
-    <!-- Logo - centered with flex-grow -->
     <div class="flex-grow text-center">
         <p class="text-xl font-bold text-gray-800">{text || "SHARELLOC"}</p>
     </div>
 
-    <!-- Spacer to balance the layout -->
     <div class="w-8 flex-shrink-0"></div>
 </nav>
