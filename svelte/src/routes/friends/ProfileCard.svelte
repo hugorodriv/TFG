@@ -9,9 +9,6 @@
     export let sender_uuid;
     export let receiver_uuid;
 
-    // if user is friend already the button text changes and the fetch changes slightly too,
-    export let isFriend = false;
-
     /**
      * @type {string}
      */
