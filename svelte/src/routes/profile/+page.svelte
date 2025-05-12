@@ -63,7 +63,7 @@
 {:else}
     <Navbar text={"Profile"} />
 
-    <div class="space-y-4 p-4 max-w-md m-auto">
+    <div class="space-y-4 p-4 m-auto">
         <!-- Profile Card -->
         <div
             class="bg-white grid grid-cols-[auto_1fr] items-center gap-1 border border-gray-300 rounded-lg shadow-sm"
@@ -142,12 +142,14 @@
         <div class="grid grid-cols-3 gap-1">
             {#each posts as post}
                 <a href="/post/{post.post_uuid}">
-                    <div class="rounded-lg overflow-hidden shadow-lg">
+                    <div
+                        class="rounded-lg overflow-hidden shadow-lg aspect-[1000/1618]"
+                    >
                         <img
                             loading="lazy"
                             src={post.img_url}
                             alt="Post"
-                            class="w-full h-48 object-cover"
+                            class="w-full h-full object-cover"
                         />
                     </div>
                 </a>

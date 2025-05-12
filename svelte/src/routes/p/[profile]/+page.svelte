@@ -166,7 +166,7 @@
     <Bottombar />
 {:else}
     <Navbar />
-    <div class="space-y-4 p-4 max-w-md m-auto">
+    <div class="space-y-4 p-4 m-auto">
         {#if userNotFound}
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="mt-10 flex flex-col items-center pb-10">
@@ -336,12 +336,14 @@
             <div class="grid grid-cols-3 gap-1">
                 {#each posts as post}
                     <a href="/post/{post.post_uuid}">
-                        <div class="rounded-lg overflow-hidden shadow-lg">
+                        <div
+                            class="rounded-lg overflow-hidden shadow-lg aspect-[1000/1618]"
+                        >
                             <img
                                 loading="lazy"
                                 src={post.img_url}
                                 alt="Post"
-                                class="w-full h-48 object-cover"
+                                class="w-full h-full object-cover"
                             />
                         </div>
                     </a>
