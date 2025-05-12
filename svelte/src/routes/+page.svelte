@@ -69,6 +69,7 @@
     }
 
     async function updateLocation() {
+        locationStore.reset();
         loadingLocation = true;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
@@ -78,7 +79,6 @@
     }
 
     async function success(loc) {
-        // Store basic location data first
         loadingLocation = false;
         locationStore.update(loc.coords.latitude, loc.coords.longitude);
         isLocationExpired = false;
