@@ -10,6 +10,7 @@
     import PostFeed from "./PostFeed.svelte";
 
     let loading = true;
+    let loadingLocation = false;
 
     export let data;
     const session = data.session;
@@ -68,6 +69,7 @@
     }
 
     async function updateLocation() {
+        loadingLocation = true;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
         } else {
@@ -77,12 +79,14 @@
 
     async function success(loc) {
         // Store basic location data first
+        loadingLocation = false;
         locationStore.update(loc.coords.latitude, loc.coords.longitude);
         isLocationExpired = false;
         locationError = false;
     }
 
     function error(e) {
+        loadingLocation = false;
         console.error(e);
         locationError = true;
     }
@@ -115,8 +119,8 @@
             <Navbar showBack={false} />
 
             <div class="py-4 m-auto">
-                {#if (isLocationExpired || !locationStore) && !locationError}
-                    <!-- Please allow loc access -->
+                {#if (isLocationExpired || !locationStore) && !locationError && !loadingLocation}
+                    <!-- Allow loc access -->
                     <div
                         class="bg-white w-11/12 m-auto border border-gray-300 rounded-lg shadow-sm"
                     >

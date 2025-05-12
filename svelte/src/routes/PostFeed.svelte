@@ -10,7 +10,6 @@
     let accountData;
     let pfp;
 
-    let loading = true;
     let loadingMorePosts = false;
     let allPostsLoaded = false;
 
@@ -28,7 +27,6 @@
         }
         // Set up scroll event listener
         window.addEventListener("scroll", handleScroll);
-        loading = false;
     });
     onDestroy(() => {
         try {
