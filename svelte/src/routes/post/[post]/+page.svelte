@@ -153,7 +153,7 @@
             </div>
         </div>
     {:else}
-        <div class="p-4 max-w-md m-auto w-11/12">
+        <div class="p-4 m-auto w-11/12">
             <div class="border border-gray-300 rounded-lg shadow-lg">
                 <div class="rounded-t-lg bg-white px-2 flex items-center">
                     <div class="flex flex-row">
