@@ -22,11 +22,15 @@
     let timeoutId = null;
     let accountData;
 
+    let darkFilter;
+
     onMount(async () => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
         location = locationStore.getData();
 
         L = await import("leaflet");
+
+        mapContainer.style.backgroundColor = "black";
 
         map = L.map(mapContainer, {}).setView([location.lat, location.lon], 15);
         map.removeControl(map.zoomControl);
@@ -36,6 +40,8 @@
             "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png",
             {
                 minZoom: 12,
+                opacity: 0.8,
+                updateWhenIdle: false,
             },
         ).addTo(map);
 
