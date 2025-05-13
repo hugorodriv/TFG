@@ -1,4 +1,5 @@
 <script>
+    // @ts-nocheck
     import { onMount } from "svelte";
     import Bottombar from "../Bottombar.svelte";
     import Navbar from "../Navbar.svelte";
@@ -10,38 +11,15 @@
     const MAX_POSTS = 10;
     const RADIUS = 10_000; //in meters
 
-    /**
-     * @type {HTMLDivElement}
-     */
     let mapContainer;
-    /**
-     * @type {{ lat: any; lon: any; }}
-     */
     let location;
-    /**
-     * @type {{ options: { zoomSnap: number; zoomDelta: number; }; attributionControl: { remove: () => void; }; on: (arg0: string, arg1: () => Promise<void>) => void; getBounds: () => any; eachLayer: (arg0: (layer: { remove: () => void; }) => void) => void; }}
-     */
     let map;
-    /**
-     * @type {{ map: any; tileLayer: any; circle: any; latLng: any; Marker: any; divIcon: any; marker: any; default?: any; Bounds?: any; Browser?: any; CRS?: any; Canvas?: any; Circle?: any; CircleMarker?: any; Class?: any; Control?: any; DivIcon?: any; DivOverlay?: any; DomEvent?: any; DomUtil?: any; Draggable?: any; Evented?: any; FeatureGroup?: any; GeoJSON?: any; GridLayer?: any; Handler?: any; Icon?: any; ImageOverlay?: any; LatLng?: any; LatLngBounds?: any; Layer?: any; LayerGroup?: any; LineUtil?: any; Map?: any; Mixin?: any; Path?: any; Point?: any; PolyUtil?: any; Polygon?: any; Polyline?: any; Popup?: any; PosAnimation?: any; Projection?: any; Rectangle?: any; Renderer?: any; SVG?: any; SVGOverlay?: any; TileLayer?: any; Tooltip?: any; Transformation?: any; Util?: any; VideoOverlay?: any; bind?: any; bounds?: any; canvas?: any; circleMarker?: any; control?: any; extend?: any; featureGroup?: any; geoJSON?: any; geoJson?: any; gridLayer?: any; icon?: any; imageOverlay?: any; latLngBounds?: any; layerGroup?: any; point?: any; polygon?: any; polyline?: any; popup?: any; rectangle?: any; setOptions?: any; stamp?: any; svg?: any; svgOverlay?: any; tooltip?: any; transformation?: any; version?: any; videoOverlay?: any; noConflict?: () => any; }}
-     */
     let L;
-    /**
-     * @type {any[]}
-     */
+
     let relevantPosts;
     const placedCoords = [];
-    /**
-     * @type {any[]}
-     */
     let localPostsCache = [];
-    /**
-     * @type {number | null | undefined}
-     */
     let timeoutId = null;
-    /**
-     * @type {{ uuid: any; }}
-     */
     let accountData;
 
     onMount(async () => {
@@ -50,29 +28,55 @@
 
         L = await import("leaflet");
 
-        map = L.map(mapContainer, {
-            zoomControl: false,
-            zoomAnimation: false,
-            fadeAnimation: false,
-        }).setView([location.lat, location.lon], 15);
-        map.options.zoomSnap = 0;
-        map.options.zoomDelta = 0;
-        // map.setMaxBounds(bounds);
+        map = L.map(mapContainer, {}).setView([location.lat, location.lon], 15);
+        map.removeControl(map.zoomControl);
         map.attributionControl.remove();
 
         L.tileLayer(
             "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png",
             {
-                minZoom: 8,
-                maxZoom: 18,
+                minZoom: 12,
             },
         ).addTo(map);
 
-        L.circle([location.lat, location.lon], {
-            radius: RADIUS,
-            weight: 0,
+        const outerBounds = [
+            [-90, -180],
+            [90, -180],
+            [90, 180],
+            [-90, 180],
+        ];
+
+        const kmPerLat = 111320;
+
+        // polygon holes need point coords. calculate 100 of them
+        const circleLatLngs = [];
+        for (let i = 0; i < 200; i++) {
+            const angle = (Math.PI * 2 * i) / 200;
+            const latRadius = RADIUS / kmPerLat;
+            const lngRadius =
+                RADIUS / (kmPerLat * Math.cos(location.lat * (Math.PI / 180)));
+
+            const lat = location.lat + latRadius * Math.sin(angle);
+            const lng = location.lon + lngRadius * Math.cos(angle);
+
+            circleLatLngs.push([lat, lng]);
+        }
+        // create a black opacity polygon, with a hole in the middle
+        L.polygon([outerBounds, circleLatLngs], {
+            stroke: false,
             color: "black",
-            fillOpacity: 0.15,
+            fillColor: "black",
+            fillOpacity: 0.3,
+            interactive: false,
+        }).addTo(map);
+
+        // user location marker
+        L.circleMarker([location.lat, location.lon], {
+            radius: 8,
+            fillColor: "#4a90e2",
+            color: "white",
+            weight: 2,
+            fillOpacity: 1,
         }).addTo(map);
 
         map.on("moveend zoomend", async () => {
@@ -174,7 +178,7 @@
         }
 
         // Clear old posts
-        map.eachLayer((/** @type {{ remove: () => void; }} */ layer) => {
+        map.eachLayer((layer) => {
             if (layer instanceof L.Marker) {
                 layer.remove();
             }
@@ -218,7 +222,7 @@
                 const marker = L.marker([adjLat, adjLon], {
                     icon,
 
-                    zIndexOffset: zIndex, // Apply the zIndex offset based on post_uuid
+                    zIndexOffset: zIndex,
                 }).on("click", () => {
                     window.location.href = getPostLink(p.post_uuid);
                 });
