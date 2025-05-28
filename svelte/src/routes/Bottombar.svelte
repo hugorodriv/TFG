@@ -13,12 +13,10 @@
      */
     let pfp;
     let accountData;
-    let loading = true;
     let showWarning = false;
     onMount(() => {
         accountData = JSON.parse(localStorage.getItem("accData") || "{}");
         pfp = localStorage.getItem("pfp");
-        loading = false;
     });
     async function launchProtected(route) {
         if (!locationStore.isExpired()) {
