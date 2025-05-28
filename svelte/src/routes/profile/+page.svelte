@@ -34,13 +34,13 @@
         <div class="w-full space-y-2 my-2">
             <div>
                 <p class="text-xl font-medium text-gray-900">
-                    {accountData.name}
+                    {accountData?.name}
                 </p>
                 <p class="text-sm text-gray-500">
-                    @{accountData.username}
+                    @{accountData?.username}
                 </p>
                 <p class="whitespace-break-spaces text-sm text-gray-800">
-                    {accountData.bio}
+                    {accountData?.bio}
                 </p>
             </div>
             <div class="space-x-2 space-y-2">
