@@ -1,6 +1,5 @@
 <script>
     // loading bar
-    import "nprogress/nprogress.css";
     import NProgress from "nprogress";
     import { navigating } from "$app/stores";
     import "../app.css";
