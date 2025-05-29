@@ -301,6 +301,23 @@
                         />
                     </div>
                 </a>
+            {:else}
+                <div
+                    class="flex items-center justify-center col-span-3 w-11/12 m-auto h-18"
+                >
+                    <hr class="flex-grow border-t border-gray-300" />
+                    {#if friendshipStatus === "ACCEPTED"}
+                        <span class="mx-4 text-gray-400 text-sm"
+                            >User has no posts</span
+                        >
+                    {:else}
+                        <span class="mx-4 text-gray-400 text-sm"
+                            >Add as friend to see posts</span
+                        >
+                    {/if}
+
+                    <hr class="flex-grow border-t border-gray-300" />
+                </div>
             {/each}
         </div>
     {/if}
