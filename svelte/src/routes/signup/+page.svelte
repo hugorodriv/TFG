@@ -136,7 +136,7 @@
                     on:keyup={(e) => checkUsername(e)}
                     required
                     class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 w-full p-2.5"
-                    placeholder="username"
+                    placeholder="Username (4 or more characters)"
                 />
             </div>
 
