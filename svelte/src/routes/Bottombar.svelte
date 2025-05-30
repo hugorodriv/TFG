@@ -25,7 +25,8 @@
             showWarning = true;
             setTimeout(() => {
                 showWarning = false;
-            }, 3000);
+                goto("/");
+            }, 500);
         }
     }
 </script>
