@@ -2,6 +2,7 @@ import pkg from "pg"
 const { Pool } = pkg
 import { DATABASE_HOST, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD } from "$env/static/private";
 import { removePfpS3 } from "./s3";
+import { checkAndRemovePost, getUserPostsUUIDs } from "./db_posts";
 
 
 //  (?![-_.])           // Prevents the username from starting with -, _, or .
@@ -165,6 +166,17 @@ export async function deleteAccount(userId) {
         // pfp S3 removal
         const uuid = await getUserUUID(userId)
         removePfpS3(uuid)
+
+        // posts removal
+        const { posts } = await getUserPostsUUIDs(uuid)
+        /**
+         * @type {Promise<any>[]}
+         */
+        const promises = []
+        posts?.forEach(post => {
+            promises.push(checkAndRemovePost(post.post_uuid, uuid))
+        });
+        await Promise.all(promises)
 
         // database cleaning
         const resProfiles = await pool.query('DELETE FROM profiles WHERE _id = $1', [userId]);

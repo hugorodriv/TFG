@@ -30,6 +30,23 @@ export async function uploadPost(profile_uuid, text, location, resolved_location
 }
 
 /**
+ * @param {String} poster_uuid
+ */
+export async function getUserPostsUUIDs(poster_uuid) {
+    try {
+        const query = `
+            SELECT post_uuid FROM posts
+            WHERE profile = $1`
+        let { rows } = await pool.query(query, [poster_uuid]);
+
+        return { success: true, posts: rows }
+    } catch (error) {
+        console.log(error)
+        return { success: false }
+    }
+}
+
+/**
  * @param {String} uuid
  */
 export async function getUserPosts(uuid) {
