@@ -91,7 +91,6 @@ export async function fetchAccData(userId) {
 
     try {
         const res = await pool.query('SELECT * FROM profiles WHERE _id = $1 LIMIT 1', [userId]);
-        // TODO: Dont include userId (but the uuid instead)
         const { _id: omittedUserId, ...profile } = res.rows[0];
         return profile;
     } catch (error) {
@@ -109,7 +108,6 @@ export async function fetchAccDataFromUsername(username) {
         if (res.rows.length < 1) {
             return null
         }
-        // TODO: Dont include userId (but the uuid instead)
         const { _id: omittedUserId, ...profile } = res.rows[0];
         return profile;
     } catch (error) {
@@ -183,9 +181,6 @@ export async function deleteAccount(userId) {
         const resSessions = await pool.query('DELETE FROM sessions WHERE "userId" = $1', [userId]);
         const resAccounts = await pool.query('DELETE FROM accounts WHERE "userId" = $1', [userId]);
         const resUsers = await pool.query('DELETE FROM users WHERE id = $1', [userId]);
-
-        // TODO: Delete user posts?
-
 
         return resProfiles && resSessions && resUsers && resAccounts
     } catch (error) {
