@@ -1,8 +1,5 @@
 # **Sharelloc**
 
-
-🔗 Visit the site and take a look: [Sharelloc - https://sharelloc.app](https://sharelloc.app)
-
 ## What is this project
 
 This is my final year project at UPF. Sharelloc is a social media application for photo sharing.
